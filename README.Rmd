@@ -1,0 +1,37 @@
+# msgtools #
+
+**msgtools** implements a number utilities for developing and maintaining error, warning, and other messages in R packages, including checking for consistency across messages, spell-checking messages, and building message translations into various languages.
+
+## Requirements and Installation ##
+
+[![Build Status](https://travis-ci.org/leeper/msgtools.png?branch=master)](https://travis-ci.org/leeper/msgtools)
+
+**msgtools** will eventually be available on [CRAN](http://cran.r-project.org/web/packages/msgtools/index.html), so that it can be installed using:
+
+```
+install.packages('msgtools')
+```
+
+The development version can be installed directly from GitHub using `devtools`:
+
+```
+if(!require('devtools')) {
+    install.packages('devtools')
+    library('devtools')
+}
+install_github('leeper/msgtools')
+```
+
+## Example Usage ##
+
+### Spell checking documentation ###
+
+### Spell checking diagnostic messages ###
+
+### Checking consistency of diagnostic messages ###
+
+### Documenting diagnostic messages ###
+
+### Building and updating message translation files ###
+
+### Interactive message translation ###
