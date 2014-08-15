@@ -1,7 +1,7 @@
 # import functions
 importFrom(tools, xgettext, 
                   xngettext, 
-                  xgetttext2pot, 
+                  #xgetttext2pot, 
                   update_pkg_po, 
                   checkPoFile, 
                   checkPoFiles)
@@ -14,4 +14,11 @@ importFrom(utils, aspell,
 # export functions
 
 
+## `as` methods
+S3method(as.pot, xgettext)
+S3method(as.po, xgetpot)
+
 ## print methods
+S3method(print, xgettext)
+S3method(print, xgetpot)
+S3method(print, xgetpo)
