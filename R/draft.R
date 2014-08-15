@@ -118,3 +118,20 @@ print.xgetpot <- function(x, ...){
 print.xgetpo <- function(x, ...){
     invisible(x)
 }
+
+document_msgs <- function(x, file, fmt = "Rd", ...){
+    # document
+    
+    # format
+    if(fmt == "Rd"){
+        
+    } else if (fmt == "roxygen"){
+        
+    } else {
+        stop("'fmt' must be 'Rd' or 'roxygen'")
+    }
+    
+    # write to file
+    
+    invisible(x)
+}
