@@ -49,8 +49,21 @@ function(x,
 ){
     
     # convert xgettext object to a pot object
+    out <- unlist(x)
     
-    invisible(x)
+    # attach .pot metadata as attributes
+    attr(out, "language") <- language
+    attr(out, "project.name") <- project.name
+    attr(out, "project.version") <- project.version
+    attr(out, "creation.date") <- creation.date
+    attr(out, "revision.date") <- revision.date
+    attr(out, "translator.name") <- translator.name
+    attr(out, "translator.email") <- translator.email
+    attr(out, "team.name") <- team.name
+    attr(out, "team.email") <- team.email
+    attr(out, "bug.reports") <- bug.reports
+    
+    invisible(out)
 }
 
 
@@ -73,8 +86,16 @@ write.pot <- function(x, file = NULL, replace){
                c("msgid \"\"", "msgstr \"\"", 
                  sprintf("\"Project-Id-Version: %s %s\\n\"", a$project.name, a$project.version), 
                  sprintf("\"Report-Msgid-Bugs-To: %s\\n\"", a$bug.reports), 
-                 paste0("\"POT-Creation-Date: ", format(Sys.time(), "%Y-%m-%d %H:%M"), "\\n\""), 
-                 "\"PO-Revision-Date: ", format(Sys.time(), "%Y-%m-%d %H:%M"), "\\n\"", 
+                 paste0("\"POT-Creation-Date: ", 
+                     ifelse(is.null(a$creation.date), 
+                            format(Sys.time(), "%Y-%m-%d %H:%M"), 
+                            a$creation.date), 
+                        "\\n\""), 
+                 paste0("\"PO-Revision-Date: ", 
+                     ifelse(is.null(a$creation.date), 
+                            format(Sys.time(), "%Y-%m-%d %H:%M"), 
+                            a$creation.date), 
+                        "\\n\""), 
                  "\"Last-Translator: ", a$translator.name, "<",a$translator.email,">", "\\n\"", 
                  "\"Language-Team: ", a$team.name, "<",a$team.email,">", "\\n\"", 
                  "\"MIME-Version: 1.0\\n\"", 
@@ -119,14 +140,54 @@ print.xgetpo <- function(x, ...){
     invisible(x)
 }
 
-document_msgs <- function(x, file, fmt = "Rd", ...){
+document_msgs <- 
+function(x, 
+         file, 
+         fmt = "Rd", 
+         title = "Diagnostic messages",
+         description = NULL,
+         name = NULL,
+         keywords = c("message", "warning", "error"),
+         ...
+){
     # document
     
     # format
     if(fmt == "Rd"){
+        writeLines(file,
+        c(paste0("\\name{",name,"}"),
+        paste0("\\alias{",name"}"),
+        paste0("\\title{",title"}"),
+        "\\description{This page documents common messages, warnings, and errors for package \dQuote{package}.}",
+        "\\section{Messages}{"))
+        
+        # this part will write the object to file:
+        writeLines(file, paste0("\\item ", names(x), ":", unname(x), collapse = "\n"))
+        
+        writeLines(file,
+        c("}",
+        "}",
+        paste0("\\keyword{",keywords,"}",collapse="\n")))
         
     } else if (fmt == "roxygen"){
+        writeLines(file,
+        c("#' ", title,
+        "#'",
+        "#' ",description,
+        "#'",
+        "#' @section Messages:",
+        "#' \\itemize{"))
         
+        # this part will write the object to file:
+        writeLines(file, paste0("#' \\item ", names(x), ":", unname(x), collapse = "\n"))
+        
+        writeLines(file,
+        c("#' }",
+        "#'",
+        "#' @name ", name,
+        "#' @keywords ",paste(keywords, collapse = " "),
+        "NULL"))
+
     } else {
         stop("'fmt' must be 'Rd' or 'roxygen'")
     }
