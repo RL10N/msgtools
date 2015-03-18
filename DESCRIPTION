@@ -1,13 +1,14 @@
 Package: msgtools
 Type: Package
-Title: Tools for developing diagnostic messages
+Title: Tools for Developing Diagnostic messages
 Description: This package implements a number utilities for developing and maintaining error, warning, and other messages in R packages, including checking for consistency across messages, spell-checking messages, and building message translations into various languages.
 License: MIT + file LICENSE
 Version: 0.1.0
-Date: 2014-08-11
+Date: 2015-03-18
 Authors@R: c(person("Thomas J.", "Leeper",
                     role = c("aut", "cre"),
                     email = "thosjleeper@gmail.com"))
 Maintainer: Thomas J. Leeper <thosjleeper@gmail.com>
-Imports: tools, utils
+Imports: tools, utils, devtools
+Enhances: devtools
 SystemRequirements: gettext, Aspell

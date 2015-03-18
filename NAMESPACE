@@ -1,15 +1,16 @@
 # import functions
 importFrom(tools, xgettext, 
                   xngettext, 
-                  #xgetttext2pot, 
+                  xgetttext2pot, 
                   update_pkg_po, 
-                  checkPoFile, 
+                  #checkPoFile, 
                   checkPoFiles)
 importFrom(utils, aspell, 
                   aspell_package_Rd_files, 
                   aspell_package_R_files, 
                   aspell_package_C_files, 
                   aspell_write_personal_dictionary_file)
+importFrom(devtools, as.package)
 
 # export functions
 
