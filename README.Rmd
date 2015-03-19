@@ -4,17 +4,13 @@
 
 ## Requirements and Installation ##
 
+Note: This package is still under active development. Everything can break.
+
 [![Build Status](https://travis-ci.org/leeper/msgtools.png?branch=master)](https://travis-ci.org/leeper/msgtools)
-
-**msgtools** will eventually be available on [CRAN](http://cran.r-project.org/web/packages/msgtools/index.html), so that it can be installed using:
-
-```
-install.packages('msgtools')
-```
 
 The development version can be installed directly from GitHub using `devtools`:
 
-```
+```R
 if(!require('devtools')) {
     install.packages('devtools')
     library('devtools')
@@ -22,16 +18,78 @@ if(!require('devtools')) {
 install_github('leeper/msgtools')
 ```
 
+**msgtools** will eventually be available on [CRAN](http://cran.r-project.org/web/packages/msgtools/index.html), so that it can be installed using:
+
+```R
+install.packages('msgtools')
+```
+
+
 ## Example Usage ##
 
-### Spell checking documentation ###
-
-### Spell checking diagnostic messages ###
-
-### Checking consistency of diagnostic messages ###
-
-### Documenting diagnostic messages ###
+**msgtools** is designed to enhance **devtools**, so all of the functions can be used just like those from devtools. For example, all of the functions call `devtools::as.package` allowing you to call them from anywhere within a package directory (thus negating the need to navigate between package subdirectories).
 
 ### Building and updating message translation files ###
 
+The package creates a simplified workflow for creating, maintaining, and updating translations of messages in both R and C code that improve upon those available in the **tools** package. Specifically, the package offers R representations of .pot (gettext; "portable object template") and .po (translation; "portable object") files, enabling comparison of existing translations and eased reading and writing of translation files. By creating R representations, it is also possible to programmatically modify translations, thus eliminating the need to manually open each translation file in a text editor.
+
+```R
+library("msgtools")
+
+# update gettext (.pot) template file
+update_pot_file()
+
+# create Spanish translation
+make_translation("es")
+
+# create French translation
+make_translation("fr")
+
+# check translations
+check_translations()
+
+# install translations (checking translations is optional)
+install_translations(check = FALSE)
+```
+
+At this point, you still have to manually edit the the .po translation files created by `make_translation` (but see next example).
+
 ### Interactive message translation ###
+
+The plan is to introduce a simple interface for creating message translations, which can then be written to file. This negates the need to manually open and edit translation (.po) files in a text editor.
+
+```R
+# interactively update or create Spanish translation
+edit_translation("es")
+```
+
+
+### Checking consistency of diagnostic messages ###
+
+Packages frequently use similar errors and warnings across functions, but in practice these errors and warnings might have slight changes in wording, spelling, etc. that can be confusing to users. The internal representation of a gettext file allows a developer to quickly examine messages, identify problems, and correct them.
+
+```R
+g <- get_messages()
+sort(unlist(g))
+```
+
+
+### Documenting diagnostic messages ###
+
+By extracting errors, warnings, and messages from R and C code, it is also possible to document those messages. In practice, many diagnostic messages are uninformative (especially for new users) and the only way to figure out their meaning is to search the web or search the source code. **msgtools** allows developers to create an up-to-date documentation page of messages to provide additional troubleshooting details for users.
+
+```R
+document_msgs()
+```
+
+### Spell checking ###
+
+Packages have spelling errors. This package can check documentation, vignettes, source code, and messages for spelling errors. (Requires a system spell checker.)
+
+```R
+# check whole package
+spell_check()
+
+# check just diagnostic messages
+spell_check("messages")
+```
