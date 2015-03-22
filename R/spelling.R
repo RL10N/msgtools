@@ -1,30 +1,36 @@
-spell_check <- function(check = "all", pkg = ".", control = list(), program = NULL) {
+spell_check <- function(pkg = ".", control = list(), program = NULL) {
     pkg <- as.package(pkg)
-    
-    if("all" %in% check) {
-        all <- c("documentation", "vignettes", "r", "c", "messages")
+    msgs <- get_messages(pkg = pkg)
+    d <- tempdir()
+    f <- character(length(msgs))
+    for(i in seq_along(msgs)) {
+        f[i] <- tempfile(tmpdir = d, fileext = paste0("__",basename(names(msgs)[i])))
+        writeLines(msgs[[i]], con = f[i])
+        on.exit(unlink(f[i]))
     }
-    all <- tolower(all)
-    
-    out <- list()
-    if("documentation" %in% all)
-        out$documentation <- aspell_package_Rd_files(dir = pkg$path, control = control, program = program)
-    if("vignettes" %in% all)
-        out$vignettes <- aspell_package_vignettes(dir = pkg$path, control = control, program = program)
-    if("r" %in% all)
-        out$R <- aspell_package_R_files(dir = pkg$path, control = control, program = program)
-    if("c" %in% all)
-        out$C <- aspell_package_C_files(dir = pkg$path, control = control, program = program)
-    if("messages" %in% all) {
-        msgs <- get_messages(dir = pkg$path)
-        d <- tempdir()
-        f <- character(length(msgs))
-        for(i in seq_along(msgs)) {
-            f[i] <- tempfile(dir = d, fileext = basename(names(msgs)[i]))
-            writeLines(msgs[[i]], con = f[i])
-            on.exit(unlink(f[i]))
-        }
-        out$messages <- aspell(f, control = control, program = program)
+    out <- aspell(f, control = control, program = program)
+    out$Message <- character(nrow(out))
+    for(i in 1:nrow(out)) {
+        out$Message[i] <- readLines(out$File[i], n = out$Line[i])[out$Line[i]]
     }
-    structure(out, class = "spellcheck")
+    names(out)[names(out) == "Original"] <- "Word"
+    out$File <- sapply(strsplit(out$File, "__"),`[`, 2)
+    structure(out, class = c("spellcheck","data.frame"))
+}
+
+print.spellcheck <- function(x, ...) {
+    if(nrow(x) > 0) {
+        out <- data.frame(Word = x$Word,
+                          Message = x$Message,
+                          Suggestions = sapply(s$Suggestions, function(x) {
+                              paste(c(head(x, 5), if(length(x) > 5) "..." else ""), collapse = ", ")
+                          }),
+                          File = x$File, 
+                          Line = x$Line,
+                          Column = x$Column)
+        print(out, right = FALSE)
+    } else {
+        message("No spelling errors found")
+    }
+    invisible(x)
 }

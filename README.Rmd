@@ -24,6 +24,7 @@ install_github('leeper/msgtools')
 install.packages('msgtools')
 ```
 
+Note that **msgtools** also has two system requirements (i.e., software that must be installed separately from R). Specifically, the package requires [GNU gettext-tools](https://www.gnu.org/software/gettext/). Windows binaries can be installed from http://www.stats.ox.ac.uk/pub/Rtools/goodies/gettext-tools.zip. To use the spell checking functionality of **mgstools**, a spell checking application is required (i.e., [aspell](http://aspell.net), [hunspell](http://hunspell.sourceforge.net/), or [http://lasr.cs.ucla.edu/geoff/ispell.html](ispell)). See `? aspell` for further details.
 
 ## Example Usage ##
 
@@ -33,7 +34,7 @@ install.packages('msgtools')
 
 The package creates a simplified workflow for creating, maintaining, and updating translations of messages in both R and C code that improve upon those available in the **tools** package. Specifically, the package offers R representations of .pot (gettext; "portable object template") and .po (translation; "portable object") files, enabling comparison of existing translations and eased reading and writing of translation files. By creating R representations, it is also possible to programmatically modify translations, thus eliminating the need to manually open each translation file in a text editor.
 
-```R
+```{r}
 library("msgtools")
 
 # update gettext (.pot) template file
@@ -68,7 +69,7 @@ edit_translation("es")
 
 Packages frequently use similar errors and warnings across functions, but in practice these errors and warnings might have slight changes in wording, spelling, etc. that can be confusing to users. The internal representation of a gettext file allows a developer to quickly examine messages, identify problems, and correct them.
 
-```R
+```{r}
 g <- get_messages()
 sort(unlist(g))
 ```
@@ -78,7 +79,7 @@ sort(unlist(g))
 
 By extracting errors, warnings, and messages from R and C code, it is also possible to document those messages. In practice, many diagnostic messages are uninformative (especially for new users) and the only way to figure out their meaning is to search the web or search the source code. **msgtools** allows developers to create an up-to-date documentation page of messages to provide additional troubleshooting details for users.
 
-```R
+```{r}
 document_msgs()
 ```
 
@@ -86,7 +87,7 @@ document_msgs()
 
 Packages have spelling errors. This package can check documentation, vignettes, source code, and messages for spelling errors. (Requires a system spell checker.)
 
-```R
+```{r}
 # check whole package
 spell_check()
 
