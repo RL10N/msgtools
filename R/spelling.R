@@ -15,14 +15,14 @@ spell_check <- function(pkg = ".", control = list(), program = NULL) {
     }
     names(out)[names(out) == "Original"] <- "Word"
     out$File <- sapply(strsplit(out$File, "__"),`[`, 2)
-    structure(out, class = c("spell_check","data.frame"))
+    structure(out, class = c("msgspellcheck", "data.frame"))
 }
 
-print.spell_check <- function(x, ...) {
+print.msgspellcheck <- function(x, ...) {
     if(nrow(x) > 0) {
         out <- data.frame(Word = x$Word,
                           Message = x$Message,
-                          Suggestions = sapply(s$Suggestions, function(x) {
+                          Suggestions = sapply(x$Suggestions, function(x) {
                               paste(c(head(x, 5), if(length(x) > 5) "..." else ""), collapse = ", ")
                           }),
                           File = x$File, 

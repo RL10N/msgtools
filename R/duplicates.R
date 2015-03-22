@@ -6,10 +6,10 @@ find_msg_duplicates <- function(pkg = ".") {
     distance <- sapply(msgs, adist, x = msgs)
     colnames(distance) <- NULL
     matches <- sapply(msgs, function(z) agrep(z, x = msgs[msgs != z]))
-    structure(list(Message = unname(msgs), Location = locations, Matches = matches, Distance = distance), class = "msg_duplicates")
+    structure(list(Message = unname(msgs), Location = locations, Matches = matches, Distance = distance), class = "msgduplicates")
 }
 
-print.msg_duplicates <- function(x, ...) {
+print.msgduplicates <- function(x, ...) {
     d <- numeric(nrow(x$Distance))
     for(i in 1:nrow(x$Distance))
         d[i] <- min(x$Distance[i,-i])

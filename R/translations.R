@@ -64,11 +64,11 @@ template_exists <- function(pkg = ".", domain = "R") {
 }
 
 parse_template <- function(template) {
-    h <- gsub("[\"]$", "", gsub("^[\"]", "", p[!grepl("msgid", p)]))
+    h <- gsub("[\"]$", "", gsub("^[\"]", "", template[!grepl("msgid", template)]))
     h <- read.dcf(textConnection(h[!grepl("msgstr", h)]))
     out <- setNames(as.list(h), colnames(h))
     
-    msgids <- p[grep("msgid", p)]
+    msgids <- template[grep("msgid", template)]
     msgids <- gsub("^\n", "", msgids)
     msgids <- sapply(strsplit(msgids, "\nmsgstr"), `[`, 1)
     msgids <- gsub("^msgid ", "", msgids)
@@ -79,7 +79,7 @@ parse_template <- function(template) {
     # a "msgid" element and maybe "msgid_plural" and multiple "msgstr"'s
     
     out$msgids <- sort(as.list(msgids[msgids != ""]))
-    structure(out, class = "gettexttemplate")
+    structure(out, class = "msgtemplate")
 }
 
 write_template <- function(template, pkg = ".", domain = "R") {
@@ -121,7 +121,7 @@ read_template <- function(file, pkg = ".", domain = "R"){
     parse_template(template)
 }
 
-update_template_file <- 
+update_template <- 
 function(pkg = ".", 
          created = format(Sys.time(), "%Y-%m-%d %H:%M"),
          maintainer, # object of class "person"
@@ -140,7 +140,7 @@ function(pkg = ".",
         domain <- pkg$package
     template_file <- file.path(pkg$path, "po", paste0(domain, ".pot"))
     
-    # generate internal gettexttemplate representation (calling `xgettext` and `xngettext`)
+    # generate internal msgtemplate representation (calling `xgettext` and `xngettext`)
     template <- generate_template(pkg = pkg$package, 
                         created = created, 
                         maintainer = if(!missing(maintainer)) format(maintainer) else pkg$maintainer, 
@@ -183,7 +183,7 @@ read_translation <- function(file, language, pkg = ".", domain = "R") {
         stop(paste0(domain_prefix, language, ".po file not found"))
     con <- file(file, "r")
     on.exit(close(con))
-    structure(readLines(con), class = "gettextpo")
+    structure(readLines(con), class = "msgtranslation")
 }
 
 write_translation <- function(po, pkg = ".", domain = "R") {
@@ -272,6 +272,10 @@ edit_translation <- function(language, file, pkg = ".", domain = "R", write = TR
     }
     update_template(pkg = pkg, domain = domain)
     
+    if(domain == "R")
+        domain_prefix <- "R-"
+    else
+        domain_prefix <- ""
     if(missing(file)) {
         file <- file.path(pkg$path, "po", paste0(domain_prefix, language, ".po"))
     } else if(missing(language)) {
@@ -283,7 +287,7 @@ edit_translation <- function(language, file, pkg = ".", domain = "R", write = TR
     }
     if(file.exists(file)) {
         if(!translation_current(file = file)) {
-            tmp <- make_translation(language = lanugage, pkg = pkg, domain = domain, write = FALSE)
+            tmp <- make_translation(language = language, pkg = pkg, domain = domain, write = FALSE)
             po <- attributes(tmp)$po
         } else {
             po <- read_translation(file = file)
@@ -295,7 +299,7 @@ edit_translation <- function(language, file, pkg = ".", domain = "R", write = TR
     # write a command-line interface to update po translation here
     stop("This feature is not yet supported. Sorry!")
     
-    po_file <- if(write) write_translation(template) else ""
+    po_file <- if(write) write_translation(po) else ""
     structure(po_file, po = po)
 }
 
@@ -343,7 +347,7 @@ install_translations <- function(pkg = ".", which, check = TRUE) {
         lang <- "en@quot"
         message("  R-", lang, ":", domain = NA)
         f <- tempfile()
-        en_quote(templatefile, f)
+        #en_quote(template_file, f)
         dest <- file.path(stem, lang, "LC_MESSAGES")
         dir.create(dest, FALSE, TRUE)
         dest <- file.path(dest, sprintf("R-%s.mo", pkg$package))
@@ -384,10 +388,10 @@ install_translations <- function(pkg = ".", which, check = TRUE) {
         lang <- "en@quot"
         message("  ", lang, ":", domain = NA)
         f <- tempfile()
-        en_quote(template, f)
+        #en_quote(template, f)
         dest <- file.path(stem, lang, "LC_MESSAGES")
         dir.create(dest, FALSE, TRUE)
-        dest <- file.path(dest, sprintf("%s.mo", dom))
+        dest <- file.path(dest, sprintf("%s.mo", domain))
         cmd <- paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))
         if (system(cmd) != 0L) 
             warning(sprintf("running msgfmt on %s failed", basename(f)), domain = NA)
@@ -395,24 +399,10 @@ install_translations <- function(pkg = ".", which, check = TRUE) {
 }
 
 # print methods
-print.gettexttemplate <- function(x, ...){
+print.msgtemplate <- function(x, ...){
     invisible(x)
 }
 
-print.gettextpo <- function(x, ...){
+print.msgtranslation <- function(x, ...){
     invisible(x)
-}
-
-
-# toggles to check
-setlang <- function(language) {
-    options("msgtools_LANG" = Sys.getenv("LANG"))
-    Sys.setenv(LANG = language)
-}
-
-resetlang <- function(language) {
-    if(missing(language))
-        Sys.setenv(LANG = getOptions("msgtools_LANG", "EN"))
-    else
-        Sys.setenv(LANG = language)
 }
