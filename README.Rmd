@@ -94,3 +94,11 @@ spell_check()
 # check just diagnostic messages
 spell_check("messages")
 ```
+
+### Identifying duplicate and similar messages ###
+
+Sometimes one intends to use the same diagnostic messages throughout a package but changes are made or typographical errors are introduced when copying. The `find_msg_duplicates` can be used to identify these situations.
+
+```{r}
+find_msg_duplicates()
+```
