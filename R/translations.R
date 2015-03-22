@@ -255,13 +255,15 @@ make_translation <- function(language, pkg = ".", domain = "R", write = TRUE) {
         if(current) {
             message("Translation already up-to-date")
             return(po_file, po = attributes(current)$gettextpo)
+        } else {
+            # update existing translation, leaving unchanged messages unchanged
         }
     }
     
     template$Language <- paste(language, sep = ":")
     if(write) # optionally write to disk
         write_translation(template)
-    structure(po_file, po = template)
+    structure(po_file, translation = template)
 }
 
 edit_translation <- function(language, file, pkg = ".", domain = "R", write = TRUE) {
@@ -300,7 +302,7 @@ edit_translation <- function(language, file, pkg = ".", domain = "R", write = TR
     stop("This feature is not yet supported. Sorry!")
     
     po_file <- if(write) write_translation(po) else ""
-    structure(po_file, po = po)
+    structure(po_file, translation = po)
 }
 
 check_translations <- function(pkg = ".") {

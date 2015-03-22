@@ -22,5 +22,5 @@ Both functions search through data in the \code{ISOcodes} package and return dat
 \value{A data.frame containing language or country information.}
 \author{Thomas J. Leeper}
 %\references{}
-\seealso{}
+\seealso{\code{\link{setlang}}}
 %\examples{}

@@ -1,5 +1,6 @@
 \name{setlang}
 \alias{setlang}
+\alias{resetlang}
 \title{Set or reset locale language}
 \description{Set or reset a locale language}
 \usage{
@@ -14,5 +15,5 @@ resetlang(language)
 \value{Invisibly, a logical indicating with the language setting was successful.}
 \author{Thomas J. Leeper}
 %\references{}
-%\seealso{}
+\seealso{\code{\link{language_code}}}
 %\examples{}

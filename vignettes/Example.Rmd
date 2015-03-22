@@ -1,0 +1,73 @@
+<!--
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{Tutorial}
+-->
+
+# msgtools Tutorial #
+
+
+
+## Create an Example Package ##
+
+Let's start by creating a simple package:
+
+```{r}
+library("pkgKitten")
+setwd(tempdir())
+kitten("aPackage")
+setwd("aPackage")
+```
+
+Now we'll add a function to it that contains different types of diagnostic messages.
+
+## Message Translations ##
+
+Then we can create a translation template and setup a Spanish translation:
+
+```R
+generate_template()
+make_translation("es")
+```
+
+We could also do this interactively using `edit_translation`
+
+Once we have the messages translated, we can install them into the package directory
+
+```R
+install_translations()
+```
+
+
+
+## Update Translations ##
+
+If we add a new function with new messages, we'll want to update our template and translations:
+
+
+```R
+update_template()
+make_translation("es")
+```
+
+
+## Spell Check Messages ##
+
+```R
+spell_check()
+```
+
+
+## Check Duplicates ##
+
+```R
+find_msg_duplicates()
+```
+
+
+## Document Messages ##
+
+```R
+library("msgtools")
+document_msgs()
+```
+
