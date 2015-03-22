@@ -9,6 +9,6 @@ Authors@R: c(person("Thomas J.", "Leeper",
                     role = c("aut", "cre"),
                     email = "thosjleeper@gmail.com"))
 Maintainer: Thomas J. Leeper <thosjleeper@gmail.com>
-Imports: tools, utils, devtools
+Imports: tools, utils, ISOcodes, devtools
 Enhances: devtools
 SystemRequirements: gettext, Aspell
