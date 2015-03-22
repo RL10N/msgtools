@@ -11,6 +11,6 @@ Authors@R: c(person("Thomas J.", "Leeper",
 Maintainer: Thomas J. Leeper <thosjleeper@gmail.com>
 Depends: ISOcodes
 Imports: tools, utils, devtools
-Suggest: pkgKitten, knitr
+Suggests: pkgKitten, knitr
 SystemRequirements: gettext, Aspell
 VignetteBuilder: knitr
