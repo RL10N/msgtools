@@ -19,9 +19,25 @@ function(pkg = ".",
             stop("'fmt' must be 'Rd' or 'roxygen'")
     }
     
-    # document
+    # extract messages
+    m1 <- get_messages(pkg = pkg, type = "xgettext")
+    m2 <- get_messages(pkg = pkg, type = "xngettext")
     
-    # format
+    
+    # check if documentation file already exists
+    # if file exists:
+    
+        # parse documentation file
+    
+        # compare file to messages
+        
+        # update file
+    
+    # if file doesn't exist:
+    
+        # document messages
+        
+        # write to file
     
     con <- file(file)
     on.exit(close(con))
