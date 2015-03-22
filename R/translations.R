@@ -5,16 +5,7 @@ make_po_dir <- function(pkg = ".") {
     return(po_dir)
 }
 
-get_messages <- function(pkg = ".", type = "xgettext") {
-    pkg <- as.package(pkg)
-    if(type == "xgettext") {
-        xgettext(pkg$path, asCall = FALSE)
-    } else if (type == "xngettext") {
-        xngettext(pkg$path)
-    }
-}
-
-generate_pot <- 
+generate_template <- 
 function(pkg = ".", 
          created = format(Sys.time(), "%Y-%m-%d %H:%M"),
          maintainer = "",
@@ -24,7 +15,7 @@ function(pkg = ".",
          domain = "R") {
     pkg <- as.package(pkg)
     
-    pot <- 
+    template <- 
     c("msgid \"\"", 
       "msgstr \"\"", 
       sprintf("\"Project-Id-Version: %s %s\\n\"", pkg$package, pkg$version), 
@@ -43,7 +34,7 @@ function(pkg = ".",
     tmp <- tmp[nzchar(tmp)]
     if (length(tmp) > 0L) {
         tmp <- shQuote(encodeString(tmp), type = "cmd")
-        pot <- c(pot, paste0("\nmsgid ",tmp,"\nmsgstr \"\""))
+        template <- c(template, paste0("\nmsgid ",tmp,"\nmsgstr \"\""))
     }
     
     # run xngettext
@@ -52,27 +43,27 @@ function(pkg = ".",
     for (ee in tmp) {
         for (e in ee) {
             if (e[1L] %in% un) {
-               pot <- c(pot, paste0(paste0("\nmsgid        ", shQuote(encodeString(e[1L]), type = "cmd")),
+               template <- c(template, paste0(paste0("\nmsgid        ", shQuote(encodeString(e[1L]), type = "cmd")),
                                     paste0("\nmsgid_plural ", shQuote(encodeString(e[2L]), type = "cmd")), 
                                     "\nmsgstr[0]    \"", "\nmsgstr[1]    \""))
                 un <- un[-match(e, un)]
             }
         }
     }
-    structure(parse_pot(pot), domain = domain)
+    structure(parse_template(template), domain = domain)
 }
 
-pot_exists <- function(pkg = ".", domain = "R") {
+template_exists <- function(pkg = ".", domain = "R") {
     pkg <- as.package(pkg)
     if(domain == "R")
         domain <- paste0("R-", pkg$package)
     else
         domain <- pkg$package
-    pot_file <- file.path(pkg$path, "po", paste0(domain, ".pot"))
-    file.exists(pot_file)
+    template_file <- file.path(pkg$path, "po", paste0(domain, ".pot"))
+    file.exists(template_file)
 }
 
-parse_pot <- function(pot) {
+parse_template <- function(template) {
     h <- gsub("[\"]$", "", gsub("^[\"]", "", p[!grepl("msgid", p)]))
     h <- read.dcf(textConnection(h[!grepl("msgstr", h)]))
     out <- setNames(as.list(h), colnames(h))
@@ -88,10 +79,10 @@ parse_pot <- function(pot) {
     # a "msgid" element and maybe "msgid_plural" and multiple "msgstr"'s
     
     out$msgids <- sort(as.list(msgids[msgids != ""]))
-    structure(out, class = "gettextpot")
+    structure(out, class = "gettexttemplate")
 }
 
-write_pot <- function(pot, pkg = ".", domain = "R") {
+write_template <- function(template, pkg = ".", domain = "R") {
     pkg <- as.package(pkg)
     if(domain == "R")
         domain <- paste0("R-", pkg$package)
@@ -100,20 +91,20 @@ write_pot <- function(pot, pkg = ".", domain = "R") {
     po_dir <- file.path(pkg$path, "po")
     if(!file.exists(po_dir))
         make_po_dir(pkg = pkg)
-    pot_file <- file.path(po_dir, paste0(domain, ".pot"))
+    template_file <- file.path(po_dir, paste0(domain, ".pot"))
     out <- c("msgid \"\"\nmsgstr \"\"")
-    msgids <- pot$msgids
-    pot$msgids <- NULL
-    out <- c(out, paste0("\n\"", names(pot),": ", unname(unlist(pot)), "\""))
+    msgids <- template$msgids
+    template$msgids <- NULL
+    out <- c(out, paste0("\n\"", names(template),": ", unname(unlist(template)), "\""))
     
     # need to generalize this so that each message is itself a list with
     # a "msgid" element and maybe "msgid_plural" and multiple "msgstr"'s
     
     out <- c(out, paste0("\n\nmsgid \"", unlist(msgids), "\"\nmsgstr \"\""))
-    writeLines(out, con = pot_file)
+    writeLines(out, con = template_file)
 }
 
-read_pot <- function(file, pkg = ".", domain = "R"){
+read_template <- function(file, pkg = ".", domain = "R"){
     if(missing(file)) {
         pkg <- as.package(pkg)
         if(domain == "R")
@@ -123,14 +114,14 @@ read_pot <- function(file, pkg = ".", domain = "R"){
         file <- file.path(pkg$path, "po", paste0(domain, ".pot"))
     }
     if(!file.exists(file))
-        stop(".pot file not found")
+        stop(".pot template file not found")
     con <- file(file, "r")
     on.exit(close(con))
-    pot <- readLines(con)
-    parse_pot(pot)
+    template <- readLines(con)
+    parse_template(template)
 }
 
-update_pot_file <- 
+update_template_file <- 
 function(pkg = ".", 
          created = format(Sys.time(), "%Y-%m-%d %H:%M"),
          maintainer, # object of class "person"
@@ -147,10 +138,10 @@ function(pkg = ".",
         domain <- paste0("R-", pkg$package)
     else
         domain <- pkg$package
-    pot_file <- file.path(pkg$path, "po", paste0(domain, ".pot"))
+    template_file <- file.path(pkg$path, "po", paste0(domain, ".pot"))
     
-    # generate internal gettextpot representation (calling `xgettext` and `xngettext`)
-    pot <- generate_pot(pkg = pkg$package, 
+    # generate internal gettexttemplate representation (calling `xgettext` and `xngettext`)
+    template <- generate_template(pkg = pkg$package, 
                         created = created, 
                         maintainer = if(!missing(maintainer)) format(maintainer) else pkg$maintainer, 
                         translator = if(!missing(translator)) format(translator) else NULL,
@@ -158,19 +149,19 @@ function(pkg = ".",
                         charset = charset,
                         domain = domain)
     
-    if(pot_exists(pkg = pkg) && pot_current(pkg = pkg, pot = pot)) {
-        message(".pot file has not changed")
+    if(template_exists(pkg = pkg) && template_current(pkg = pkg, template = template)) {
+        message(".pot template file has not changed")
     } else {
-        write_pot(pot, domain = attributes(pot)$domain)
+        write_template(template, domain = attributes(template)$domain)
     }
-    return(pot_file)
+    return(template_file)
 }
 
-pot_current <- function(pot, pkg = ".", domain = "R") {
-    pot_file <- read_pot(pkg = pkg, domain = domain)
-    if(missing(pot))
-        pot <- generate_pot(pkg = pkg, domain = domain)
-    structure(identical(pot, pot_file), comparison = all.equal(pot, pot_file), pot = pot, pot_file = pot_file)
+template_current <- function(template, pkg = ".", domain = "R") {
+    template_file <- read_template(pkg = pkg, domain = domain)
+    if(missing(template))
+        template <- generate_template(pkg = pkg, domain = domain)
+    structure(identical(template, template_file), comparison = all.equal(template, template_file), template = template, template_file = template_file)
 }
 
 read_translation <- function(file, language, pkg = ".", domain = "R") {
@@ -216,9 +207,9 @@ write_translation <- function(po, pkg = ".", domain = "R") {
     writeLines(out, con = po_file)
 }
 
-translation_current <- function(language, file, pot, pkg = ".", domain = "R") {
-    if(missing(pot)) {
-        pot <- read_pot(pkg = pkg, domain = domain)
+translation_current <- function(language, file, template, pkg = ".", domain = "R") {
+    if(missing(template)) {
+        template <- read_template(pkg = pkg, domain = domain)
     }
     if(domain == "R")
         domain_prefix <- "R-"
@@ -240,7 +231,7 @@ translation_current <- function(language, file, pot, pkg = ".", domain = "R") {
     gettextpo <- read_translation(file)
     tran <- gettextpo$msgid
     
-    structure(identical(pot$msgid, tran), pot = pot, translation = gettextpo)
+    structure(identical(template$msgid, tran), template = template, translation = gettextpo)
 }
 
 make_translation <- function(language, pkg = ".", domain = "R", write = TRUE) {
@@ -250,27 +241,27 @@ make_translation <- function(language, pkg = ".", domain = "R", write = TRUE) {
         stop("No /po directory found for package")
     }
     if(domain == "R") {
-        pot_file <- file.path(po_dir, paste0("R-",pkg$package, ".pot"))
+        template_file <- file.path(po_dir, paste0("R-",pkg$package, ".pot"))
         po_file <- file.path(po_dir, paste0("R-", language, ".po"))
     } else {
-        pot_file <- file.path(po_dir, paste0(pkg$package, ".pot"))
+        template_file <- file.path(po_dir, paste0(pkg$package, ".pot"))
         po_file <- file.path(po_dir, paste0(language, ".po"))
     }
     
     # check current translation
-    pot <- read_pot(pot_file)
+    template <- read_template(template_file)
     if(file.exists(po_file)) {
-        current <- translation_current(file = po_file, pot = pot)
+        current <- translation_current(file = po_file, template = template)
         if(current) {
             message("Translation already up-to-date")
             return(po_file, po = attributes(current)$gettextpo)
         }
     }
     
-    pot$Language <- paste(language, sep = ":")
+    template$Language <- paste(language, sep = ":")
     if(write) # optionally write to disk
-        write_translation(pot)
-    structure(po_file, po = pot)
+        write_translation(template)
+    structure(po_file, po = template)
 }
 
 edit_translation <- function(language, file, pkg = ".", domain = "R", write = TRUE) {
@@ -279,7 +270,7 @@ edit_translation <- function(language, file, pkg = ".", domain = "R", write = TR
     if(!file.exists(po_dir)) {
         make_po_dir(pkg = pkg)
     }
-    update_pot_file(pkg = pkg, domain = domain)
+    update_template(pkg = pkg, domain = domain)
     
     if(missing(file)) {
         file <- file.path(pkg$path, "po", paste0(domain_prefix, language, ".po"))
@@ -304,7 +295,7 @@ edit_translation <- function(language, file, pkg = ".", domain = "R", write = TR
     # write a command-line interface to update po translation here
     stop("This feature is not yet supported. Sorry!")
     
-    po_file <- if(write) write_translation(pot) else ""
+    po_file <- if(write) write_translation(template) else ""
     structure(po_file, po = po)
 }
 
@@ -319,7 +310,7 @@ check_translations <- function(pkg = ".") {
 
 install_translations <- function(pkg = ".", which, check = TRUE) {
     pkg <- as.package(pkg)
-    pot_file <- file.path("po", paste0("R-", pkg$package, ".pot"))
+    template_file <- file.path("po", paste0("R-", pkg$package, ".pot"))
     
     if(check & missing(which))
         check_translations(pkg = pkg)
@@ -331,7 +322,7 @@ install_translations <- function(pkg = ".", which, check = TRUE) {
     for (f in po_files) {
         lang <- sub("^R-(.*)[.]po$", "\\1", basename(f))
         message("  R-", lang, ":", appendLF = FALSE, domain = NA)
-        if (system(paste("msgmerge --update", f, shQuote(pot_file))) != 0L) {
+        if (system(paste("msgmerge --update", f, shQuote(template_file))) != 0L) {
             warning("running msgmerge on ", sQuote(f), " failed", domain = NA)
             next
         }
@@ -352,7 +343,7 @@ install_translations <- function(pkg = ".", which, check = TRUE) {
         lang <- "en@quot"
         message("  R-", lang, ":", domain = NA)
         f <- tempfile()
-        en_quote(potfile, f)
+        en_quote(templatefile, f)
         dest <- file.path(stem, lang, "LC_MESSAGES")
         dir.create(dest, FALSE, TRUE)
         dest <- file.path(dest, sprintf("R-%s.mo", pkg$package))
@@ -372,7 +363,7 @@ install_translations <- function(pkg = ".", which, check = TRUE) {
     for (f in po_files) {
         lang <- sub("[.]po", "", basename(f))
         #message("  ", lang, ":", appendLF = FALSE, domain = NA)
-        if (system(paste("msgmerge --update", shQuote(f), shQuote(pot_file))) != 0L) {
+        if (system(paste("msgmerge --update", shQuote(f), shQuote(template_file))) != 0L) {
             warning("running msgmerge on ", f, " failed", domain = NA)
             next
         }
@@ -393,7 +384,7 @@ install_translations <- function(pkg = ".", which, check = TRUE) {
         lang <- "en@quot"
         message("  ", lang, ":", domain = NA)
         f <- tempfile()
-        en_quote(pot_file, f)
+        en_quote(template, f)
         dest <- file.path(stem, lang, "LC_MESSAGES")
         dir.create(dest, FALSE, TRUE)
         dest <- file.path(dest, sprintf("%s.mo", dom))
@@ -404,7 +395,7 @@ install_translations <- function(pkg = ".", which, check = TRUE) {
 }
 
 # print methods
-print.gettextpot <- function(x, ...){
+print.gettexttemplate <- function(x, ...){
     invisible(x)
 }
 
