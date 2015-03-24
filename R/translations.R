@@ -298,8 +298,15 @@ edit_translation <- function(language, file, pkg = ".", domain = "R", write = TR
         po <- make_translation(language = language, pkg = pkg, domain = domain, write = FALSE)
     }
     
-    # write a command-line interface to update po translation here
-    stop("This feature is not yet supported. Sorry!")
+    # command-line interface to update po translation
+    m <- po$msgids
+    e <- function(x) {
+        message(paste0("Original message is: ", x))
+        readline("Translation: ")
+    }
+    for(i in m) {
+        m$msgstr <- e(m$msgid[i])
+    }
     
     po_file <- if(write) write_translation(po) else ""
     structure(po_file, translation = po)
