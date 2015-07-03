@@ -10,13 +10,13 @@ function(pkg = ".",
          ...
 ){
     pkg <- as.package(pkg)
+    fmt <- match.arg(tolower(fmt), c("rd", "roxygen"))
     if(missing(file)) {
-        if(tolower(fmt) == "rd")
+        if(fmt == "rd") {
             file <- file.path(pkg$path, "man", paste0(pkg$package, "-messages.Rd"))
-        else if(tolower(fmt) == "roxygen")
+        } else {
             file <- file.path(pkg$path, "R", paste0(pkg$package, "-messages.R"))
-        else
-            stop("'fmt' must be 'Rd' or 'roxygen'")
+        }
     }
     
     # extract messages
@@ -42,7 +42,6 @@ function(pkg = ".",
     con <- file(file)
     on.exit(close(con))
     
-    fmt <- match.arg(tolower(fmt), c("rd", "roxygen"))
     if(fmt == "rd"){
         writeLines(
         c(paste0("\\name{",name,"}"),

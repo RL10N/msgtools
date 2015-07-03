@@ -10,14 +10,19 @@ importFrom(utils, aspell, adist)
 importFrom(devtools, as.package)
 
 # export functions
-export(get_messages)
 export(use_translations)
-export(update_template)
+export(get_messages)
+export(make_template)
+export(read_template)
+export(write_template)
+export(template_current)
+
 export(make_translation)
 export(edit_translation)
 export(read_translation)
 export(write_translation)
 export(translation_current)
+
 export(check_translations)
 export(install_translations)
 

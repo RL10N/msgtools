@@ -1,159 +1,3 @@
-make_po_dir <- function(pkg = ".") {
-    pkg <- as.package(pkg)
-    po_dir <- file.path(pkg$path, "po")
-    dir.create(po_dir, FALSE)
-    return(po_dir)
-}
-
-use_translations <- 
-function(pkg = ".", 
-         created = format(Sys.time(), "%Y-%m-%d %H:%M"),
-         maintainer,
-         translator,
-         team,
-         charset = "UTF-8",
-         domain = "R") {
-    pkg <- as.package(pkg)
-
-    po_dir <- file.path(pkg$path, "po")
-    if(!file.exists(po_dir))
-        po_dir <- make_po_dir(pkg = pkg)
-    if(domain == "R")
-        domain <- paste0("R-", pkg$package)
-    else
-        domain <- pkg$package
-    template_file <- file.path(pkg$path, "po", paste0(domain, ".pot"))
-    
-    # generate internal msgtemplate representation (calling `xgettext` and `xngettext`)
-    template <- 
-    c("msgid \"\"", 
-      "msgstr \"\"", 
-      sprintf("\"Project-Id-Version: %s %s\\n\"", pkg$package, pkg$version), 
-      sprintf("\"Report-Msgid-Bugs-To: %s\\n\"", if(!missing(maintainer)) format(maintainer) else pkg$maintainer), 
-      paste0("\"POT-Creation-Date: ", created, "\\n\""), 
-      paste0("\"PO-Revision-Date: ", format(Sys.time(), "%Y-%m-%d %H:%M"), "\\n\""), 
-      paste0("\"Last-Translator: ", if(!missing(translator)) format(translator) else NULL, "\\n\""), 
-      paste0("\"Language-Team: ", if(!missing(team)) format(team) else NULL, "\\n\""), 
-      "\"Language: LL \\n\"",
-      "\"MIME-Version: 1.0\\n\"", 
-      paste0("\"Content-Type: text/plain; charset=", charset, "\\n\""), 
-      "\"Content-Transfer-Encoding: 8bit\\n\"")
-    
-    # run xgettext
-    tmp <- unique(unlist(get_messages(pkg = pkg, type = "xgettext")))
-    tmp <- tmp[nzchar(tmp)]
-    if (length(tmp) > 0L) {
-        tmp <- shQuote(encodeString(tmp), type = "cmd")
-        template <- c(template, paste0("\nmsgid ",tmp,"\nmsgstr \"\""))
-    }
-    
-    # run xngettext
-    tmp <- get_messages(pkg = pkg, type = "xngettext")
-    un <- unique(unlist(tmp, recursive = TRUE))
-    for (ee in tmp) {
-        for (e in ee) {
-            if (e[1L] %in% un) {
-               template <- c(template, paste0(paste0("\nmsgid        ", shQuote(encodeString(e[1L]), type = "cmd")),
-                                    paste0("\nmsgid_plural ", shQuote(encodeString(e[2L]), type = "cmd")), 
-                                    "\nmsgstr[0]    \"", "\nmsgstr[1]    \""))
-                un <- un[-match(e, un)]
-            }
-        }
-    }
-    
-    # parse template to internal representation
-    template <- structure(parse_template(template), domain = domain)
-    
-    # check if an existing template matches internal template representation
-    if(template_exists(pkg = pkg)) {
-        if(template_current(pkg = pkg, template = template)) {
-            message(".pot template file has not changed")
-        } else {
-            write_template(template, domain = attributes(template)$domain)
-        }
-    } else {
-        write_template(template, domain = attributes(template)$domain)
-    }
-    return(invisible(template))
-}
-
-template_exists <- function(pkg = ".", domain = "R") {
-    pkg <- as.package(pkg)
-    if(domain == "R")
-        domain <- paste0("R-", pkg$package)
-    else
-        domain <- pkg$package
-    template_file <- file.path(pkg$path, "po", paste0(domain, ".pot"))
-    file.exists(template_file)
-}
-
-parse_template <- function(template) {
-    h <- gsub("[\"]$", "", gsub("^[\"]", "", template[!grepl("msgid", template)]))
-    h <- read.dcf(textConnection(h[!grepl("msgstr", h)]))
-    out <- setNames(as.list(h), colnames(h))
-    
-    msgids <- template[grep("msgid", template)]
-    msgids <- gsub("^\n", "", msgids)
-    msgids <- sapply(strsplit(msgids, "\nmsgstr"), `[`, 1)
-    msgids <- gsub("^msgid ", "", msgids)
-    msgids <- gsub("^[\"]", "", msgids)
-    msgids <- gsub("[\"]$", "", msgids)
-    
-    # need to generalize this so that each message is itself a list with
-    # a "msgid" element and maybe "msgid_plural" and multiple "msgstr"'s
-    
-    out$msgids <- sort(msgids[msgids != ""])
-    structure(out, class = "msgtemplate")
-}
-
-write_template <- function(template, pkg = ".", domain = "R") {
-    pkg <- as.package(pkg)
-    if(domain == "R")
-        domain <- paste0("R-", pkg$package)
-    else
-        domain <- pkg$package
-    po_dir <- file.path(pkg$path, "po")
-    if(!file.exists(po_dir))
-        make_po_dir(pkg = pkg)
-    template_file <- file.path(po_dir, paste0(domain, ".pot"))
-    out <- c("msgid \"\"\nmsgstr \"\"")
-    msgids <- template$msgids
-    template$msgids <- NULL
-    out <- c(out, paste0("\n\"", names(template),": ", unname(unlist(template)), "\""))
-    
-    # need to generalize this so that each message is itself a list with
-    # a "msgid" element and maybe "msgid_plural" and multiple "msgstr"'s
-    
-    out <- c(out, paste0("\n\nmsgid \"", unlist(msgids), "\"\nmsgstr \"\""))
-    writeLines(out, con = template_file)
-}
-
-read_template <- function(file, pkg = ".", domain = "R"){
-    if(missing(file)) {
-        pkg <- as.package(pkg)
-        if(domain == "R")
-            domain <- paste0("R-", pkg$package)
-        else
-            domain <- pkg$package
-        file <- file.path(pkg$path, "po", paste0(domain, ".pot"))
-    }
-    if(!file.exists(file))
-        stop(".pot template file not found")
-    con <- file(file, "r")
-    on.exit(close(con))
-    template <- readLines(con)
-    parse_template(template)
-}
-
-
-template_current <- function(template, pkg = ".", domain = "R") {
-    template_file <- read_template(pkg = pkg, domain = domain)
-    if(missing(template))
-        template <- use_translations(pkg = pkg, domain = domain)
-    structure(identical(template, template_file), comparison = all.equal(template, template_file), template = template, template_file = template_file)
-}
-
-
 parse_translation <- function(translation) {
     h <- gsub("[\"]$", "", gsub("^[\"]", "", translation[!grepl("msgid", translation)]))
     h <- read.dcf(textConnection(h[!grepl("msgstr", h)]))
@@ -169,19 +13,14 @@ parse_translation <- function(translation) {
     # need to generalize this so that each message is itself a list with
     # a "msgid" element and maybe "msgid_plural" and multiple "msgstr"'s
     
-    out$msgids <- sort(as.list(msgids[msgids != ""]))
+    out$msgids <- sort(msgids[msgids != ""])
     structure(out, class = "msgtranslation")
 }
 
-
 read_translation <- function(file, language, pkg = ".", domain = "R") {
-    if(domain == "R")
-        domain_prefix <- "R-"
-    else
-        domain_prefix <- ""
     if(missing(file)) {
         pkg <- as.package(pkg)
-        file <- file.path(pkg$path, "po", paste0(domain_prefix, language, ".po"))
+        file <- file.path(pkg$path, "po", paste0(if(domain == "R") "R-" else NULL, language, ".po"))
     } else if(missing(language)) {
         language <- gsub(".po", "", basename(file))
         if(domain == "R")
@@ -190,7 +29,7 @@ read_translation <- function(file, language, pkg = ".", domain = "R") {
         stop("Either 'file' or 'language' is required")
     }
     if(!file.exists(file))
-        stop(paste0(domain_prefix, language, ".po file not found"))
+        stop(paste0(if(domain == "R") "R-" else NULL, language, ".po file not found"))
     con <- file(file, "r")
     on.exit(close(con))
     parse_translation(readLines(con))
@@ -198,13 +37,10 @@ read_translation <- function(file, language, pkg = ".", domain = "R") {
 
 write_translation <- function(translation, pkg = ".", domain = "R") {
     pkg <- as.package(pkg)
-    lang <- strsplit(tolower(translation$Language),":",fixed = TRUE)[[1]][1]
-    if(domain == "R")
-        domain <- paste0("R-", lang)
-    else
-        domain <- lang
+    language <- strsplit(tolower(translation$Language),":",fixed = TRUE)[[1]][1]
+    language <- gsub("\\n", "", language, fixed = TRUE)
     po_dir <- file.path(pkg$path, "po")
-    po_file <- file.path(po_dir, paste0(domain, ".po"))
+    po_file <- file.path(po_dir, paste0(if(domain == "R") "R-" else NULL, language, ".po"))
     out <- c("msgid \"\"\nmsgstr \"\"")
     msgids <- translation$msgids
     translation$msgids <- NULL
@@ -213,21 +49,19 @@ write_translation <- function(translation, pkg = ".", domain = "R") {
     # need to generalize this so that each message is itself a list with
     # a "msgid" element and maybe "msgid_plural" and multiple "msgstr"'s
     
-    out <- c(out, paste0("\n\nmsgid \"", unlist(msgids), "\"\nmsgstr \"\""))
-    writeLines(out, con = po_file)
+    out <- c(out, paste0("\n\nmsgid \"", unlist(msgids), "\"\nmsgstr \"\""), "\n")
+    con <- file(po_file, "w")
+    on.exit(close(con))
+    writeLines(out, con = con, sep = "")
 }
 
 translation_current <- function(language, file, template, pkg = ".", domain = "R") {
     if(missing(template)) {
         template <- read_template(pkg = pkg, domain = domain)
     }
-    if(domain == "R")
-        domain_prefix <- "R-"
-    else
-        domain_prefix <- ""
     if(missing(file)) {
         pkg <- as.package(pkg)
-        file <- file.path(pkg$path, "po", paste0(domain_prefix, language, ".po"))
+        file <- file.path(pkg$path, "po", paste0(if(domain == "R") "R-" else NULL, language, ".po"))
     } else if(missing(language)) {
         language <- gsub(".po", "", basename(file))
         if(domain == "R")
@@ -235,21 +69,30 @@ translation_current <- function(language, file, template, pkg = ".", domain = "R
     } else {
         stop("Either 'file' or 'language' is required")
     }
-    if(!file.exists(file))
-        stop(paste0(domain_prefix, language, ".po file not found"))
+    if(!file.exists(file)) {
+        stop(paste0(if(domain == "R") "R-" else NULL, language, ".po file not found"))
+    }
+    translation <- read_translation(file)
     
-    gettextpo <- read_translation(file)
-    tran <- gettextpo$msgid
-    
-    structure(identical(template$msgid, tran), template = template, translation = gettextpo)
+    # do not compare creation or revision dates
+    translation2 <- translation
+    translation2$"PO-Revision-Date" <- template$"PO-Revision-Date"
+    translation2$"POT-Creation-Date" <- template$"POT-Creation-Date"
+    structure(identical(translation2, template), 
+              comparison = all.equal(translation2, template), 
+              template = template, 
+              translation = translation)
 }
 
-make_translation <- function(language, pkg = ".", domain = "R", write = TRUE) {
+make_translation <- 
+function(language, 
+         pkg = ".", 
+         translator,
+         team,
+         domain = "R", 
+         write = TRUE) {
     pkg <- as.package(pkg)
     po_dir <- file.path(pkg$path, "po")
-    if(!file.exists(po_dir)) {
-        stop("No /po directory found for package")
-    }
     if(domain == "R") {
         template_file <- file.path(po_dir, paste0("R-",pkg$package, ".pot"))
         po_file <- file.path(po_dir, paste0("R-", language, ".po"))
@@ -257,14 +100,23 @@ make_translation <- function(language, pkg = ".", domain = "R", write = TRUE) {
         template_file <- file.path(po_dir, paste0(pkg$package, ".pot"))
         po_file <- file.path(po_dir, paste0(language, ".po"))
     }
+    if(file.exists(template_file)) {
+        template <- read_template(template_file, pkg = pkg, domain = domain)
+    } else {
+        template <- use_translations(pkg = pkg, domain = "R")
+    }
     
     # check current translation
-    template <- read_template(template_file)
+    if(!missing(translator))
+        template$"Last-Translator" <- paste0(translator, "\\n")
+    if(!missing(team))
+        template$"Language-Team" <- paste0(team, "\\n")
+    
     if(file.exists(po_file)) {
         current <- translation_current(file = po_file, template = template)
         if(current) {
             message(sprintf("%s translation already up-to-date", language))
-            return(po_file, po = attributes(current)$gettextpo)
+            return(po_file, translation = attributes(current)$translation)
         } else {
             # update existing translation, leaving unchanged messages unchanged
             # translation <- read_translation()
@@ -275,7 +127,7 @@ make_translation <- function(language, pkg = ".", domain = "R", write = TRUE) {
         }
     }
     
-    template$Language <- paste(language, sep = ":")
+    template$Language <- paste0(paste(language, sep = ":"), "\\n")
     if(write)
         write_translation(template)
     structure(po_file, translation = template)
@@ -289,12 +141,8 @@ edit_translation <- function(language, file, pkg = ".", domain = "R", write = TR
     }
     update_template(pkg = pkg, domain = domain)
     
-    if(domain == "R")
-        domain_prefix <- "R-"
-    else
-        domain_prefix <- ""
     if(missing(file)) {
-        file <- file.path(pkg$path, "po", paste0(domain_prefix, language, ".po"))
+        file <- file.path(pkg$path, "po", paste0(if(domain == "R") "R-" else NULL, language, ".po"))
     } else if(missing(language)) {
         language <- gsub(".po", "", basename(file))
         if(domain == "R")
@@ -420,11 +268,6 @@ install_translations <- function(pkg = ".", which, check = TRUE) {
         if (system(cmd) != 0L) 
             warning(sprintf("running msgfmt on %s failed", basename(f)), domain = NA)
     }
-}
-
-# print methods
-print.msgtemplate <- function(x, ...){
-    invisible(x)
 }
 
 print.msgtranslation <- function(x, ...){
