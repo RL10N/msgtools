@@ -25,7 +25,7 @@ Now we'll add a function to it that contains different types of diagnostic messa
 Then we can create a translation template and setup a Spanish translation:
 
 ```R
-generate_template()
+use_translations()
 make_translation("es")
 ```
 

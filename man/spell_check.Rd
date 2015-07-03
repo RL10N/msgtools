@@ -1,9 +1,9 @@
-\name{spell_check}
-\alias{spell_check}
+\name{spell_check_msgs}
+\alias{spell_check_msgs}
 \title{Spell check diagnostic messages}
 \description{Extracts diagnostic messages from a package and checks them for spelling errors.}
 \usage{
-spell_check(pkg = ".", control = list(), program = NULL)
+spell_check_msgs(pkg = ".", control = list(), program = NULL)
 }
 \arguments{
     \item{pkg}{The directory of an R package to extract diagnostic messages from. Path is passed to \code{\link[devtools]{as.package}}.}

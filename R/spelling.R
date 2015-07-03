@@ -1,4 +1,4 @@
-spell_check <- function(pkg = ".", control = list(), program = NULL) {
+spell_check_msgs <- function(pkg = ".", control = list(), program = NULL) {
     pkg <- as.package(pkg)
     msgs <- get_messages(pkg = pkg)
     d <- tempdir()

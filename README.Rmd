@@ -1,6 +1,6 @@
 # msgtools #
 
-**msgtools** implements a number utilities for developing and maintaining error, warning, and other messages in R packages, including checking for consistency across messages, spell-checking messages, and building message translations into various languages.
+**msgtools** implements a number utilities for developing and maintaining error, warning, and other messages in R packages, including checking for consistency across messages, spell-checking messages, and building message translations into various languages for purposes of localization.
 
 ## Requirements and Installation ##
 
@@ -38,7 +38,7 @@ The package creates a simplified workflow for creating, maintaining, and updatin
 library("msgtools")
 
 # update gettext (.pot) template file
-update_pot_file()
+use_translations()
 
 # create Spanish translation
 make_translation("es")
@@ -88,7 +88,7 @@ document_msgs()
 Packages have spelling errors. The `spell_check` function checks messages for spelling errors and returns a data.frame of suggestion corrections for those errors.
 
 ```{r}
-spell_check()
+spell_check_msgs()
 ```
 
 ### Identifying duplicate and similar messages ###

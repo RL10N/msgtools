@@ -1,10 +1,10 @@
 Package: msgtools
 Type: Package
 Title: Tools for Developing Diagnostic Messages
-Description: This package implements a number utilities for developing and maintaining error, warning, and other messages in R packages, including checking for consistency across messages, spell-checking messages, and building message translations into various languages.
+Description: A number utilities for developing and maintaining error, warning, and other messages in R packages, including checking for consistency across messages, spell-checking messages, and building message translations into various languages for purposes of localization.
 License: MIT + file LICENSE
 Version: 0.1.0
-Date: 2015-03-24
+Date: 2015-07-02
 Authors@R: c(person("Thomas J.", "Leeper",
                     role = c("aut", "cre"),
                     email = "thosjleeper@gmail.com"))

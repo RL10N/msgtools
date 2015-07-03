@@ -42,7 +42,8 @@ function(pkg = ".",
     con <- file(file)
     on.exit(close(con))
     
-    if(tolower(fmt) == "rd"){
+    fmt <- match.arg(tolower(fmt), c("rd", "roxygen"))
+    if(fmt == "rd"){
         writeLines(
         c(paste0("\\name{",name,"}"),
           paste0("\\alias{",name,"}"),
@@ -58,7 +59,7 @@ function(pkg = ".",
           "}",
           paste0("\\keyword{",keywords,"}",collapse="\n")))
         
-    } else if (tolower(fmt) == "roxygen"){
+    } else {
         writeLines(
         c("#' ", title,
           "#'",
@@ -76,8 +77,6 @@ function(pkg = ".",
           "#' @keywords ",paste(keywords, collapse = " "),
           "NULL"), con = con)
 
-    } else {
-        stop("'fmt' must be 'Rd' or 'roxygen'")
     }
     
     # write to file

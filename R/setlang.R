@@ -1,6 +1,9 @@
-# toggles to check
+getlang <- function() {
+    Sys.getenv("LANG")
+}
+
 setlang <- function(language) {
-    options("msgtools_LANG" = Sys.getenv("LANG"))
+    options("msgtools_LANG" = getlang())
     Sys.setenv(LANG = language)
 }
 
