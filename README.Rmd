@@ -32,7 +32,9 @@ Note that **msgtools** also has two system requirements (i.e., software that mus
 
 ### Building and updating message translation files ###
 
-The package creates a simplified workflow for creating, maintaining, and updating translations of messages in both R and C code that improve upon those available in the **tools** package. Specifically, the package offers R representations of .pot (gettext; "portable object template") and .po (translation; "portable object") files, enabling comparison of existing translations and eased reading and writing of translation files. By creating R representations, it is also possible to programmatically modify translations, thus eliminating the need to manually open each translation file in a text editor.
+The package creates a simplified workflow for creating, maintaining, and updating translations of messages in both R and C code that improve upon those available in the **tools** package. For some context on message localization in R, see ["R Administration"](http://cran.r-project.org/doc/manuals/r-devel/R-admin.html#Localization-of-messages) and ["Translating R Messages, R >=3.0.0"](http://developer.r-project.org/Translations30.html)). A list of "translation teams" is available from http://developer.r-project.org/TranslationTeams.html.
+
+Specifically, the package offers R representations of .pot (gettext; "portable object template") and .po (translation; "portable object") files, enabling comparison of existing translations and eased reading and writing of translation files. By creating R representations, it is also possible to programmatically modify translations, thus eliminating the need to manually open each translation file in a text editor.
 
 ```{r}
 library("msgtools")
