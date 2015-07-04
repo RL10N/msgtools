@@ -18,7 +18,7 @@ print.msgtemplate <- function(x, ...){
 print.msgtranslation <- function(x, ...){
     m <- x$msgids
     x$msgids <- NULL
-    cat(sprintf("%s-level %s message translation (.po) for %s\n", 
+    cat(sprintf("%s-level %s-language message translation (.po) for %s\n", 
                 attributes(x)$domain, 
                 toupper(gsub("\\\\n", "", x$"Language")),
                 gsub("\\\\n", "", x$"Project-Id-Version")), 
@@ -27,8 +27,8 @@ print.msgtranslation <- function(x, ...){
     print(data.frame(Metadata = names(x), 
                      Value = gsub("\\\\n", "", unname(unlist(x)))), 
           right = FALSE, row.names = FALSE)
-    cat(ngettext(length(m), sprintf("\nThere is 1 msgid in the template."),
-                 sprintf("\nThere are %i msgid's in the template.", length(m))),
+    cat(ngettext(length(m), sprintf("\nThere is 1 msgid in the translation."),
+                 sprintf("\nThere are %i msgid's in the translation.", length(m))),
         "\n\n")
     invisible(x)
 }

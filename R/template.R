@@ -45,7 +45,7 @@ function(pkg = ".",
         for (e in ee) {
             if (e[1L] %in% un) {
                template <- c(template, paste0(paste0("\nmsgid  ", shQuote(encodeString(e[1L])), "\""),
-                                              paste0("\nmsgid_plural \"", shQuote(encodeString(e[1L])), "\""), 
+                                              paste0("\nmsgid_plural \"", shQuote(encodeString(e[2L])), "\""), 
                                               "\nmsgstr[0]    \"", "\nmsgstr[1]    \""))
                 un <- un[-match(e, un)]
             }
@@ -72,14 +72,15 @@ function(pkg = ".",
         current <- template_current(pkg = pkg, template = template)
         if(current) {
             message("The .pot template file has not changed")
+            return(attributes(current)$template)
         } else {
             template$"POT-Creation-Date" <- attributes(current)$"template_file"$"POT-Creation-Date"
-            write_template(template, domain = attributes(template)$domain)
+            write_template(template)
         }
     } else {
-        write_template(template, domain = attributes(template)$domain)
+        write_template(template)
     }
-    return(invisible(template))
+    structure(template, file = template_file)
 }
 
 template_exists <- function(pkg = ".", domain = "R") {
@@ -88,64 +89,71 @@ template_exists <- function(pkg = ".", domain = "R") {
     file.exists(template_file)
 }
 
-gettext_msg <- function(msg) {
-    structure(list(msgid = msg, msgstr = ""), class = "gettext_msg")
+gettext_msg <- function(msg, tr = "") {
+    structure(list(msgid = msg, 
+                   msgstr = tr), 
+              class = "gettext_msg")
 }
 
-print.gettext_msg <- function(x, ...) {
-    cat("msgid: ", x$msgid, "\n")
-    cat("msgstr: ", x$msgstr, "\n\n")
-    invisible(x)
-}
-
-ngettext_msg <- function(msg, plural) {
-    structure(list(msgid = msg, msgid_plural = plural, msgstr0 = "", msgstr1 = ""), class = "ngettext_msg")
-}
-
-print.ngettext_msg <- function(x, ...) {
-    cat("msgid: ", x$msgid, "\n")
-    cat("msgid_plural: ", x$msgid_plural, "\n")
-    cat("msgstr[0]: ", x$msgstr0, "\n")
-    cat("msgstr[1]: ", x$msgstr1, "\n\n")
-    invisible(x)
+ngettext_msg <- function(msg, plural, ...) {
+    a <- list(...)
+    if(!length(a)) {
+        # need to generalize this to arbitrary numbers of translation strings
+        m0 <- ""
+        m1 <- ""
+    }
+    structure(list(msgid = msg, 
+                   msgid_plural = plural, 
+                   msgstr0 = m0, 
+                   msgstr1 = m1), 
+              class = "ngettext_msg")
 }
 
 parse_template <- function(template) {
     h <- gsub("[\"]$", "", gsub("^[\"]", "", template[!grepl("msgid", template)]))
     h <- read.dcf(textConnection(h[!grepl("msgstr", h)]))
     out <- setNames(as.list(h), colnames(h))
+    out$msgids <- list()
     
     gx <- grep("msgid", template)
     gn <- grep("msgid_plural", template)
     
     # parse `xgettext` messages
-    gx <- gx[!gx %in% gn]
-    msgids1 <- template[gx]
-    msgids1 <- gsub("^\n", "", msgids1)
-    msgids1 <- sapply(strsplit(msgids1, "\nmsgstr"), `[`, 1)
-    msgids1 <- gsub("^msgid ", "", msgids1)
-    msgids1 <- gsub("^[\"]", "", msgids1)
-    msgids1 <- gsub("[\"]$", "", msgids1)
-    msgids1 <- msgids1[msgids1 != ""]
-    msgids1out <- lapply(msgids1, gettext_msg)[sort.list(msgids1)]
-    out$msgids <- msgids1out
+    if(length(gx)) {
+        gx <- gx[!gx %in% (gn-1)]
+        msgids1 <- template[gx]
+        msgids1 <- gsub("^\n", "", msgids1)
+        msgids1 <- sapply(strsplit(msgids1, "\nmsgstr"), `[`, 1)
+        msgids1 <- gsub("^msgid ", "", msgids1)
+        msgids1 <- gsub("^[\"]", "", msgids1)
+        msgids1 <- gsub("[\"]$", "", msgids1)
+        msgids1 <- msgids1[msgids1 != ""]
+        
+        # for translations: handle translation strings
+        
+        msgids1out <- lapply(msgids1, gettext_msg)[sort.list(msgids1)]
+        out$msgids <- msgids1out
+    }
     
     # parse `nxgettext` messages
-    msgids2 <- template[gn]
-    msgids2 <- gsub("^\n", "", msgids2)
-    msgids2 <- sapply(strsplit(msgids2, "\nmsgstr"), `[`, 1)
-    s <- strsplit(msgids2, "\nmsgid_plural ")
-    msgids2single <- sapply(s, `[`, 1)
-    msgids2single <- gsub("^msgid  ", "", msgids2single)
-    msgids2single <- gsub("^[\"]{1,2}", "", msgids2single)
-    msgids2single <- gsub("[\"]+$", "", msgids2single)
-    
-    msgids2plural <- sapply(s, `[`, 2)
-    msgids2plural <- gsub("^[\"]+", "", msgids2plural)
-    msgids2plural <- gsub("[\"]+$", "", msgids2plural)
-    
-    msgids2out <- unname(mapply(ngettext_msg, msgids2single, msgids2plural, SIMPLIFY = FALSE)[sort.list(msgids2single)])
-    out$msgids <- c(out$msgids, msgids2out)
+    if(length(gn)) {
+        msgids2single <- template[gn-1]
+        msgids2single <- gsub("^\n", "", msgids2single)
+        msgids2single <- gsub("^msgid ", "", msgids2single)
+        msgids2single <- gsub("^[\"]{1,2}", "", msgids2single)
+        msgids2single <- gsub("[\"]+$", "", msgids2single)
+        
+        msgids2plural <- template[gn]
+        msgids2plural <- gsub("^\n", "", msgids2plural)
+        msgids2plural <- gsub("^msgid_plural ", "", msgids2plural)
+        msgids2plural <- gsub("^[\"]+", "", msgids2plural)
+        msgids2plural <- gsub("[\"]+$", "", msgids2plural)
+        
+        # for translations: handle arbitrary number of translation strings
+        
+        msgids2out <- unname(mapply(ngettext_msg, msgids2single, msgids2plural, SIMPLIFY = FALSE)[sort.list(msgids2single)])
+        out$msgids <- c(out$msgids, msgids2out)
+    }
     
     structure(out, class = "msgtemplate")
 }
@@ -163,10 +171,10 @@ write_template <- function(template, pkg = ".", domain = "R") {
     
     for(i in seq_along(msgids)) {
         if(inherits(msgids[[i]], "gettext_msg")) {
-            out <- c(out, paste0("\n\nmsgid \"", unlist(msgids[[i]]$msgid), "\"\nmsgstr \"\""))
+            out <- c(out, paste0("\n\nmsgid \"", msgids[[i]]$msgid, "\"\nmsgstr \"\""))
         } else {
-            out <- c(out, paste0("\n\nmsgid \"", unlist(msgids[[i]]$msgid), 
-                                 "\"\nmsgid_plural \"", unlist(msgids[[i]]$msgid_plural), 
+            out <- c(out, paste0("\n\nmsgid \"", msgids[[i]]$msgid, 
+                                 "\"\nmsgid_plural \"", msgids[[i]]$msgid_plural, 
                                  "\"\nmsgstr[0] \"\"\nmsgstr[1] \"\""))
         }
     }
@@ -183,7 +191,7 @@ read_template <- function(file, pkg = ".", domain = "R"){
     con <- file(file, "r")
     on.exit(close(con))
     template <- readLines(con)
-    structure(parse_template(template), domain = domain)
+    structure(parse_template(template), file = file, domain = domain)
 }
 
 template_current <- function(template, pkg = ".", domain = "R") {
@@ -194,11 +202,7 @@ template_current <- function(template, pkg = ".", domain = "R") {
     template2$"PO-Revision-Date" <- template_file$"PO-Revision-Date"
     template2$"POT-Creation-Date" <- template_file$"POT-Creation-Date"
     structure(identical(template2, template_file), 
-              comparison = all.equal(template2, template_file), 
               template = template, 
-              template_file = template_file)
-}
-
-print.msgtemplate <- function(x, ...){
-    invisible(x)
+              template_file = template_file,
+              comparison = all.equal(template2, template_file))
 }

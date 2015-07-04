@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: msgtools 0.1.0\n"
 "Report-Msgid-Bugs-To: Thomas J. Leeper <thosjleeper@gmail.com>\n"
 "POT-Creation-Date: 2015-07-03 11:12\n"
-"PO-Revision-Date: 2015-07-04 18:15\n"
+"PO-Revision-Date: 2015-07-04 22:28\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: LL\n"
@@ -12,9 +12,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "%s translation already up-to-date"
-msgstr ""
-
-msgid ".po file not found"
 msgstr ""
 
 msgid "Either 'file' or 'language' is required"
@@ -29,27 +26,19 @@ msgstr ""
 msgid "Original message is:"
 msgstr ""
 
-msgid "R"
-msgstr ""
-
-msgid "R-"
-msgstr ""
-
 msgid "The .pot template file has not changed"
 msgstr ""
 
 msgid "The .pot template file not found"
 msgstr ""
 
+msgid "This is a single test message"
+msgstr ""
+
 msgid "Translation:"
 msgstr ""
 
-msgid "This is a second test"
-msgid_plural "This is a second test"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "This is a test"
-msgid_plural "This is a test"
+msgid "This is a test message"
+msgid_plural "These are two test messages"
 msgstr[0] ""
 msgstr[1] ""

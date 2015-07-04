@@ -7,3 +7,6 @@ get_messages <- function(pkg = ".", type = "gettext") {
         xngettext(pkg$path)
     }
 }
+
+gettext("This is a single test message")
+ngettext(2, "This is a test message", "These are two test messages")

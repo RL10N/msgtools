@@ -1,26 +1,21 @@
-ngettext(2, "This is a test", "These are tests")
-ngettext(2, "This is a second test", "These are a second set of tests")
-
 parse_translation <- function(translation) {
     structure(parse_template(translation), class = "msgtranslation")
 }
 
 read_translation <- function(language, file, pkg = ".", domain = "R") {
-    if(missing(file)) {
+    if(!missing(language)) {
         pkg <- as.package(pkg)
         file <- file.path(pkg$path, "po", paste0(if(domain == "R") "R-" else NULL, language, ".po"))
-    } else if(missing(language)) {
+    } else if(!missing(file)) {
         language <- gsub(".po", "", basename(file))
         if(domain == "R")
             language <- gsub("R-", "", language)
     } else {
         stop("Either 'file' or 'language' is required")
     }
-    if(!file.exists(file))
-        stop(paste0(if(domain == "R") "R-" else NULL, language, ".po file not found"))
     con <- file(file, "r")
     on.exit(close(con))
-    parse_translation(readLines(con))
+    structure(parse_translation(readLines(con)), file = file)
 }
 
 write_translation <- function(translation, pkg = ".", domain = "R") {
@@ -46,36 +41,29 @@ write_translation <- function(translation, pkg = ".", domain = "R") {
     }
     con <- file(po_file, "w")
     on.exit(close(con))
-    writeLines(out, con = con, sep = "")
+    writeLines(c(out, "\n"), con = con, sep = "")
 }
 
 translation_current <- function(language, file, template, pkg = ".", domain = "R") {
     if(missing(template)) {
         template <- read_template(pkg = pkg, domain = domain)
     }
-    if(missing(file)) {
-        pkg <- as.package(pkg)
-        file <- file.path(pkg$path, "po", paste0(if(domain == "R") "R-" else NULL, language, ".po"))
-    } else if(missing(language)) {
-        language <- gsub(".po", "", basename(file))
-        if(domain == "R")
-            language <- gsub("R-", "", language)
+    if(missing(language)) {
+        translation <- read_translation(file = file)
+    } else if(missing(file)) {
+        translation <- read_translation(language = language)
     } else {
         stop("Either 'file' or 'language' is required")
     }
-    if(!file.exists(file)) {
-        stop(paste0(if(domain == "R") "R-" else NULL, language, ".po file not found"))
-    }
-    translation <- read_translation(file)
     
     # do not compare creation or revision dates
     translation2 <- translation
     translation2$"PO-Revision-Date" <- template$"PO-Revision-Date"
     translation2$"POT-Creation-Date" <- template$"POT-Creation-Date"
     structure(identical(translation2, template), 
-              comparison = all.equal(translation2, template), 
               template = template, 
-              translation = translation)
+              translation = translation,
+              comparison = all.equal(translation2, template))
 }
 
 make_translation <- 
@@ -106,25 +94,36 @@ function(language,
     if(!missing(team))
         template$"Language-Team" <- paste0(team, "\\n")
     
+    template$Language <- paste0(paste(language, sep = ":"), "\\n")
     if(file.exists(po_file)) {
         current <- translation_current(file = po_file, template = template)
+        translation <- attributes(current)$translation
         if(current) {
             message(sprintf("%s translation already up-to-date", language))
-            return(po_file, translation = attributes(current)$translation)
+            return(attributes(current)$translation, file = po_file, domain = domain)
         } else {
             # update existing translation, leaving unchanged messages unchanged
-            # translation <- read_translation()
+            m_old <- translation$msgids
+            m_new <- template$msgids
+            m_old_m1 <- sapply(m_old, `[`, "msgid")
+            m_old_m2 <- sapply(m_old, `[`, "msgid_plural")
+            m_new_m1 <- sapply(m_new, `[`, "msgid")
+            m_new_m2 <- sapply(m_new, `[`, "msgid_plural")
+            
             # add new messages
-            if(write)
-                write_translation(translation)
-            return(structure(po_file, translation = template))
+            if(!setequal(m_old_m1, m_new_m1)) {
+                
+            }
+            if(!setequal(m_old_m2, m_new_m2)) {
+            
+            }
+            
+            if(write) write_translation(translation)
+            return(structure(`class<-`(template, "msgtranslation"), file = po_file, domain = domain))
         }
     }
-    
-    template$Language <- paste0(paste(language, sep = ":"), "\\n")
-    if(write)
-        write_translation(template)
-    structure(po_file, translation = template)
+    if(write) write_translation(template)
+    structure(`class<-`(template, "msgtranslation"), file = po_file, domain = domain)
 }
 
 edit_translation <- function(language, file, pkg = ".", domain = "R", write = TRUE) {
@@ -264,6 +263,3 @@ install_translations <- function(pkg = ".", which, check = TRUE) {
     }
 }
 
-print.msgtranslation <- function(x, ...){
-    invisible(x)
-}
