@@ -1,0 +1,48 @@
+print.msgtemplate <- function(x, ...){
+    m <- x$msgids
+    x$msgids <- NULL
+    cat(sprintf("%s-level message template (.pot) for %s\n", 
+                attributes(x)$domain, 
+                gsub("\\\\n", "", x$"Project-Id-Version")), 
+        "\n")
+    x$"Project-Id-Version" <- NULL
+    print(data.frame(Metadata = names(x), 
+                     Value = gsub("\\\\n", "", unname(unlist(x)))), 
+          right = FALSE, row.names = FALSE)
+    cat(ngettext(length(m), sprintf("\nThere is 1 msgid in the template."),
+                 sprintf("\nThere are %i msgid's in the template.", length(m))),
+        "\n\n")
+    invisible(x)
+}
+
+print.msgtranslation <- function(x, ...){
+    m <- x$msgids
+    x$msgids <- NULL
+    cat(sprintf("%s-level %s message translation (.po) for %s\n", 
+                attributes(x)$domain, 
+                toupper(gsub("\\\\n", "", x$"Language")),
+                gsub("\\\\n", "", x$"Project-Id-Version")), 
+        "\n")
+    x$"Project-Id-Version" <- NULL
+    print(data.frame(Metadata = names(x), 
+                     Value = gsub("\\\\n", "", unname(unlist(x)))), 
+          right = FALSE, row.names = FALSE)
+    cat(ngettext(length(m), sprintf("\nThere is 1 msgid in the template."),
+                 sprintf("\nThere are %i msgid's in the template.", length(m))),
+        "\n\n")
+    invisible(x)
+}
+
+print.gettext_msg <- function(x, ...) {
+    cat("msgid: ", x$msgid, "\n")
+    cat("msgstr: ", x$msgstr, "\n\n")
+    invisible(x)
+}
+
+print.ngettext_msg <- function(x, ...) {
+    cat("msgid: ", x$msgid, "\n")
+    cat("msgid_plural: ", x$msgid_plural, "\n")
+    cat("msgstr[0]: ", x$msgstr0, "\n")
+    cat("msgstr[1]: ", x$msgstr1, "\n\n")
+    invisible(x)
+}
