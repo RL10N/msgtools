@@ -1,23 +1,11 @@
+ngettext(2, "This is a test", "These are tests")
+ngettext(2, "This is a second test", "These are a second set of tests")
+
 parse_translation <- function(translation) {
-    h <- gsub("[\"]$", "", gsub("^[\"]", "", translation[!grepl("msgid", translation)]))
-    h <- read.dcf(textConnection(h[!grepl("msgstr", h)]))
-    out <- setNames(as.list(h), colnames(h))
-    
-    msgids <- translation[grep("msgid", translation)]
-    msgids <- gsub("^\n", "", msgids)
-    msgids <- sapply(strsplit(msgids, "\nmsgstr"), `[`, 1)
-    msgids <- gsub("^msgid ", "", msgids)
-    msgids <- gsub("^[\"]", "", msgids)
-    msgids <- gsub("[\"]$", "", msgids)
-    
-    # need to generalize this so that each message is itself a list with
-    # a "msgid" element and maybe "msgid_plural" and multiple "msgstr"'s
-    
-    out$msgids <- sort(msgids[msgids != ""])
-    structure(out, class = "msgtranslation")
+    structure(parse_template(translation), class = "msgtranslation")
 }
 
-read_translation <- function(file, language, pkg = ".", domain = "R") {
+read_translation <- function(language, file, pkg = ".", domain = "R") {
     if(missing(file)) {
         pkg <- as.package(pkg)
         file <- file.path(pkg$path, "po", paste0(if(domain == "R") "R-" else NULL, language, ".po"))
@@ -46,10 +34,16 @@ write_translation <- function(translation, pkg = ".", domain = "R") {
     translation$msgids <- NULL
     out <- c(out, paste0("\n\"", names(translation),": ", unname(unlist(translation)), "\""))
     
-    # need to generalize this so that each message is itself a list with
-    # a "msgid" element and maybe "msgid_plural" and multiple "msgstr"'s
-    
-    out <- c(out, paste0("\n\nmsgid \"", unlist(msgids), "\"\nmsgstr \"\""), "\n")
+    for(i in seq_along(msgids)) {
+        if(inherits(msgids[[i]], "gettext_msg")) {
+            out <- c(out, paste0("\n\nmsgid \"", unlist(msgids[[i]]$msgid), "\"\nmsgstr \"\""))
+        } else {
+            out <- c(out, paste0("\n\nmsgid \"", unlist(msgids[[i]]$msgid), 
+                                 "\"\nmsgid_plural \"", unlist(msgids[[i]]$msgid_plural), 
+                                 "\"\nmsgstr[0] ", "\"\"",
+                                 "\nmsgstr[1] ", "\"\""))
+        }
+    }
     con <- file(po_file, "w")
     on.exit(close(con))
     writeLines(out, con = con, sep = "")
@@ -139,7 +133,7 @@ edit_translation <- function(language, file, pkg = ".", domain = "R", write = TR
     if(!file.exists(po_dir)) {
         make_po_dir(pkg = pkg)
     }
-    update_template(pkg = pkg, domain = domain)
+    template <- use_translations(pkg = pkg, domain = domain)
     
     if(missing(file)) {
         file <- file.path(pkg$path, "po", paste0(if(domain == "R") "R-" else NULL, language, ".po"))

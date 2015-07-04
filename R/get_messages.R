@@ -1,9 +1,9 @@
-get_messages <- function(pkg = ".", type = "xgettext") {
+get_messages <- function(pkg = ".", type = "gettext") {
     pkg <- as.package(pkg)
-    type <- match.arg(type, c("xgettext", "xngettext"))
-    if(type == "xgettext") {
+    type <- match.arg(type, c("gettext", "ngettext"))
+    if(type == "gettext") {
         xgettext(pkg$path, asCall = FALSE)
-    } else if (type == "xngettext") {
+    } else {
         xngettext(pkg$path)
     }
 }

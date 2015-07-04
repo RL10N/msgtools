@@ -20,8 +20,8 @@ function(pkg = ".",
     }
     
     # extract messages
-    m1 <- get_messages(pkg = pkg, type = "xgettext")
-    m2 <- get_messages(pkg = pkg, type = "xngettext")
+    m1 <- get_messages(pkg = pkg, type = "gettext")
+    m2 <- get_messages(pkg = pkg, type = "ngettext")
     
     
     # check if documentation file already exists
