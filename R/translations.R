@@ -155,17 +155,32 @@ edit_translation <- function(language, file, pkg = ".", domain = "R", write = TR
     }
     
     # command-line interface to update po translation
-    m <- po$msgids
-    e <- function(x) {
-        message(paste0("Original message is: ", x))
+    esingle <- function(msgid, msgstr) {
+        message(paste0(gettext("Original message is: "), msgid))
+        message(paste0(gettext("Current translation is: "), msgstr))
         readline(gettext("Translation: "))
     }
-    for(i in m) {
-        m$msgstr <- e(m$msgid[i])
+    eplural <- function(x) {
+        message(paste0(gettext("Original message is: "), x))
+        
+        # generalize to enter values of plural and respective message
+        readline(gettext("Translation: "))
+    }
+    
+    m <- sapply(po$msgids, `[`, "msgid")
+    mlist <- select.list(choices = m, title = gettext("Select Messages to Translate"))
+    
+    # convert this to an interactive menu    
+    for(i in mlist) {
+        if(inherits(msgids[[i]], "gettext_msg")) {
+            po$msgids[[i]]$msgstr <- esingle(po$msgids[[i]]$msgid, po$msgids[[i]]$msgstr)
+        } else {
+            # generalize to enter multiple values for ngettext_msg's
+        }
     }
     
     po_file <- if(write) write_translation(po) else ""
-    structure(po_file, translation = po)
+    structure(translation, file = po_file)
 }
 
 check_translations <- function(pkg = ".") {
