@@ -16,44 +16,47 @@ function(pkg = ".",
     # generate internal msgtemplate representation (calling `xgettext` and `xngettext`)
     pkg <- as.package(pkg)
     
+    if(domain != "R")
+        stop("Currently only the R domain is implemented")
+    
     template <- 
-    c("msgid \"\"", 
-      "msgstr \"\"", 
-      sprintf("\"Project-Id-Version: %s %s\\n\"", pkg$package, pkg$version), 
-      sprintf("\"Report-Msgid-Bugs-To: %s\\n\"", if(!missing(maintainer)) format(maintainer) else pkg$maintainer), 
-      paste0("\"POT-Creation-Date: ", created, "\\n\""), 
-      paste0("\"PO-Revision-Date: ", format(Sys.time(), "%Y-%m-%d %H:%M"), "\\n\""), 
-      paste0("\"Last-Translator: ", if(!missing(translator)) format(translator) else NULL, "\\n\""), 
-      paste0("\"Language-Team: ", if(!missing(team)) format(team) else NULL, "\\n\""), 
-      "\"Language: LL\\n\"",
-      "\"MIME-Version: 1.0\\n\"", 
-      paste0("\"Content-Type: text/plain; charset=", charset, "\\n\""), 
-      "\"Content-Transfer-Encoding: 8bit\\n\"")
+        list("Project-Id-Version" = paste(pkg$package, pkg$version), 
+             "Report-Msgid-Bugs-To" = if(!missing(maintainer)) format(maintainer) else pkg$maintainer, 
+             "POT-Creation-Date" = created, 
+             "PO-Revision-Date" = format(Sys.time(), "%Y-%m-%d %H:%M"), 
+             "Last-Translator" = if(!missing(translator)) format(translator) else "", 
+             "Language-Team" = if(!missing(team)) format(team) else "", 
+             "Language" = "LL",
+             "MIME-Version" = "1.0", 
+             "Content-Type" = paste0("text/plain; charset=", charset), 
+             "Content-Transfer-Encoding" = "8bit"
+        )
     
     # run xgettext
     tmp <- unique(unlist(get_messages(pkg = pkg, type = "gettext")))
+    msgids1 <- list()
     tmp <- tmp[nzchar(tmp)]
     if (length(tmp) > 0L) {
-        tmp <- shQuote(encodeString(tmp), type = "cmd")
-        template <- c(template, paste0("\nmsgid ",tmp,"\nmsgstr \"\""))
+        msgids1 <- lapply(tmp, gettext_msg)
     }
     
     # run xngettext
     tmp <- get_messages(pkg = pkg, type = "ngettext")
+    msgids2 <- list()
+    i <- 1
     un <- unique(unlist(tmp, recursive = TRUE))
     for (ee in tmp) {
         for (e in ee) {
             if (e[1L] %in% un) {
-               template <- c(template, paste0(paste0("\nmsgid  ", shQuote(encodeString(e[1L])), "\""),
-                                              paste0("\nmsgid_plural \"", shQuote(encodeString(e[2L])), "\""), 
-                                              "\nmsgstr[0]    \"", "\nmsgstr[1]    \""))
+                msgids2[[i]] <- ngettext_msg(e[1L], e[2L])
+                i <- i + 1
                 un <- un[-match(e, un)]
             }
         }
     }
     
     # parse template to internal representation
-    structure(parse_template(template), domain = domain)
+    structure(c(template, msgids = list(c(msgids1, msgids2))), class = "msgtemplate", domain = domain)
 }
 
 use_translations <- 
@@ -68,19 +71,19 @@ function(pkg = ".",
     template_file <- file.path(pkg$path, "po", paste0(if(domain == "R") "R-" else NULL, pkg$package, ".pot"))
     
     template <- make_template(pkg = pkg, domain = domain, ...)
-    if(template_exists(pkg = pkg)) {
-        current <- template_current(pkg = pkg, template = template)
+    if(template_exists(pkg = pkg, domain = domain)) {
+        current <- template_current(pkg = pkg, template = template, domain = domain)
         if(current) {
             message("The .pot template file has not changed")
             return(attributes(current)$template)
         } else {
             template$"POT-Creation-Date" <- attributes(current)$"template_file"$"POT-Creation-Date"
-            write_template(template)
+            write_template(template, domain = domain)
         }
     } else {
-        write_template(template)
+        write_template(template, domain = domain)
     }
-    structure(template, file = template_file)
+    structure(template, file = template_file, domain = domain)
 }
 
 template_exists <- function(pkg = ".", domain = "R") {
@@ -112,6 +115,7 @@ ngettext_msg <- function(msg, plural, ...) {
 parse_template <- function(template) {
     h <- gsub("[\"]$", "", gsub("^[\"]", "", template[!grepl("msgid", template)]))
     h <- read.dcf(textConnection(h[!grepl("msgstr", h)]))
+    h <- gsub("\\\\n", "", h)
     out <- setNames(as.list(h), colnames(h))
     out$msgids <- list()
     
@@ -167,7 +171,9 @@ write_template <- function(template, pkg = ".", domain = "R") {
     out <- c("msgid \"\"\nmsgstr \"\"")
     msgids <- template$msgids
     template$msgids <- NULL
-    out <- c(out, paste0("\n\"", names(template),": ", unname(unlist(template)), "\""))
+    out <- c(out, paste0("\n\"", names(template),": ", unname(unlist(template)), "\\n\""))
+    
+    msgids <- msgids[order(unlist(lapply(msgids, `[`, "msgid")))]
     
     for(i in seq_along(msgids)) {
         if(inherits(msgids[[i]], "gettext_msg")) {

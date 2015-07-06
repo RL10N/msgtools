@@ -27,7 +27,7 @@ write_translation <- function(translation, pkg = ".", domain = "R") {
     out <- c("msgid \"\"\nmsgstr \"\"")
     msgids <- translation$msgids
     translation$msgids <- NULL
-    out <- c(out, paste0("\n\"", names(translation),": ", unname(unlist(translation)), "\""))
+    out <- c(out, paste0("\n\"", names(translation),": ", unname(unlist(translation)), "\\n\""))
     
     for(i in seq_along(msgids)) {
         if(inherits(msgids[[i]], "gettext_msg")) {
@@ -85,16 +85,16 @@ function(language,
     if(file.exists(template_file)) {
         template <- read_template(template_file, pkg = pkg, domain = domain)
     } else {
-        template <- use_translations(pkg = pkg, domain = "R")
+        template <- use_translations(pkg = pkg, domain = domain)
     }
     
     # check current translation
     if(!missing(translator))
-        template$"Last-Translator" <- paste0(translator, "\\n")
+        template$"Last-Translator" <- translator
     if(!missing(team))
-        template$"Language-Team" <- paste0(team, "\\n")
+        template$"Language-Team" <- team
     
-    template$Language <- paste0(paste(language, sep = ":"), "\\n")
+    template$Language <- paste(language, sep = ":")
     if(file.exists(po_file)) {
         current <- translation_current(file = po_file, template = template)
         translation <- attributes(current)$translation
@@ -124,157 +124,5 @@ function(language,
     }
     if(write) write_translation(template)
     structure(`class<-`(template, "msgtranslation"), file = po_file, domain = domain)
-}
-
-edit_translation <- function(language, file, pkg = ".", domain = "R", write = TRUE) {
-    pkg <- as.package(pkg)
-    po_dir <- file.path(pkg$path, "po")
-    if(!file.exists(po_dir)) {
-        make_po_dir(pkg = pkg)
-    }
-    template <- use_translations(pkg = pkg, domain = domain)
-    
-    if(missing(file)) {
-        file <- file.path(pkg$path, "po", paste0(if(domain == "R") "R-" else NULL, language, ".po"))
-    } else if(missing(language)) {
-        language <- gsub(".po", "", basename(file))
-        if(domain == "R")
-            language <- gsub("R-", "", language)
-    } else {
-        stop("Either 'file' or 'language' is required")
-    }
-    if(file.exists(file)) {
-        if(!translation_current(file = file)) {
-            tmp <- make_translation(language = language, pkg = pkg, domain = domain, write = FALSE)
-            po <- attributes(tmp)$po
-        } else {
-            po <- read_translation(file = file)
-        }
-    } else {
-        po <- make_translation(language = language, pkg = pkg, domain = domain, write = FALSE)
-    }
-    
-    # command-line interface to update po translation
-    esingle <- function(msgid, msgstr) {
-        message(paste0(gettext("Original message is: "), msgid))
-        message(paste0(gettext("Current translation is: "), msgstr))
-        readline(gettext("Translation: "))
-    }
-    eplural <- function(x) {
-        message(paste0(gettext("Original message is: "), x))
-        
-        # generalize to enter values of plural and respective message
-        readline(gettext("Translation: "))
-    }
-    
-    m <- sapply(po$msgids, `[`, "msgid")
-    mlist <- select.list(choices = m, title = gettext("Select Messages to Translate"))
-    
-    # convert this to an interactive menu    
-    for(i in mlist) {
-        if(inherits(msgids[[i]], "gettext_msg")) {
-            po$msgids[[i]]$msgstr <- esingle(po$msgids[[i]]$msgid, po$msgids[[i]]$msgstr)
-        } else {
-            # generalize to enter multiple values for ngettext_msg's
-        }
-    }
-    
-    po_file <- if(write) write_translation(po) else ""
-    structure(translation, file = po_file)
-}
-
-check_translations <- function(pkg = ".") {
-    pkg <- as.package(pkg)
-    po_dir <- file.path(pkg$path, "po")
-    if(!file.exists(po_dir)) {
-        stop("No /po directory found for package")
-    }
-    checkPoFiles(po_dir)
-}
-
-install_translations <- function(pkg = ".", which, check = TRUE) {
-    pkg <- as.package(pkg)
-    template_file <- file.path("po", paste0("R-", pkg$package, ".pot"))
-    
-    if(check & missing(which))
-        check_translations(pkg = pkg)
-    
-    # R-level messages
-    po_files <- dir("po", pattern = "R-.*[.]po$", full.names = TRUE)
-    po_files <- po_files[po_files != "po/R-en@quot.po"]
-    
-    for (f in po_files) {
-        lang <- sub("^R-(.*)[.]po$", "\\1", basename(f))
-        message("  R-", lang, ":", appendLF = FALSE, domain = NA)
-        if (system(paste("msgmerge --update", f, shQuote(template_file))) != 0L) {
-            warning("running msgmerge on ", sQuote(f), " failed", domain = NA)
-            next
-        }
-        if(check & !missing(which))
-            res <- checkPoFile(f, TRUE)
-        if (nrow(res)) {
-            print(res)
-            message("not installing", domain = NA)
-            next
-        }
-        dest <- file.path(stem, lang, "LC_MESSAGES")
-        dir.create(dest, FALSE, TRUE)
-        dest <- file.path(dest, sprintf("R-%s.mo", pkg$package))
-        if (system(paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))) != 0L) 
-            warning(sprintf("running msgfmt on %s failed", basename(f)), domain = NA, immediate. = TRUE)
-    }
-    if (l10n_info()[["UTF-8"]]) {
-        lang <- "en@quot"
-        message("  R-", lang, ":", domain = NA)
-        f <- tempfile()
-        #en_quote(template_file, f)
-        dest <- file.path(stem, lang, "LC_MESSAGES")
-        dir.create(dest, FALSE, TRUE)
-        dest <- file.path(dest, sprintf("R-%s.mo", pkg$package))
-        cmd <- paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))
-        if (system(cmd) != 0L) 
-            warning(sprintf("running msgfmt on %s failed", basename(f)), domain = NA, immediate. = TRUE)
-    }
-    
-    # C-level messages
-    po_files <- dir("po", pattern = "^[^R].*[.]po$", full.names = TRUE)
-    po_files <- po_files[po_files != "po/en@quot.po"]
-    if(!missing(which)) {
-        # further select which translations to install from `pofiles`
-    }
-    
-    # install C-level messages
-    for (f in po_files) {
-        lang <- sub("[.]po", "", basename(f))
-        #message("  ", lang, ":", appendLF = FALSE, domain = NA)
-        if (system(paste("msgmerge --update", shQuote(f), shQuote(template_file))) != 0L) {
-            warning("running msgmerge on ", f, " failed", domain = NA)
-            next
-        }
-        if(check & !missing(which))
-            res <- checkPoFile(f, TRUE)
-        if (nrow(res)) {
-            print(res)
-            message("not installing", domain = NA)
-            next
-        }
-        dest <- file.path(stem, lang, "LC_MESSAGES")
-        dir.create(dest, FALSE, TRUE)
-        dest <- file.path(dest, paste0("R-", pkg$package, ".mo"))
-        if (system(paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))) != 0L) 
-            warning(sprintf("running msgfmt on %s failed", basename(f)), domain = NA)
-    }
-    if (l10n_info()[["UTF-8"]]) {
-        lang <- "en@quot"
-        message("  ", lang, ":", domain = NA)
-        f <- tempfile()
-        #en_quote(template, f)
-        dest <- file.path(stem, lang, "LC_MESSAGES")
-        dir.create(dest, FALSE, TRUE)
-        dest <- file.path(dest, sprintf("%s.mo", domain))
-        cmd <- paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))
-        if (system(cmd) != 0L) 
-            warning(sprintf("running msgfmt on %s failed", basename(f)), domain = NA)
-    }
 }
 

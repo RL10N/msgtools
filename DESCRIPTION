@@ -4,13 +4,12 @@ Title: Tools for Developing Diagnostic Messages
 Description: A number utilities for developing and maintaining error, warning, and other messages in R packages, including checking for consistency across messages, spell-checking messages, and building message translations into various languages for purposes of localization.
 License: MIT + file LICENSE
 Version: 0.1.0
-Date: 2015-07-03
+Date: 2015-07-06
 Authors@R: c(person("Thomas J.", "Leeper",
                     role = c("aut", "cre"),
                     email = "thosjleeper@gmail.com"))
 Maintainer: Thomas J. Leeper <thosjleeper@gmail.com>
-Depends: ISOcodes
-Imports: tools, utils, devtools
+Imports: ISOcodes, tools, utils, devtools
 Suggests: pkgKitten, knitr
 SystemRequirements: gettext, Aspell
 VignetteBuilder: knitr

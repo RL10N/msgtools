@@ -6,8 +6,9 @@ print.msgtemplate <- function(x, ...){
                 gsub("\\\\n", "", x$"Project-Id-Version")), 
         "\n")
     x$"Project-Id-Version" <- NULL
-    print(data.frame(Metadata = names(x), 
-                     Value = gsub("\\\\n", "", unname(unlist(x)))), 
+    print(data.frame("Template Metadata" = names(x), 
+                     Value = gsub("\\\\n", "", unname(unlist(x))), 
+                     check.names = FALSE), 
           right = FALSE, row.names = FALSE)
     cat(ngettext(length(m), sprintf("\nThere is 1 msgid in the template."),
                  sprintf("\nThere are %i msgid's in the template.", length(m))),
@@ -24,8 +25,9 @@ print.msgtranslation <- function(x, ...){
                 gsub("\\\\n", "", x$"Project-Id-Version")), 
         "\n")
     x$"Project-Id-Version" <- NULL
-    print(data.frame(Metadata = names(x), 
-                     Value = gsub("\\\\n", "", unname(unlist(x)))), 
+    print(data.frame("Translation Metadata" = names(x), 
+                     Value = gsub("\\\\n", "", unname(unlist(x))),
+                     check.names = FALSE), 
           right = FALSE, row.names = FALSE)
     cat(ngettext(length(m), sprintf("\nThere is 1 msgid in the translation."),
                  sprintf("\nThere are %i msgid's in the translation.", length(m))),

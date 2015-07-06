@@ -47,7 +47,7 @@ function(pkg = ".",
         c(paste0("\\name{",name,"}"),
           paste0("\\alias{",name,"}"),
           paste0("\\title{",title,"}"),
-          "\\description{This page documents common messages, warnings, and errors for package \\dQuote{package}.}",
+          "\\description{This page documents messages, warnings, and errors for package \\dQuote{",pkg$package,"}.}",
           "\\section{Messages}{"), con = con)
         
         # this part will write the object to file:
