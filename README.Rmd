@@ -1,34 +1,6 @@
 # msgtools #
 
-**msgtools** implements a number utilities for developing and maintaining error, warning, and other messages in R packages, including checking for consistency across messages, spell-checking messages, and building message translations into various languages for purposes of localization.
-
-## Requirements and Installation ##
-
-Note: This package is still under active development. Everything can break.
-
-[![Build Status](https://travis-ci.org/leeper/msgtools.png?branch=master)](https://travis-ci.org/leeper/msgtools)
-
-The development version can be installed directly from GitHub using `devtools`:
-
-```R
-if(!require('devtools')) {
-    install.packages('devtools')
-    library('devtools')
-}
-install_github('leeper/msgtools')
-```
-
-**msgtools** will eventually be available on [CRAN](http://cran.r-project.org/web/packages/msgtools/index.html), so that it can be installed using:
-
-```R
-install.packages('msgtools')
-```
-
-Note that **msgtools** also has two system requirements (i.e., software that must be installed separately from R). Specifically, the package requires [GNU gettext-tools](https://www.gnu.org/software/gettext/). Windows binaries can be installed from http://www.stats.ox.ac.uk/pub/Rtools/goodies/gettext-tools.zip. To use the spell checking functionality of **mgstools**, a spell checking application is required (i.e., [aspell](http://aspell.net), [hunspell](http://hunspell.sourceforge.net/), or [ispell](http://lasr.cs.ucla.edu/geoff/ispell.html)). See `? aspell` for further details.
-
-## Example Usage ##
-
-**msgtools** is designed to enhance **devtools**, so all of the functions can be used just like those from devtools. For example, all of the functions call `devtools::as.package` allowing you to call them from anywhere within a package directory (thus negating the need to navigate between package subdirectories).
+**msgtools** implements a number utilities for developing and maintaining error, warning, and other messages in R packages, including checking for consistency across messages, spell-checking messages, and building message translations into various languages for purposes of localization. The package is designed to enhance **devtools**, so all of the functions can be used just like those from devtools. For example, all of the functions call `devtools::as.package()` allowing you to call them from anywhere within a package directory (thus negating the need to navigate between package subdirectories).
 
 ### Building and updating message translation files ###
 
@@ -100,3 +72,30 @@ Sometimes one intends to use the same diagnostic messages throughout a package b
 ```{r}
 find_msg_duplicates()
 ```
+
+## Requirements and Installation ##
+
+Note: This package is still under active development. Everything can break.
+
+[![CRAN Version](http://www.r-pkg.org/badges/version/msgtools)](http://cran.r-project.org/package=msgtools)
+![Downloads](http://cranlogs.r-pkg.org/badges/msgtools)
+[![Travis-CI Build Status](https://travis-ci.org/RL10N/msgtools.png?branch=master)](https://travis-ci.org/RL10N/msgtools)
+[![codecov.io](http://codecov.io/github/RL10N/msgtools/coverage.svg?branch=master)](http://codecov.io/github/RL10N/msgtools?branch=master)
+
+The development version can be installed directly from GitHub using `ghit`:
+
+```R
+if(!require('ghit')) {
+    install.packages('ghit')
+    library('ghit')
+}
+install_github('RL10N/msgtools')
+```
+
+**msgtools** will eventually be available on [CRAN](http://cran.r-project.org/web/packages/msgtools/index.html), so that it can be installed using:
+
+```R
+install.packages('msgtools')
+```
+
+Note that **msgtools** also has two system requirements (i.e., software that must be installed separately from R). Specifically, the package requires [GNU gettext-tools](https://www.gnu.org/software/gettext/). Windows binaries can be installed from http://www.stats.ox.ac.uk/pub/Rtools/goodies/gettext-tools.zip. To use the spell checking functionality of **mgstools**, a spell checking application is required (i.e., [aspell](http://aspell.net), [hunspell](http://hunspell.sourceforge.net/), or [ispell](http://lasr.cs.ucla.edu/geoff/ispell.html)). See `? aspell` for further details.
