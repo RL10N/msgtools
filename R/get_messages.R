@@ -1,12 +1,43 @@
-get_messages <- function(pkg = ".", type = "gettext") {
+#' @title Extract diagnostic messages 
+#' @description Extracts diagnostic messages from a package using \code{\link[tools]{xgettext}}
+#' @template pkg
+#' @details Extracts diagnostic messages from a package.
+#' @return A \dQuote{tibble} (data frame) containing messages, pluralized messages, and the file location of each message.
+#' @author Thomas J. Leeper
+#' @examples
+#' \dontrun{
+#'   # get tidy data frame of messages
+#'   get_messages()
+#' 
+#'   # spell check messages
+#'   spell_check_msgs()
+#' }
+#' @seealso \code{\link{spell_check_msgs}}
+#' @importFrom tibble tibble
+#' @importFrom tools xgettext xngettext
+#' @export
+get_messages <- function(pkg = ".") {
     pkg <- as.package(pkg)
-    type <- match.arg(type, c("gettext", "ngettext"))
-    if(type == "gettext") {
-        xgettext(pkg$path, asCall = FALSE)
-    } else {
-        xngettext(pkg$path)
-    }
+    
+    gettextmsgs <- xgettext(pkg$path, asCall = FALSE)
+    msgsA1 <- unlist(gettextmsgs)
+    msgsA2 <- rep(NA_character_, length(msgsA1))
+    filesA <- rep(names(gettextmsgs), lengths(gettextmsgs))
+    filesA <- gsub(paste0(pkg$path, "/"), "", filesA)
+    
+    ngettextmsgs <- xngettext(pkg$path)
+    msgsB <- do.call("rbind.data.frame", lapply(ngettextmsgs, function(x) do.call("rbind", x)))
+    filesB <- rep(names(ngettextmsgs), lengths(ngettextmsgs))
+    filesB <- gsub(paste0(pkg$path, "/"), "", filesB)
+    
+    tibble(msgid = c(msgsA1, as.character(msgsB[["msg1"]])),
+           msgid_plural = c(msgsA2, as.character(msgsB[["msg2"]])),
+           type = c(rep("direct", length(filesA)), rep("countable", length(filesB))),
+           file = c(filesA, filesB))
 }
 
-gettext("This is a single test message")
-ngettext(2, "This is a test message", "These are two test messages")
+some_nonexported_messages <- function() {
+    gettext("This is a single test message")
+    ngettext(2, "This is a test message", "These are two test messages")
+    ngettext(2, "There is another test message", "These are another two test messages")
+}

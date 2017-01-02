@@ -1,3 +1,4 @@
+#' @export
 print.msgtemplate <- function(x, ...){
     m <- x$msgids
     x$msgids <- NULL
@@ -16,6 +17,7 @@ print.msgtemplate <- function(x, ...){
     invisible(x)
 }
 
+#' @export
 print.msgtranslation <- function(x, ...){
     m <- x$msgids
     x$msgids <- NULL
@@ -35,16 +37,30 @@ print.msgtranslation <- function(x, ...){
     invisible(x)
 }
 
+#' @export
 print.gettext_msg <- function(x, ...) {
     cat("msgid: ", x$msgid, "\n")
     cat("msgstr: ", x$msgstr, "\n\n")
     invisible(x)
 }
 
+#' @export
 print.ngettext_msg <- function(x, ...) {
     cat("msgid: ", x$msgid, "\n")
     cat("msgid_plural: ", x$msgid_plural, "\n")
     cat("msgstr[0]: ", x$msgstr0, "\n")
     cat("msgstr[1]: ", x$msgstr1, "\n\n")
+    invisible(x)
+}
+
+#' @export
+print.msgduplicates <- function(x, ...) {
+    d <- numeric(nrow(x$Distance))
+    for(i in 1:nrow(x$Distance))
+        d[i] <- min(x$Distance[i,-i])
+    print(data.frame(Message = x$Message, Location = x$Location, 
+                     Matches = sapply(x$Matches, function(z) if(length(z)) paste(z, collapse = ",") else "None"),
+                     MinDistance = d,
+                     stringsAsFactors = FALSE), right = FALSE, row.names = FALSE)
     invisible(x)
 }

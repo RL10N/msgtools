@@ -26,7 +26,7 @@ Then we can create a translation template and setup a Spanish translation:
 
 ```R
 use_translations()
-make_translation("es")
+make_translation("es", translator = "Awesome Translator <translator@example.com")
 ```
 
 We could also do this interactively using `edit_translation`
@@ -45,8 +45,8 @@ If we add a new function with new messages, we'll want to update our template an
 
 
 ```R
-update_template()
-make_translation("es")
+#update_template()
+make_translation("es", translator = "Awesome Translator <translator@example.com")
 ```
 
 

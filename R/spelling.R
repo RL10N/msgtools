@@ -1,36 +1,57 @@
-spell_check_msgs <- function(pkg = ".", control = list(), program = NULL) {
+#' @title Spell check diagnostic messages
+#' @description Extracts diagnostic messages from a package and checks them for spelling errors.
+# @param language A character string specifying a translation language.
+#' @param dict A \code{\link[hunspell]{dictionary}} object.
+#' @template pkg 
+#' @details Extracts diagnostic messages from a package and processes them using \code{\link[hunspell]{hunspell}} to check for possible spelling mistakes.
+#' @return A data frame containing each message with a potentially misspelled word, the misspelled word, and the source code file in which the message is located, and (for each word) a list of suggested corrections.
+#' @author Thomas J. Leeper
+#' @examples
+#' \dontrun{
+#'   spell_check_msgs()
+#' }
+#' @importFrom tibble as_tibble
+#' @importFrom hunspell hunspell dictionary hunspell_suggest
+#' @export
+spell_check_msgs <- function(dict = dictionary("en_US"), pkg = ".") {
     pkg <- as.package(pkg)
-    msgs <- get_messages(pkg = pkg)
-    d <- tempdir()
-    f <- character(length(msgs))
-    for(i in seq_along(msgs)) {
-        f[i] <- tempfile(tmpdir = d, fileext = paste0("__",basename(names(msgs)[i])))
-        writeLines(msgs[[i]], con = f[i])
-        on.exit(unlink(f[i]))
-    }
-    out <- aspell(f, control = control, program = program)
-    out$Message <- character(nrow(out))
-    for(i in 1:nrow(out)) {
-        out$Message[i] <- readLines(out$File[i], n = out$Line[i])[out$Line[i]]
-    }
-    names(out)[names(out) == "Original"] <- "Word"
-    out$File <- sapply(strsplit(out$File, "__"),`[`, 2)
-    structure(out, class = c("msgspellcheck", "data.frame"))
+    all_msgs <- get_messages(pkg = pkg)
+    
+    msgs1 <- all_msgs[["msgid"]]
+    out1 <- hunspell(msgs1, dict = dict)
+    ret1 <- 
+    structure(list(message = rep(msgs1, lengths(out1)), 
+                   misspelling = unlist(out1),
+                   file = rep(all_msgs[["file"]], lengths(out1))), 
+              row.names = seq_len(sum(lengths(out1))), 
+              class = "data.frame")
+    
+    msgs2 <- all_msgs[["msgid_plural"]][!is.na(all_msgs[["msgid_plural"]])]
+    out2 <- hunspell(msgs2, dict = dict)
+    ret2 <- 
+    structure(list(message = rep(msgs2, lengths(out2)), 
+                   misspelling = unlist(out2),
+                   file = rep(all_msgs[["file"]][!is.na(all_msgs[["msgid_plural"]])], lengths(out2))), 
+              row.names = seq_len(sum(lengths(out2))), 
+              class = "data.frame")
+    
+    out <- rbind(ret1, ret2)
+    out <- as_tibble(out[!is.na(out[["misspelling"]]), ])
+    out[["suggestions"]] <- hunspell_suggest(out[["misspelling"]])
+    return(out)
 }
 
-print.msgspellcheck <- function(x, ...) {
-    if(nrow(x) > 0) {
-        out <- data.frame(Word = x$Word,
-                          Message = x$Message,
-                          Suggestions = sapply(x$Suggestions, function(x) {
-                              paste(c(head(x, 5), if(length(x) > 5) "..." else ""), collapse = ", ")
-                          }),
-                          File = x$File, 
-                          Line = x$Line,
-                          Column = x$Column)
-        print(out, right = FALSE)
-    } else {
-        message("No spelling errors found")
-    }
-    invisible(x)
+spell_check_translation <- function(language, dict = dictionary(language), domain = "R", pkg = ".") {
+    
+    # function to spell check translations in a given language
+    
+    pkg <- as.package(pkg)
+    
+    translation <- read_translation(language = language, domain = domain, pkg = pkg)
+    
+    translation[["direct"]]
+    translation[["countable"]]
+    
+    # do stuff
+
 }

@@ -1,57 +1,73 @@
-edit_translation <- function(language, file, pkg = ".", domain = "R", write = TRUE) {
-    pkg <- as.package(pkg)
-    po_dir <- file.path(pkg$path, "po")
-    if(!file.exists(po_dir)) {
-        make_po_dir(pkg = pkg)
-    }
-    template <- use_translations(pkg = pkg, domain = domain)
-    
-    if(missing(file)) {
-        file <- file.path(pkg$path, "po", paste0(if(domain == "R") "R-" else NULL, language, ".po"))
-    } else if(missing(language)) {
-        language <- gsub(".po", "", basename(file))
-        if(domain == "R")
-            language <- gsub("R-", "", language)
-    } else {
-        stop("Either 'file' or 'language' is required")
-    }
-    if(file.exists(file)) {
-        if(!translation_current(file = file)) {
-            tmp <- make_translation(language = language, pkg = pkg, domain = domain, write = FALSE)
-            po <- attributes(tmp)$po
-        } else {
-            po <- read_translation(file = file)
-        }
-    } else {
-        po <- make_translation(language = language, pkg = pkg, domain = domain, write = FALSE)
-    }
+#' @title Interactive translation editing
+#' @description Edit a translation object in-memory using a simple interface
+#' @param translation An object of class \code{"po"}, such as returned by \code{\link{make_translation}} or \code{\link{read_translation}}.
+#' @return \code{make_translation} and \code{read_translation} reutrn an object of class \code{"po"}.
+#' @author Thomas J. Leeper
+#' @examples
+#' \dontrun{
+#'   # setup pkg for localization
+#'   use_localization()
+#'   
+#'   # generate translation in memory
+#'   (tran <- make_translation("es", translator = "Some Person <example@examle.com>"))
+#'   
+#'   # edit translations
+#'   tran2 <- edit_translation(tran)
+#'   # write to disk
+#'   write_translation(tran2)
+#' }
+#' @seealso \code{\link{make_translation}}
+#' @importFrom utils select.list
+#' @export
+edit_translation <- function(translation) {
     
     # command-line interface to update po translation
     esingle <- function(msgid, msgstr) {
         message(paste0(gettext("Original message is: "), msgid))
-        message(paste0(gettext("Current translation is: "), msgstr))
-        readline(gettext("Translation: "))
-    }
-    eplural <- function(x) {
-        message(paste0(gettext("Original message is: "), x))
-        
-        # generalize to enter values of plural and respective message
-        readline(gettext("Translation: "))
-    }
-    
-    m <- sapply(po$msgids, `[`, "msgid")
-    mlist <- select.list(choices = m, title = gettext("Select Messages to Translate"))
-    
-    # convert this to an interactive menu    
-    for(i in mlist) {
-        if(inherits(msgids[[i]], "gettext_msg")) {
-            po$msgids[[i]]$msgstr <- esingle(po$msgids[[i]]$msgid, po$msgids[[i]]$msgstr)
+        if (length(msgstr) && !is.na(msgstr) && msgstr != "") {
+            message(paste0(gettext("Current translation is: "), msgstr))
         } else {
-            # generalize to enter multiple values for ngettext_msg's
+            message("Current translation is empty")
+        }
+        
+        readline(gettext("Translation: "))
+    }
+    eplural <- function(msgid, msgid_plural, msgstr) {
+        message(paste0(gettext("Original message is: "), msgid))
+        message(paste0(gettext("Original plural message is: "), msgid_plural))
+        if (length(msgstr)) {
+            message(paste0(gettext("Current translations are: "), paste0(msgstr, collapse = "\n")))
+        } else {
+            message("Current translation is empty")
+        }
+        
+        list(readline(gettext("Translation (n == 0): ")),
+             readline(gettext("Translation (n == 1): ")),
+             readline(gettext("Translation (n == 2): ")),
+             readline(gettext("Translation (n == 3): ")),
+             readline(gettext("Translation (n >= 4): "))
+             )
+    }
+    
+    msgs1 <- translation[["direct"]][["msgid"]]
+    mlist1 <- select.list(choices = msgs1, multiple = TRUE, title = gettext("Select 'Direct' Messages to Translate"))
+    mlist1 <- match(mlist1, msgs1)
+    
+    if (length(mlist1)) {
+        for (i in mlist1) {
+            translation[["direct"]][["msgstr"]][i] <- esingle(translation[["direct"]][["msgid"]][i], translation[["direct"]][["msgstr"]][i])
         }
     }
     
-    po_file <- if(write) write_translation(po) else ""
-    structure(translation, file = po_file)
+    msgs2 <- translation[["countable"]][["msgid"]]
+    mlist2 <- select.list(choices = msgs2, multiple = TRUE, title = gettext("Select 'Pluralized' Messages to Translate"))
+    mlist2 <- match(mlist2, msgs2)
+    
+    if (length(mlist2)) {
+        for (i in mlist2) {
+            translation[["countable"]][["msgstr"]][[i]] <- eplural(translation[["countable"]][["msgid"]][i], translation[["countable"]][["msgid_plural"]][i], translation[["countable"]][["msgstr"]][[i]])
+        }
+    }
+    return(translation)
 }
 

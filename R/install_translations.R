@@ -1,18 +1,35 @@
+#' @rdname install
+#' @title Install translations
+#' @description Check and install message translations
+#' @template pkg
+#' @param which Currently ignored.
+#' @param check A logical indicating whether to run \code{check_translations} before installing translations.
+#' @details \code{check_translations} is just a wrapper around \code{\link[tools]{checkPoFiles}}
+#' @examples
+#' \dontrun{
+#'    # check translations
+#'    check_translations()
+#'    
+#'    # install translations
+#'    install_translations()
+#' }
+#' @importFrom tools checkPoFiles
+#' @export
 check_translations <- function(pkg = ".") {
     pkg <- as.package(pkg)
-    po_dir <- file.path(pkg$path, "po")
-    if(!file.exists(po_dir)) {
-        stop("No /po directory found for package")
-    }
-    checkPoFiles(po_dir)
+    check_for_po_dir(pkg = pkg)
+    checkPoFiles(file.path(pkg$path, "po"))
 }
 
-install_translations <- function(pkg = ".", which, check = TRUE) {
+#' @rdname install
+#' @export
+install_translations <- function(pkg = ".", check = TRUE) {
     pkg <- as.package(pkg)
-    template_file <- file.path("po", paste0("R-", pkg$package, ".pot"))
+    template_file <- template_path(pkg = pkg, domain = domain)
     
-    if(check & missing(which))
+    if (check & missing(which)) {
         check_translations(pkg = pkg)
+    }
     
     # R-level messages
     po_files <- dir("po", pattern = "R-.*[.]po$", full.names = TRUE)
