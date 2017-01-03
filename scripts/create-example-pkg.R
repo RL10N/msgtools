@@ -60,10 +60,10 @@ translatable_messages <- function(n = 7) {
 # Zip contents and copy to msgtools/inst/extdata
 current_dir <- getwd()
 withr::with_dir(
-  pkg_dir,
+  parent_dir(pkg_dir),
   zip(
-    file.path(current_dir, "inst/extdata/translateme"), 
-    files = dir(pkg_dir, recursive = TRUE)
+    file.path(current_dir, "inst/extdata/translateme.zip"), 
+    files = file.path("translateme", dir(pkg_dir, recursive = TRUE))
   )
 )
 
