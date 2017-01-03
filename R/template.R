@@ -1,9 +1,12 @@
-#' @rdname templates
+`%n%` <- function (x, y)  if (!is.null(x)) x else y
+
+#' @name templates
 #' @title Handle message templates (.pot files)
 #' @description Read, write, and generate .pot diagnostic message templates
 #' @template pkg
 #' @template template
 #' @param charset A character string specifying the character set of the translation template file.
+#' @param verbose Logical. Should the function be chatty?
 #' @template domain
 #' @details \code{read_template} and \code{write_template} provide basic input and output functionality for translation template (.pot) files. If called from with an R package directory, the locations of these fies are identified automatically (see \code{\link{make_po_dir}}).
 #' 
@@ -20,9 +23,7 @@
 #' write_template(pot)
 #'   
 #' # setup a package for translating
-#' \dontrun{
-#' # Should this be use_localization(pkg)?
-#' use_translations(pkg)
+#' use_localization(pkg)
 #' }
 #' @seealso \code{\link{get_messages}} to read messages into memory without creating a template file, \code{\link{use_localization}} to setup a package for localization (including generation of a template file)
 #' @importFrom tibble tibble
@@ -43,6 +44,10 @@ function(charset = "UTF-8",
     direct <- msgs[msgs[["type"]] == "direct",]
     countable <- msgs[msgs[["type"]] == "countable",]
     
+    # This is sometimes NULL, and we need it to have length 1 when
+    # creating the tibble later in this function
+    bugreports <- pkg[["bugreports"]] %n% " "
+    
     structure(list(
               source_type = tolower(domain),
               file_type = "pot",
@@ -58,7 +63,7 @@ function(charset = "UTF-8",
                                          "Content-Type",
                                          "Content-Transfer-Encoding"),
                                 value = c(paste(pkg[["package"]], pkg[["version"]]),
-                                          pkg[["bugreports"]], 
+                                          bugreports, 
                                           format(Sys.time(), "%Y-%m-%d %H:%M"),
                                           format(Sys.time(), "%Y-%m-%d %H:%M"), 
                                           " ", 
@@ -91,9 +96,10 @@ function(charset = "UTF-8",
 
 #' @rdname templates
 #' @export
-sync_template <- function(charset = "UTF-8", pkg = ".", domain = "R") {
+sync_template <- function(charset = "UTF-8", pkg = ".", domain = "R",
+                          verbose = getOption("verbose")) {
     template <- make_template(charset = charset, pkg = pkg, domain = domain)
-    write_template(template, pkg = pkg)
+    write_template(template, pkg = pkg, verbose = verbose)
 }
 
 #' @rdname templates
@@ -106,9 +112,15 @@ read_template <- function(pkg = ".", domain = "R"){
 
 #' @rdname templates
 #' @export
-write_template <- function(template, pkg = ".") {
+write_template <- function(template, pkg = ".", verbose = getOption("verbose")) {
     pkg <- as.package(pkg)
+    if(verbose) {
+      message("Creating the 'po' directory")
+    }
     make_po_dir(pkg = pkg)
+    if(verbose) {
+      message("Writing the 'pot' master translation file")
+    }
     pot_file <- template_path(pkg = pkg, domain = template[["source_type"]])
     write_po(template, pot_file)
     return(invisible(pot_file))

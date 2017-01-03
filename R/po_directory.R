@@ -15,6 +15,7 @@ check_for_po_dir <- function(pkg = ".") {
     po_dir <- file.path(pkg$path, "po")
     if (!dir.exists(po_dir)) {
         make_po_dir(pkg)
+        return(dir.exists(po_dir))
     } else {
         return(TRUE)
     }
