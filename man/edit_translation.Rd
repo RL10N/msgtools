@@ -15,6 +15,9 @@ edit_translation(translation)
 \description{
 Edit a translation object in-memory using a simple interface
 }
+\note{
+Emacs users may find the gettext PO file editor more comfortable: \url{https://www.gnu.org/software/gettext/manual/gettext.html#PO-Mode}.
+}
 \examples{
 \dontrun{
   # setup pkg for localization

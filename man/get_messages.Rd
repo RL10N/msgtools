@@ -31,6 +31,6 @@ Extracts diagnostic messages from a package.
 Thomas J. Leeper
 }
 \seealso{
-\code{\link{spell_check_msgs}}
+\code{\link{spell_check_msgs}}, \code{\link{get_message_distances}}
 }
 

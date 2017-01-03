@@ -1,101 +1,106 @@
-# msgtools #
+# msgtools
 
 **msgtools** implements a number utilities for developing and maintaining error, warning, and other messages in R packages, including checking for consistency across messages, spell-checking messages, and building message translations into various languages for purposes of localization. The package is designed to enhance **devtools**, so all of the functions can be used just like those from devtools. For example, all of the functions call `devtools::as.package()` allowing you to call them from anywhere within a package directory (thus negating the need to navigate between package subdirectories).
 
-### Building and updating message translation files ###
+### Building and updating message translation files
 
 The package creates a simplified workflow for creating, maintaining, and updating translations of messages in both R and C code that improve upon those available in the **tools** package. For some context on message localization in R, see ["R Administration"](http://cran.r-project.org/doc/manuals/r-devel/R-admin.html#Localization-of-messages) and ["Translating R Messages, R >=3.0.0"](http://developer.r-project.org/Translations30.html)). A list of "translation teams" is available from http://developer.r-project.org/TranslationTeams.html.
 
-Specifically, the package offers R representations of .pot (gettext; "portable object template") and .po (translation; "portable object") files, enabling comparison of existing translations and eased reading and writing of translation files. By creating R representations, it is also possible to programmatically modify translations, thus eliminating the need to manually open each translation file in a text editor.
+R has reasonably sophisticated *internationalization* (i18n) features. All calls to `message()`, `warning()`, `stop()`, `gettext()`, `ngettext()`, and `gettextf()` are passed through a C-level functionality that translates the contained messages into the user's local language (if the translations are available). To begin *localization* (l10n) of messages, a package developer simply needs to write translations for these messages using a standardized file format and install the translations into their package.
+
+Specifically, the msgtools uses R representations of .pot (gettext; "portable object template") and .po (translation; "portable object") files (provided by [poio](https://cran.r-project.org/package=poio)), enabling comparison of existing translations and eased reading and writing of translation files. By creating R representations, it is also possible to programmatically modify translations, thus eliminating the need to manually open each translation file in a text editor.
+
+The [Rcmdr](https://cran.r-project.org/package=Rcmdr) package provides an example of extensive message translation.
+
+A basic workflow is as follows:
 
 ```{r}
 library("msgtools")
 
-# update gettext (.pot) template file
-use_translations()
+# setup package for localization
+use_localization()
 
 # create Spanish translation
-make_translation("es")
+es <- make_translation("es", translator = "My Name <me@example.com")
+write_translation(es)
 
 # create French translation
-make_translation("fr")
+fr <- make_translation("fr", translator = "My Name <me@example.com")
+write_translation(fr)
 
-# check translations
+## edit translations manually!
+
+# check translation files
 check_translations()
 
-# install translations (checking translations is optional)
-install_translations(check = FALSE)
+# install translations
+install_translations()
 ```
 
-At this point, you still have to manually edit the the .po translation files created by `make_translation` (but see next example).
+At this point, you still have to manually edit the the .po translation files created by `make_translation()` (but see next example).
 
-### Interactive message translation ###
+### Interactive message translation
 
-The plan is to introduce a simple interface for creating message translations, which can then be written to file. This negates the need to manually open and edit translation (.po) files in a text editor.
+Currently, msgtools provides a very basic interface for creating message translations, which can then be written to file:
 
 ```R
 # interactively update or create Spanish translation
-edit_translation("es")
+es <- edit_translation(es)
+write_translation(es)
 ```
 
+This negates the need to manually open and edit translation (.po) files in a text editor.
 
-### Checking consistency of diagnostic messages ###
+### Checking consistency of diagnostic messages
 
-Packages frequently use similar errors and warnings across functions, but in practice these errors and warnings might have slight changes in wording, spelling, etc. that can be confusing to users. The internal representation of a gettext file allows a developer to quickly examine messages, identify problems, and correct them.
+Packages frequently use similar errors and warnings across functions, but in practice these errors and warnings might have slight changes in wording, spelling, etc. that can be confusing to users. The `get_messages()` function extracts all messages as a tidy data frame, which can be used to examine possible problems or near-duplications of messages strings:
 
 ```{r}
-g <- get_messages()
-sort(unlist(g))
+head(sort(get_messages()[["msgid"]]))
 ```
 
+### Spell checking
 
-### Documenting diagnostic messages ###
-
-By extracting errors, warnings, and messages from R and C code, it is also possible to document those messages. In practice, many diagnostic messages are uninformative (especially for new users) and the only way to figure out their meaning is to search the web or search the source code. **msgtools** allows developers to create an up-to-date documentation page of messages to provide additional troubleshooting details for users.
-
-```{r}
-document_msgs()
-```
-
-### Spell checking ###
-
-Packages have spelling errors. The `spell_check` function checks messages for spelling errors and returns a data.frame of suggestion corrections for those errors.
+Packages have spelling errors. The `spell_check_msgs()` function checks messages for spelling errors and returns a data frame of suggestion corrections for those errors.
 
 ```{r}
 spell_check_msgs()
 ```
 
-### Identifying duplicate and similar messages ###
+### Identifying duplicate and similar messages
 
-Sometimes one intends to use the same diagnostic messages throughout a package but changes are made or typographical errors are introduced when copying. The `find_msg_duplicates` can be used to identify these situations.
+Sometimes one intends to use the same diagnostic messages throughout a package but changes are made or typographical errors are introduced when copying. The `get_message_distance()` can be used to identify these situations.
 
 ```{r}
-find_msg_duplicates()
+get_message_distances()
 ```
 
-## Requirements and Installation ##
+The resulting data frame contains columns corresponding to the Levenshtein (edit) distance between each message and every other message.
+
+
+## Requirements and Installation
 
 Note: This package is still under active development. Everything can break.
 
-[![CRAN Version](http://www.r-pkg.org/badges/version/msgtools)](http://cran.r-project.org/package=msgtools)
-![Downloads](http://cranlogs.r-pkg.org/badges/msgtools)
+[![CRAN Version](https://www.r-pkg.org/badges/version/msgtools)](https://cran.r-project.org/package=msgtools)
+![Downloads](https://cranlogs.r-pkg.org/badges/msgtools)
 [![Travis-CI Build Status](https://travis-ci.org/RL10N/msgtools.png?branch=master)](https://travis-ci.org/RL10N/msgtools)
-[![codecov.io](http://codecov.io/github/RL10N/msgtools/coverage.svg?branch=master)](http://codecov.io/github/RL10N/msgtools?branch=master)
+[![codecov.io](https://codecov.io/github/RL10N/msgtools/coverage.svg?branch=master)](https://codecov.io/github/RL10N/msgtools?branch=master)
 
 The development version can be installed directly from GitHub using `ghit`:
 
 ```R
-if(!require('ghit')) {
+if (!require('ghit')) {
     install.packages('ghit')
     library('ghit')
 }
 install_github('RL10N/msgtools')
 ```
 
-**msgtools** will eventually be available on [CRAN](http://cran.r-project.org/web/packages/msgtools/index.html), so that it can be installed using:
+**msgtools** will eventually be available on [CRAN](https://cran.r-project.org/package=msgtools), so that it can be installed using:
 
 ```R
 install.packages('msgtools')
 ```
 
-Note that **msgtools** also has two system requirements (i.e., software that must be installed separately from R). Specifically, the package requires [GNU gettext-tools](https://www.gnu.org/software/gettext/). Windows binaries can be installed from http://www.stats.ox.ac.uk/pub/Rtools/goodies/gettext-tools.zip. To use the spell checking functionality of **mgstools**, a spell checking application is required (i.e., [aspell](http://aspell.net), [hunspell](http://hunspell.sourceforge.net/), or [ispell](http://lasr.cs.ucla.edu/geoff/ispell.html)). See `? aspell` for further details.
+Note that **msgtools** also has one system requirement (i.e., software that must be installed separately from R). Specifically, the package requires [GNU gettext-tools](https://www.gnu.org/software/gettext/). Windows binaries can be installed from http://www.stats.ox.ac.uk/pub/Rtools/goodies/gettext-tools.zip or https://github.com/mlocati/gettext-iconv-windows.

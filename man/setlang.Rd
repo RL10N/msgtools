@@ -28,6 +28,6 @@ Set or reset a locale language
 Thomas J. Leeper
 }
 \seealso{
-\code{\link[poio]{language_code}}
+\code{\link[poio]{language_codes}}
 }
 

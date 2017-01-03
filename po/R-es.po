@@ -3,68 +3,80 @@ msgstr ""
 "Project-Id-Version: msgtools 0.2.1\n"
 "Report-Msgid-Bugs-To: https://github.com/RL10N/msgtools/issues\n"
 "POT-Creation-Date: 2017-01-03 11:46\n"
-"PO-Revision-Date: 2017-01-03 11:46\n"
-"Last-Translator:  \n"
+"PO-Revision-Date: 2017-01-03 11:47\n"
+"Last-Translator: Thomas J. Leeper <thosjleeper@gmail.com>\n"
 "Language-Team:  \n"
-"Language: LL\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 # NA
+#, fuzzy
 msgctxt ""
 msgid "Original message is:"
-msgstr ""
+msgstr "Mensaje original es:"
 
 # NA
+#, fuzzy
 msgctxt ""
 msgid "Current translation is:"
-msgstr ""
+msgstr "Traducción actual es:"
 
 # NA
+#, fuzzy
 msgctxt ""
 msgid "Current translation is empty"
-msgstr ""
+msgstr "La traducción actual está vacía"
 
 # NA
+#, fuzzy
 msgctxt ""
 msgid "Translation:"
-msgstr ""
+msgstr "Traducción"
 
 # NA
+#, fuzzy
 msgctxt ""
 msgid "Original plural message is:"
-msgstr ""
+msgstr "Mensaje original es:"
 
 # NA
+#, fuzzy
 msgctxt ""
 msgid "Current translations are:"
-msgstr ""
+msgstr "Traducción actual es:"
 
 # NA
+#, fuzzy
 msgctxt ""
 msgid "Translation (n == 0):"
-msgstr ""
+msgstr "Traducción (n == 0)"
 
 # NA
+#, fuzzy
 msgctxt ""
 msgid "Translation (n == 1):"
-msgstr ""
+msgstr "Traducción (n == 1)"
 
 # NA
+#, fuzzy
 msgctxt ""
 msgid "Translation (n == 2):"
-msgstr ""
+msgstr "Traducción (n == 2)"
 
 # NA
+#, fuzzy
 msgctxt ""
 msgid "Translation (n == 3):"
-msgstr ""
+msgstr "Traducción (n == 3)"
 
 # NA
+#, fuzzy
 msgctxt ""
 msgid "Translation (n >= 4):"
-msgstr ""
+msgstr "Traducción (n >= 4)"
 
 # NA
 msgctxt ""
@@ -77,9 +89,10 @@ msgid "Select 'Pluralized' Messages to Translate"
 msgstr ""
 
 # NA
+#, fuzzy
 msgctxt ""
 msgid "This is a single test message"
-msgstr ""
+msgstr "Este es un mensaje de prueba"
 
 # NA
 msgctxt ""
@@ -107,16 +120,17 @@ msgid "Overwriting existing translation (.po) file"
 msgstr ""
 
 # NA
+#, fuzzy
 msgctxt ""
 msgid "This is a test message"
 msgid_plural "These are two test messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Este es un mensaje de prueba"
+msgstr[1] "Estos son unos mensajes de prueba"
 
 # NA
+#, fuzzy
 msgctxt ""
 msgid "There is another test message"
 msgid_plural "These are another two test messages"
-msgstr[0] ""
-msgstr[1] ""
-
+msgstr[0] "Este es otro mensaje de prueba"
+msgstr[1] "Estos son otros mensajes de prueba"

@@ -10,6 +10,7 @@
 #' \dontrun{
 #'   spell_check_msgs()
 #' }
+#' @seealso \code{\link{get_messages}}, \code{\link{get_message_distances}}
 #' @importFrom tibble as_tibble
 #' @importFrom hunspell hunspell dictionary hunspell_suggest
 #' @export

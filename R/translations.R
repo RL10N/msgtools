@@ -1,7 +1,8 @@
 #' @rdname translations
 #' @title Handle message translations (.po files)
 #' @description Read, write, and generate translations of diagnostic messages
-#' @param language A character string specifying a language.
+#' @param translation An object of class \code{"po"} containing a message translation.
+#' @param language A character string specifying a language, as either: (1) \dQuote{ll}, an ISO 639 two-letter language code (lowercase), or (2) \dQuote{ll_CC}, an ISO 639 two-letter language code (lowercase) and \sQuote{CC} is an ISO 3166 two-letter country code (uppercase).
 #' @param translator A character string the name and email of a translation of the form \code{First Last <email@example.com>}.
 #' @param team Optionally, a character string specifying contact information for a \dQuote{translation team}.
 #' @template pkg
@@ -9,19 +10,22 @@
 #' @template template
 #' @details \code{read_translation} and \code{write_translation} provide basic input and output functionality for translation (.po) files. If called from with an R package directory, the locations of these fies are identified automatically. \code{\link[poio]{read_po}} provides a lower-level interface for reading a specific file.
 #' 
-#' \code{make_translation} creates a \code{"po"} translation object from a message template (.pot) file (if one does not exist, it is created). The \code{language} and \code{translator} arguments are mandatory. \code{language} must be an allowed language code (see \code{\link[poio]{language_codes}}); the \dQuote{Plural-Forms} metadata field is generated automatically from the language value (see \code{\link[poio]{plural_forms}}).
+#' The behavior of \code{make_translation} depends on context. If the requested translation already exists, it is updated against the template (.pot) file and loaded into memory. If the translation does not already exist, the function creates a \code{"po"} translation object from the message template (.pot) file (if one does not exist, it is created). The \code{language} and \code{translator} arguments are mandatory in the latter case and only used to update values in an existing file if they differ from the existing values. \code{language} must be an allowed language code (see \code{\link[poio]{language_codes}}); the \dQuote{Plural-Forms} metadata field is generated automatically from the language value (see \code{\link[poio]{plural_forms}}).
 #' 
 #' \code{\link{edit_translation}} is a very simple interactive interface for editing a translation object in memory.
 #' 
 #' @return \code{make_translation} and \code{read_translation} reutrn an object of class \dQuote{po}. \code{write_translation} returns the path to the file, invisibly.
+#' @note These functions require that gettext is installed on your system.
 #' @author Thomas J. Leeper
 #' @examples
 #' \dontrun{
 #'   # setup pkg for localization
 #'   use_localization()
 #'   
-#'   # generate translation in memory
-#'   (tran <- make_translation("es", translator = "Some Person <example@examle.com>"))
+#'   # generate Portugal Portugese translation in memory
+#'   make_translation("pt_PT", translator = "Some Person <example@example.com>")
+#'   # generate Spanish translation in memory
+#'   (tran <- make_translation("es", translator = "Some Person <example@example.com>"))
 #'   # write to disk
 #'   write_translation(tran)
 #' }
@@ -30,8 +34,8 @@
 #' @export
 read_translation <- function(language, domain = "R", pkg = ".") {
     pkg <- as.package(pkg)
-    file <- translation_path(pkg = pkg, language = language, domain = domain)
-    fix_metadata(read_po(file))
+    po_file <- translation_path(pkg = pkg, language = language, domain = domain)
+    fix_metadata(read_po(po_file))
 }
 
 #' @rdname translations
@@ -43,11 +47,15 @@ write_translation <- function(translation, pkg = ".") {
     po_file <- translation_path(pkg = pkg, 
                                 language = language, 
                                 domain = translation[["source_type"]])
+    if (file.exists(po_file)) {
+        message("Overwriting existing translation (.po) file")
+    }
     write_po(translation, po_file)
     return(invisible(po_file))
 }
 
 #' @rdname translations
+#' @importFrom utils data
 #' @export
 make_translation <- 
 function(language, 
@@ -55,24 +63,31 @@ function(language,
          team = " ",
          pkg = ".", 
          domain = "R") {
+    
     pkg <- as.package(pkg)
     
     check_language_regex(language)
     
     template_file <- template_path(pkg = pkg, domain = domain)
-    po_file <- translation_path(pkg = pkg, language = language, domain = template[["source_type"]])
     
     # check for template
     if (file.exists(template_file)) {
         template <- read_template(pkg = pkg, domain = domain)
     } else {
         template <- make_template(pkg = pkg, domain = domain)
-        message("Writing template (.pot) file to disk")
         write_template(template, pkg = pkg)
     }
     
+    po_file <- translation_path(pkg = pkg, language = language, domain = template[["source_type"]])
+    
     # check for translation
     if (file.exists(po_file)) {
+        
+        cmd <- paste("msgmerge --update", shQuote(po_file), shQuote(template_file))
+        if (system(cmd) != 0L) {
+            warning("running msgmerge on ", po_file, " failed", domain = NA)
+        }
+        
         translation <- read_translation(language = language, domain = domain, pkg = pkg)
         oldtranslator <- translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Last-Translator"]
         if (oldtranslator != translator) {
@@ -92,8 +107,9 @@ function(language,
         ## language
         translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Language"] <- language
         ## plural forms
-        data(plural_forms)
-        plural <- plural_forms[["PluralFormHeader"]][plural_forms[["ISO"]] == language]
+        env <- new.env()
+        data(plural_forms, package = "poio", envir = env)
+        plural <- env[["plural_forms"]][["PluralFormHeader"]][env[["plural_forms"]][["ISO"]] == language]
         translation[["metadata"]] <- rbind(translation[["metadata"]], c("Plural-Forms", plural))
         
         # need to setup structure of `countable$msgstr` list to reflect plural forms

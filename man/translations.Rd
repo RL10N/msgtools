@@ -17,13 +17,15 @@ make_translation(language, translator, team = " ", pkg = ".",
 translation_current(language, template, pkg = ".", domain = "R")
 }
 \arguments{
-\item{language}{A character string specifying a language.}
+\item{language}{A character string specifying a language, as either: (1) \dQuote{ll}, an ISO 639 two-letter language code (lowercase), or (2) \dQuote{ll_CC}, an ISO 639 two-letter language code (lowercase) and \sQuote{CC} is an ISO 3166 two-letter country code (uppercase).}
 
 \item{domain}{A character string specifying the \dQuote{domain} of the messages. Either \dQuote{R} (the default) or \dQuote{C}. This is case insensitive.}
 
 \item{pkg}{The directory of an R package to extract diagnostic messages from. Path is passed to \code{\link[devtools]{as.package}}.}
 
-\item{translation}{A character string the name and email of a translation of the form \code{First Last <email@example.com>}.}
+\item{translation}{An object of class \code{"po"} containing a message translation.}
+
+\item{translator}{A character string the name and email of a translation of the form \code{First Last <email@example.com>}.}
 
 \item{team}{Optionally, a character string specifying contact information for a \dQuote{translation team}.}
 
@@ -38,17 +40,22 @@ Read, write, and generate translations of diagnostic messages
 \details{
 \code{read_translation} and \code{write_translation} provide basic input and output functionality for translation (.po) files. If called from with an R package directory, the locations of these fies are identified automatically. \code{\link[poio]{read_po}} provides a lower-level interface for reading a specific file.
 
-\code{make_translation} creates a \code{"po"} translation object from a message template (.pot) file (if one does not exist, it is created). The \code{language} and \code{translator} arguments are mandatory. \code{language} must be an allowed language code (see \code{\link[poio]{language_codes}}); the \dQuote{Plural-Forms} metadata field is generated automatically from the language value (see \code{\link[poio]{plural_forms}}).
+The behavior of \code{make_translation} depends on context. If the requested translation already exists, it is updated against the template (.pot) file and loaded into memory. If the translation does not already exist, the function creates a \code{"po"} translation object from the message template (.pot) file (if one does not exist, it is created). The \code{language} and \code{translator} arguments are mandatory in the latter case and only used to update values in an existing file if they differ from the existing values. \code{language} must be an allowed language code (see \code{\link[poio]{language_codes}}); the \dQuote{Plural-Forms} metadata field is generated automatically from the language value (see \code{\link[poio]{plural_forms}}).
 
 \code{\link{edit_translation}} is a very simple interactive interface for editing a translation object in memory.
+}
+\note{
+These functions require that gettext is installed on your system.
 }
 \examples{
 \dontrun{
   # setup pkg for localization
   use_localization()
   
-  # generate translation in memory
-  (tran <- make_translation("es", translator = "Some Person <example@examle.com>"))
+  # generate Portugal Portugese translation in memory
+  make_translation("pt_PT", translator = "Some Person <example@example.com>")
+  # generate Spanish translation in memory
+  (tran <- make_translation("es", translator = "Some Person <example@example.com>"))
   # write to disk
   write_translation(tran)
 }

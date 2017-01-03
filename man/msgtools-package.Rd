@@ -26,6 +26,9 @@ R provides built-in message internationalization. All calls to \code{\link[base]
 
 \code{\link{get_messages}} returns a tibble (data frame) of messages and their file locations. \code{\link{spell_check_msgs}} returns a subset of messages with possible misspelled words and suggested replacements.
 }
+\note{
+Most of the functionality of this package requires \samp{gettext}. Use \code{\link{check_for_gettext}} to see if it is available on your system.
+}
 \examples{
 \dontrun{
   # get messages in memory
@@ -41,11 +44,15 @@ R provides built-in message internationalization. All calls to \code{\link[base]
   write_translation(tran)
 
   # install translation(s)
+  check_translations() # check for errors before install
   install_translations()
 }
 }
 \author{
 Thomas J. Leeper
+}
+\references{
+\href{https://www.gnu.org/software/gettext/manual/gettext.html}{GNU gettext Manual}
 }
 \seealso{
 \code{\link{make_template}}, \code{\link{make_translation}}

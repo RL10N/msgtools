@@ -5,7 +5,7 @@
 #' @details \code{getlang} retrieves the current value of \samp{LANG} environment variables. \code{setlang} sets the \samp{LANG} environment variable and stores the supplied value of \code{language} in \code{options("msgtools_LANG")}. \code{resetlang} resets the language to the value specified in that option or, if that is missing, to English (\dQuote{EN}). This can be useful for testing message translations in various languages.
 #' @return Invisibly, a logical indicating with the language setting was successful.
 #' @author Thomas J. Leeper
-#' @seealso \code{\link[poio]{language_code}}
+#' @seealso \code{\link[poio]{language_codes}}
 #' @import poio
 #' @export
 setlang <- function(language) {

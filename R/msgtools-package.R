@@ -13,6 +13,7 @@
 #' 
 #' \code{\link{get_messages}} returns a tibble (data frame) of messages and their file locations. \code{\link{spell_check_msgs}} returns a subset of messages with possible misspelled words and suggested replacements.
 #' 
+#' @note Most of the functionality of this package requires \samp{gettext}. Use \code{\link{check_for_gettext}} to see if it is available on your system.
 #' @author Thomas J. Leeper
 #' @examples
 #' \dontrun{
@@ -29,9 +30,11 @@
 #'   write_translation(tran)
 #'
 #'   # install translation(s)
+#'   check_translations() # check for errors before install
 #'   install_translations()
 #' }
 #' @seealso \code{\link{make_template}}, \code{\link{make_translation}}
+#' @references \href{https://www.gnu.org/software/gettext/manual/gettext.html}{GNU gettext Manual}
 #' @keywords package
 NULL
 
@@ -39,10 +42,6 @@ NULL
 #' @importFrom devtools as.package
 #' @export
 use_localization <- use_l10n <- function(pkg = ".", domain = "R") {
-    pkg <- as.package(pkg)
-    po_dir <- make_po_dir(pkg = pkg)
-    template_file <- template_path(pkg = pkg, domain = domain)
-    template <- make_template(pkg = pkg, domain = domain)
-    write_template(template = template, pkg = pkg)
+    sync_template(pkg = pkg, domain = domain)
     return(invisible(TRUE))
 }

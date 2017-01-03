@@ -3,6 +3,7 @@
 #' @param translation An object of class \code{"po"}, such as returned by \code{\link{make_translation}} or \code{\link{read_translation}}.
 #' @return \code{make_translation} and \code{read_translation} reutrn an object of class \code{"po"}.
 #' @author Thomas J. Leeper
+#' @note Emacs users may find the gettext PO file editor more comfortable: \url{https://www.gnu.org/software/gettext/manual/gettext.html#PO-Mode}.
 #' @examples
 #' \dontrun{
 #'   # setup pkg for localization

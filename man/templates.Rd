@@ -4,11 +4,14 @@
 \alias{check_for_template}
 \alias{make_template}
 \alias{read_template}
+\alias{sync_template}
 \alias{template_current}
 \alias{write_template}
 \title{Handle message templates (.pot files)}
 \usage{
 make_template(charset = "UTF-8", pkg = ".", domain = "R")
+
+sync_template(charset = "UTF-8", pkg = ".", domain = "R")
 
 read_template(pkg = ".", domain = "R")
 
@@ -36,7 +39,7 @@ Read, write, and generate .pot diagnostic message templates
 \details{
 \code{read_template} and \code{write_template} provide basic input and output functionality for translation template (.pot) files. If called from with an R package directory, the locations of these fies are identified automatically (see \code{\link{make_po_dir}}).
 
-\code{make_template} generates a new template in memory, without writing it to disk.
+\code{make_template} generates a new template in memory, without writing it to disk. \code{sync_template} makes a new template and writes it to disk or, if a template file already exists, overwrites it.
 }
 \examples{
 \dontrun{

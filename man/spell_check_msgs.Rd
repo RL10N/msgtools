@@ -28,4 +28,7 @@ Extracts diagnostic messages from a package and processes them using \code{\link
 \author{
 Thomas J. Leeper
 }
+\seealso{
+\code{\link{get_messages}}, \code{\link{get_message_distances}}
+}
 

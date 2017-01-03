@@ -12,7 +12,7 @@
 #'   # spell check messages
 #'   spell_check_msgs()
 #' }
-#' @seealso \code{\link{spell_check_msgs}}
+#' @seealso \code{\link{spell_check_msgs}}, \code{\link{get_message_distances}}
 #' @importFrom tibble tibble
 #' @importFrom tools xgettext xngettext
 #' @export

@@ -7,7 +7,7 @@
 #' @template domain
 #' @details \code{read_template} and \code{write_template} provide basic input and output functionality for translation template (.pot) files. If called from with an R package directory, the locations of these fies are identified automatically (see \code{\link{make_po_dir}}).
 #' 
-#' \code{make_template} generates a new template in memory, without writing it to disk. 
+#' \code{make_template} generates a new template in memory, without writing it to disk. \code{sync_template} makes a new template and writes it to disk or, if a template file already exists, overwrites it.
 #' @return \code{make_template} and \code{read_template} reutrn an object of class \dQuote{po}. \code{write_template} returns the path to the file, invisibly.
 #' @author Thomas J. Leeper
 #' @examples
@@ -85,6 +85,13 @@ function(charset = "UTF-8",
                                  previous_string_comments = rep(list(list()), nrow(countable))
                                  )
               ), class = c("po", "list"))
+}
+
+#' @rdname templates
+#' @export
+sync_template <- function(charset = "UTF-8", pkg = ".", domain = "R") {
+    template <- make_template(charset = charset, pkg = pkg, domain = domain)
+    write_template(template, pkg = pkg)
 }
 
 #' @rdname templates
