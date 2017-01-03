@@ -19,11 +19,9 @@ Compare the string distance of messages to check for near-duplicates
 Compares the generalized Levenshtein (edit) distance between pairs of messages using \code{\link[utils]{adist}}, returning the data frame of messages from \code{\link{get_messages}} with additional columns corresponding to the pairwise distance
 }
 \examples{
-\dontrun{
-  # get message distances
-  dist <- get_message_distance()
-  which.min()
-}
+# get message distances
+pkg <- extract_example_pkg()
+dist <- get_message_distances(pkg)
 }
 \author{
 Thomas J. Leeper

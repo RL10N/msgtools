@@ -19,13 +19,9 @@ Extracts diagnostic messages from a package using \code{\link[tools]{xgettext}}
 Extracts diagnostic messages from a package.
 }
 \examples{
-\dontrun{
-  # get tidy data frame of messages
-  get_messages()
-
-  # spell check messages
-  spell_check_msgs()
-}
+# get tidy data frame of messages
+pkg <- extract_example_pkg()
+get_messages(pkg)
 }
 \author{
 Thomas J. Leeper

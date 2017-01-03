@@ -22,7 +22,9 @@ Extracts diagnostic messages from a package and processes them using \code{\link
 }
 \examples{
 \dontrun{
-  spell_check_msgs()
+  # Not run since it takes too long
+  pkg <- extract_example_pkg()
+  spell_check_msgs(pkg)
 }
 }
 \author{

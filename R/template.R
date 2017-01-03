@@ -11,16 +11,18 @@
 #' @return \code{make_template} and \code{read_template} reutrn an object of class \dQuote{po}. \code{write_template} returns the path to the file, invisibly.
 #' @author Thomas J. Leeper
 #' @examples
-#' \dontrun{
-#'   # check for existing template
-#'   check_for_template()
+#' # check for existing template
+#' pkg <- extract_example_pkg()
+#' try(check_for_template(pkg))
 #' 
-#'   # generate an in-memory template
-#'   pot <- make_template()
-#'   write_template(pot)
+#' # generate an in-memory template
+#' pot <- make_template(pkg)
+#' write_template(pot)
 #'   
-#'   # setup a package for translating
-#'   use_translations()
+#' # setup a package for translating
+#' \dontrun{
+#' # Should this be use_localization(pkg)?
+#' use_translations(pkg)
 #' }
 #' @seealso \code{\link{get_messages}} to read messages into memory without creating a template file, \code{\link{use_localization}} to setup a package for localization (including generation of a template file)
 #' @importFrom tibble tibble

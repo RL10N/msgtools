@@ -21,7 +21,8 @@ Emacs users may find the gettext PO file editor more comfortable: \url{https://w
 \examples{
 \dontrun{
   # setup pkg for localization
-  use_localization()
+  pkg <- extract_example_pkg()
+  use_localization(pkg)
   
   # generate translation in memory
   (tran <- make_translation("es", translator = "Some Person <example@examle.com>"))
