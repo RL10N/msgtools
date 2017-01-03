@@ -2,3 +2,7 @@
 travis-tool.sh
 ^README.Rmd$
 man-roxygen/
+^.*\.Rproj$
+^\.Rproj\.user$
+scripts/
+
