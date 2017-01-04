@@ -1,4 +1,8 @@
-# CHANGES TO msgtools 0.1.2
+# CHANGES TO msgtools 0.2.3
+
+* Added a vignette demonstrating package functionality and streamlined the README. (#3)
+
+# CHANGES TO msgtools 0.2.2
 
 * Streamlined the `install_translations()` function and separated `check_translation()` and `check_translations()` into separate functions.
 * Added `sync_template()` function to update an existing template (or create a new template file if doesn't exist). This is now called internally by `use_localization()`.
@@ -8,7 +12,7 @@
 * Updated README documentation.
 * Fixed numerous `R CMD check` warnings and notes.
 
-# CHANGES TO msgtools 0.1.1
+# CHANGES TO msgtools 0.2.1
 
 * Use **poio** for .po and .pot file input and output. (#16)
 * Use **hunspell** for spell checking.

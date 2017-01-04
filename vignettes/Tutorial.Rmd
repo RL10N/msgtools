@@ -1,0 +1,157 @@
+---
+title: "Tools for Developing Diagnostic Messages"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_caption: false
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{Tools for Developing Diagnostic Messages}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(comment = "")
+```
+
+This vignette walks through the basic functionality of **msgtools**, in particular how to use the package to generate message translations.
+
+## Create an Example Package
+
+Let's start by creating a simple package containing some translatable messages. If you are working on your own package, of course skip these steps. We'll use **devtools** to first create a simple package:
+
+```{r}
+library("devtools")
+
+# Create a pacakge in the temp directory
+description <- list(
+  Title = "An Example Package",
+  Description = "Demonstrates 'msgtools' functionality",
+  BugReports = "https://github.com/RL10N/msgtools/issues",
+  License = "Unlimited"
+)
+pkg_dir <- file.path(tempdir(), "translateme")
+dir.create(pkg_dir)
+create(pkg_dir, description = description, rstudio = FALSE)
+```
+
+We will then add a function to this "dummy" package that contains a number of translatable messages:
+
+```{r}
+library("msgtools")
+(ex <- msgtools:::translatable_messages)
+dump("ex", file = file.path(pkg_dir, "R", "fns.R"))
+```
+
+We will just confirm that the function has been added to the package by using the `get_messages()` function, which extracts all translatable messages from a package's code:
+
+```{r}
+get_messages(pkg_dir)
+```
+
+(Note: If your working directory is within the package, you do *not* need to explicitly specify the package directory, `pkg`.)
+
+This shows that any call to `stop()`, `warning()`, `message()`, `gettext()`, `ngettext()`, or `gettextf()` is automatically internationalized. This means that you likely do not have to change any R code to make it ready for translation. All you have to do is *localize* the messages into whatever target languages you are interested in. If you translate messages into a given language, those translations will be shown to end-users when operating in a locale that uses that language; otherwise the original English language messages will be shown. (For this to work, R has to be installed with internationalization support (which is optional).) With the package setup, we can now start configuring the package for localization.
+
+To do that, start by calling `use_localization()`, which will add a `/po` directory to the package and initialize a `.pot` ("portable object template") file that contains all translatable messages:
+
+```{r}
+use_localization(pkg_dir)
+```
+
+You can also use the `use_l10n()` function, which is an alias with a slightly shorter name.
+
+### Translating Messages
+
+Once that initial step is performed, you can start creating translations. Translations are stored in `.po` ("portable object") files, based on the .pot template file. The format is pretty simple, with each message and its translation set next to one another, along with some metadata:
+
+```
+#: lib/error.c:116
+msgid "Unknown system error"
+msgstr "Error desconegut del sistema"
+```
+
+(The R source contains a number of examples of translations, for example in [the base package](https://svn.r-project.org/R/trunk/src/library/base/po/).)
+
+To do so, you simply call `make_translation()` with the language and contact information for the translator (possibly you or someone else). Here's the code to initialize a Spanish translation:
+
+```{r}
+es <- make_translation("es", translator = "Awesome Translator <translator@example.com", pkg = pkg_dir)
+```
+
+This creates an empty translation `"po"` object in memory based on the template file.
+
+
+We could also do this interactively using `edit_translation(es)`
+
+
+Once you are satisfied with the translations, you can write them to the package directory using:
+
+```{r}
+write_translation(es, pkg = pkg_dir)
+```
+
+If you want, you can also edit the files manually using a text editor. The `make_translation()` file respects any existing translations, so calling it again will update the .po file against the template and load the updated file into memory:
+
+```{r}
+es <- make_translation("es", pkg = pkg_dir)
+```
+
+
+### Updating Translations
+
+If you make changes to your code, you will need to update the .pot template file, as well as any translations. To do so, simply sync the template (updating it against your current code) and remake the translations:
+
+```{r}
+sync_template(pkg = pkg_dir)
+es <- make_translation("es", pkg = pkg_dir)
+```
+
+
+### Installing Translations
+
+Once we have the messages translated, we can check them for errors using `check_translations()` and then install them into the package by using `install_translations()`, which will create a `inst/po` directory and populate it with the translation binaries:
+
+```{r}
+check_translations(pkg_dir)
+install_translations(pkg_dir)
+```
+
+That's it! The message translations will now be built and installed with the package, as you can see here:
+
+```{r}
+dir(file.path(pkg_dir, "inst", "po"), recursive = TRUE)
+```
+
+### Messages in Compiled Code
+
+Note that R-level messages and messages in compiled code are handled separately; with separate .pot (template) and .po (translation) files for R and C code for each language. **msgtools** is primarily designed to work with R-level messages, but also supports working with C-level messages. Essentially all functions in the package will acept a `domain = "C"` argument to handle translations for messages in C code.
+
+## Some Other Tools
+
+Beyond support for message localization, **msgtools** also provides some basic diagnostic functions for examining and working with messages. One of these we have already seen: `get_message()` simply returns a data frame of messages. Other functionality includes spell-checking of messages:
+
+```{r}
+spell_check_msgs(pkg = pkg_dir)
+```
+
+This can assess spelling in other languages, as well.
+
+Another simple function is provided to compare string edit distance between messages, to identify messages that are used multiple times throughout a package that may have slight inconsistencies.
+
+```{r}
+get_message_distances(pkg = pkg_dir)
+```
+
+Here you can see, for example, the close similarity of "Every wife had %d sacks" and "Every cat had %d kits" but clearly these two messages are meant to be distinct.
+
+The plan is to add additional utilities, for example to document messages in package help files and to identify possible errors in message texts (e.g., pluralization).
+
+```{r, echo=FALSE}
+unlink(pkg_dir, recursive = TRUE)
+```

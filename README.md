@@ -12,7 +12,7 @@ R has reasonably sophisticated built-in *internationalization* (i18n) features. 
 
 To begin *localization* (l10n) of messages, a package developer simply needs to (1) write translations for these messages using a standardized file format and (2) install the translations into their package. Localization traditionally requires the manual creation of a `.pot` ("portable object template") file using the `xgettext` command line utility and the generation of language-specific .po ("portable object") translation files that specify the translation of each message string into the target language.
 
-The .pot/.po file format is fairly straight forward, simply containing a series of messages and their translations, plus some metadata:
+The .pot/.po file format is fairly straightforward, simply containing a series of messages and their translations, plus some metadata:
 
 ```
 #: lib/error.c:116
@@ -20,13 +20,13 @@ msgid "Unknown system error"
 msgstr "Error desconegut del sistema"
 ```
 
-(The R source contains a number of examples of translations, for example in [the base pacakge](https://svn.r-project.org/R/trunk/src/library/base/po/).)
+(The R source contains a number of examples of translations, for example in [the base package](https://svn.r-project.org/R/trunk/src/library/base/po/).)
 
 **msgtools** negates the need to directly call the command-line utilities or interact with .pot/.po files by relying on R representations of templates and translations (provided by [poio](https://cran.r-project.org/package=poio)). This makes it possible to programmatically create, modify, and install translations, thus eliminating the need to manually open each translation file in a text editor.
 
 A basic **msgtools** workflow is as follows:
 
-```{r}
+```R
 library("msgtools")
 
 # setup package for localization
@@ -38,9 +38,6 @@ write_translation(es)
 
 ## edit translations manually!
 
-# reload translations (if you want)
-es <- make_translation("es")
-
 # check translation files for errors
 check_translations()
 
@@ -50,45 +47,7 @@ install_translations()
 
 At this point, you still have to manually edit the the .po translation files created by `make_translation()` using either a text editor or the lightweight `edit_translation()` function.
 
-### Interactive message translation
-
-Currently, msgtools provides a very basic interactive interface for creating message translations, which can then be written to file:
-
-```R
-# interactively update or create Spanish translation
-es <- edit_translation(es)
-write_translation(es)
-```
-
-This negates the need to manually open and edit translation (.po) files in a text editor. If translations files are edited, `make_translation()` will read those revisions into memory rather than generating a new (empty) translation file from the template.
-
-## Other functionality
-
-The R representations of messsages allow some additional functionality for working with diagnostic messages, which may be useful to package developers.
-
-### Checking consistency of diagnostic messages
-
-Packages frequently use similar errors and warnings across functions, but in practice these errors and warnings might have slight changes in wording, spelling, etc. that can be confusing to users. The `get_messages()` function extracts all messages as a tidy data frame, which can be used to examine possible problems or near-duplications of messages strings:
-
-```{r}
-head(sort(get_messages()[["msgid"]]))
-```
-
-The `get_message_distance()` can further be used to identify these situations.
-
-```{r}
-get_message_distances()
-```
-
-The resulting data frame contains columns corresponding to the Levenshtein (edit) distance between each message and every other message.
-
-### Spell checking
-
-Unavoidably, packages have spelling errors. The `spell_check_msgs()` function checks messages for spelling errors and returns a data frame of suggestion corrections for those errors.
-
-```{r}
-spell_check_msgs()
-```
+A [vignette included in the package](https://github.com/RL10N/msgtools/blob/master/vignettes/Tutorial.Rmd) provides a fully documented workflow using a simple example package.
 
 ## Requirements and Installation
 
