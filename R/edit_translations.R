@@ -7,16 +7,16 @@
 #' @examples
 #' \dontrun{
 #'   # setup pkg for localization
-#'   pkg <- extract_example_pkg()
-#'   use_localization(pkg)
+#'   pkg <- dummy_pkg()
+#'   use_localization(pkg = pkg)
 #'   
 #'   # generate translation in memory
-#'   (tran <- make_translation("es", translator = "Some Person <example@examle.com>"))
+#'   (tran <- make_translation("es", translator = "Some Person <example@examle.com>", pkg = pkg))
 #'   
 #'   # edit translations
-#'   tran2 <- edit_translation(tran)
+#'   tran2 <- edit_translation(tran, pkg = pkg)
 #'   # write to disk
-#'   write_translation(tran2)
+#'   write_translation(tran2, pkg = pkg)
 #' }
 #' @seealso \code{\link{make_translation}}
 #' @importFrom utils select.list

@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: msgtools 0.2.1\n"
+"Project-Id-Version: msgtools 0.2.3\n"
 "Report-Msgid-Bugs-To: https://github.com/RL10N/msgtools/issues\n"
-"POT-Creation-Date: 2017-01-03 11:46\n"
-"PO-Revision-Date: 2017-01-03 11:46\n"
+"POT-Creation-Date: 2017-01-04 17:23\n"
+"PO-Revision-Date: 2017-01-04 17:23\n"
 "Last-Translator:  \n"
 "Language-Team:  \n"
 "Language: LL\n"
@@ -43,6 +43,11 @@ msgstr ""
 
 # NA
 msgctxt ""
+msgid ""
+msgstr ""
+
+# NA
+msgctxt ""
 msgid "Translation (n == 0):"
 msgstr ""
 
@@ -78,11 +83,6 @@ msgstr ""
 
 # NA
 msgctxt ""
-msgid "This is a single test message"
-msgstr ""
-
-# NA
-msgctxt ""
 msgid "running msgfmt on %s failed"
 msgstr ""
 
@@ -98,7 +98,52 @@ msgstr ""
 
 # NA
 msgctxt ""
+msgid "Creating the 'po' directory"
+msgstr ""
+
+# NA
+msgctxt ""
+msgid "Writing the 'pot' master translation file"
+msgstr ""
+
+# NA
+msgctxt ""
 msgid "Template (.pot) file does not exist"
+msgstr ""
+
+# NA
+msgctxt ""
+msgid "As I was going to St. Ives"
+msgstr ""
+
+# NA
+msgctxt ""
+msgid "Every wife had %d sacks"
+msgstr ""
+
+# NA
+msgctxt ""
+msgid "Every sack had"
+msgstr ""
+
+# NA
+msgctxt ""
+msgid "cats"
+msgstr ""
+
+# NA
+msgctxt ""
+msgid "Every cat had %d kits"
+msgstr ""
+
+# NA
+msgctxt ""
+msgid "Kits, cats, sacks, and wives"
+msgstr ""
+
+# NA
+msgctxt ""
+msgid "How many were going to St. Ives?"
 msgstr ""
 
 # NA
@@ -108,15 +153,8 @@ msgstr ""
 
 # NA
 msgctxt ""
-msgid "This is a test message"
-msgid_plural "These are two test messages"
-msgstr[0] ""
-msgstr[1] ""
-
-# NA
-msgctxt ""
-msgid "There is another test message"
-msgid_plural "These are another two test messages"
+msgid "I met a man with %d wife"
+msgid_plural "I met a man with %d wives"
 msgstr[0] ""
 msgstr[1] ""
 

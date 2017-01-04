@@ -5,9 +5,9 @@
 #' @return A \dQuote{tibble} (data frame) containing messages, pluralized messages, and the file location of each message.
 #' @author Thomas J. Leeper
 #' @examples
-#' # get tidy data frame of messages
-#' pkg <- extract_example_pkg()
-#' get_messages(pkg)
+#' pkg <- dummy_pkg()
+#' 
+#' get_messages(pkg = pkg)
 #' @seealso \code{\link{spell_check_msgs}}, \code{\link{get_message_distances}}
 #' @importFrom tibble tibble
 #' @importFrom tools xgettext xngettext
@@ -30,10 +30,4 @@ get_messages <- function(pkg = ".") {
            msgid_plural = c(msgsA2, as.character(msgsB[["msg2"]])),
            type = c(rep("direct", length(filesA)), rep("countable", length(filesB))),
            file = c(filesA, filesB))
-}
-
-some_nonexported_messages <- function() {
-    gettext("This is a single test message")
-    ngettext(2, "This is a test message", "These are two test messages")
-    ngettext(2, "There is another test message", "These are another two test messages")
 }

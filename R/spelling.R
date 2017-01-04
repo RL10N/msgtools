@@ -4,7 +4,7 @@
 #' @param dict A \code{\link[hunspell]{dictionary}} object.
 #' @template pkg 
 #' @details Extracts diagnostic messages from a package and processes them using \code{\link[hunspell]{hunspell}} to check for possible spelling mistakes.
-#' @return A data frame containing each message with a potentially misspelled word, the misspelled word, and the source code file in which the message is located, and (for each word) a list of suggested corrections.
+#' @return A data frame containing each message with a potentially misspelled word, the misspelled word, and the source code file in which the message is located, and (for each word) a list of suggested corrections. If no words are misspelled, a data frame with zero rows.
 #' @author Thomas J. Leeper
 #' @examples
 #' \dontrun{

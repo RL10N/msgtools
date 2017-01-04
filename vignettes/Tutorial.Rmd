@@ -21,14 +21,14 @@ knitr::opts_chunk$set(comment = "")
 
 This vignette walks through the basic functionality of **msgtools**, in particular how to use the package to generate message translations.
 
-## Create an Example Package
+## Message Translations (Localization)
 
 Let's start by creating a simple package containing some translatable messages. If you are working on your own package, of course skip these steps. We'll use **devtools** to first create a simple package:
 
 ```{r}
 library("devtools")
 
-# Create a pacakge in the temp directory
+# Create a package in the temp directory
 description <- list(
   Title = "An Example Package",
   Description = "Demonstrates 'msgtools' functionality",

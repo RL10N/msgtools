@@ -37,11 +37,11 @@ These functions require that gettext is installed on your system.
 }
 \examples{
 \dontrun{
-   # check translations
-   check_translations()
-   
-   # install translations
-   install_translations()
+  # check translations
+  check_translations()
+  
+  # install translations
+  install_translations()
 }
 }
 \seealso{

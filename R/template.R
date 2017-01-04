@@ -14,17 +14,15 @@
 #' @return \code{make_template} and \code{read_template} reutrn an object of class \dQuote{po}. \code{write_template} returns the path to the file, invisibly.
 #' @author Thomas J. Leeper
 #' @examples
+#' pkg <- dummy_pkg()
+#'
 #' # check for existing template
-#' pkg <- extract_example_pkg()
-#' try(check_for_template(pkg))
+#' try(check_for_template(pkg = pkg))
 #' 
 #' # generate an in-memory template
-#' pot <- make_template(pkg)
-#' write_template(pot)
+#' pot <- make_template(pkg = pkg)
+#' write_template(pot, pkg = pkg)
 #'   
-#' # setup a package for translating
-#' use_localization(pkg)
-#' }
 #' @seealso \code{\link{get_messages}} to read messages into memory without creating a template file, \code{\link{use_localization}} to setup a package for localization (including generation of a template file)
 #' @importFrom tibble tibble
 #' @import poio
@@ -107,7 +105,7 @@ sync_template <- function(charset = "UTF-8", pkg = ".", domain = "R",
 read_template <- function(pkg = ".", domain = "R"){
     check_for_template(pkg = pkg, domain = domain)
     pot_file <- template_path(pkg = pkg, domain = domain)
-    fix_metadata(read_po(pot_file))
+    fix_metadata(read_po(pot_file), pkg = pkg, file_type = "pot")
 }
 
 #' @rdname templates

@@ -19,9 +19,9 @@ Extracts diagnostic messages from a package using \code{\link[tools]{xgettext}}
 Extracts diagnostic messages from a package.
 }
 \examples{
-# get tidy data frame of messages
-pkg <- extract_example_pkg()
-get_messages(pkg)
+pkg <- dummy_pkg()
+
+get_messages(pkg = pkg)
 }
 \author{
 Thomas J. Leeper

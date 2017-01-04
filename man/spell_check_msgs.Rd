@@ -12,7 +12,7 @@ spell_check_msgs(dict = dictionary("en_US"), pkg = ".")
 \item{pkg}{The directory of an R package to extract diagnostic messages from. Path is passed to \code{\link[devtools]{as.package}}.}
 }
 \value{
-A data frame containing each message with a potentially misspelled word, the misspelled word, and the source code file in which the message is located, and (for each word) a list of suggested corrections.
+A data frame containing each message with a potentially misspelled word, the misspelled word, and the source code file in which the message is located, and (for each word) a list of suggested corrections. If no words are misspelled, a data frame with zero rows.
 }
 \description{
 Extracts diagnostic messages from a package and checks them for spelling errors.

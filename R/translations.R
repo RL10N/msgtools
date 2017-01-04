@@ -19,8 +19,10 @@
 #' @author Thomas J. Leeper
 #' @examples
 #' \dontrun{
+#'   # create example package
+#'   pkg <- dummy_pkg()
+#'   
 #'   # setup pkg for localization
-#'   pkg <- extract_example_pkg()
 #'   use_localization(pkg)
 #'   
 #'   # generate Portugal Portugese translation in memory
@@ -36,7 +38,7 @@
 read_translation <- function(language, domain = "R", pkg = ".") {
     pkg <- as.package(pkg)
     po_file <- translation_path(pkg = pkg, language = language, domain = domain)
-    fix_metadata(read_po(po_file))
+    fix_metadata(read_po(po_file), pkg = pkg, file_type = "po")
 }
 
 #' @rdname translations
@@ -91,12 +93,16 @@ function(language,
         
         translation <- read_translation(language = language, domain = domain, pkg = pkg)
         oldtranslator <- translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Last-Translator"]
-        if (oldtranslator != translator) {
-            translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Last-Translator"] <- translator
+        if (!missing(translator)) {
+            if (oldtranslator != translator) {
+                translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Last-Translator"] <- translator
+            }
         }
         oldteam <- translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Language-Team"]
-        if (oldteam != team) {
-            translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Language-Team"] <- team
+        if (team != " ") {
+            if (oldteam != team) {
+                translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Language-Team"] <- team
+            }
         }
     } else {
         translation <- template

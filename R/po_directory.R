@@ -4,8 +4,8 @@
 #' @template pkg
 #' @return \code{check_for_po_dir} returns a logical. \code{make_po_dir} returns the path to the directory.
 #' @examples
-#' # from within a package directory
-#' pkg <- extract_example_pkg()
+#' # create example package
+#' pkg <- dummy_pkg()
 #' if (!check_for_po_dir(pkg)) {
 #'   make_po_dir(pkg)
 #' }

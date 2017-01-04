@@ -29,23 +29,25 @@ This package implements a number utilities for developing and maintaining error,
 Most of the functionality of this package requires \samp{gettext}. Use \code{\link{check_for_gettext}} to see if it is available on your system.
 }
 \examples{
-\dontrun{
+  # create example package
+  pkg <- dummy_pkg()
+  
   # get messages in memory
-  get_messages()
+  get_messages(pkg = pkg)
   # spell check messages
-  spell_check_msgs()
+  spell_check_msgs(pkg = pkg)
 
   # setup pkg for localization
-  use_localization()
+  use_localization(pkg = pkg)
   
   # make a translation
-  tran <- make_translation("es", translator = "Some Person <example@examle.com>")
-  write_translation(tran)
+  tran <- make_translation("es", translator = "Some Person <example@examle.com>", pkg = pkg)
+  write_translation(tran, pkg = pkg)
 
   # install translation(s)
-  check_translations() # check for errors before install
-  install_translations()
-}
+  check_translations(pkg = pkg) # check for errors before install
+  install_translations(pkg = pkg)
+
 }
 \author{
 Thomas J. Leeper

@@ -45,6 +45,17 @@ Read, write, and generate .pot diagnostic message templates
 
 \code{make_template} generates a new template in memory, without writing it to disk. \code{sync_template} makes a new template and writes it to disk or, if a template file already exists, overwrites it.
 }
+\examples{
+pkg <- dummy_pkg()
+
+# check for existing template
+try(check_for_template(pkg = pkg))
+
+# generate an in-memory template
+pot <- make_template(pkg = pkg)
+write_template(pot, pkg = pkg)
+  
+}
 \author{
 Thomas J. Leeper
 }

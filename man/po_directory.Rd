@@ -19,8 +19,8 @@ make_po_dir(pkg = ".")
 Check for and create a /po directory
 }
 \examples{
-# from within a package directory
-pkg <- extract_example_pkg()
+# create example package
+pkg <- dummy_pkg()
 if (!check_for_po_dir(pkg)) {
   make_po_dir(pkg)
 }

@@ -5,9 +5,10 @@
 #' @return A \dQuote{tibble} (data frame) containing messages, pluralized messages, and the file location of each message.
 #' @author Thomas J. Leeper
 #' @examples
+#' pkg <- dummy_pkg()
+#' 
 #' # get message distances
-#' pkg <- extract_example_pkg()
-#' dist <- get_message_distances(pkg)
+#' dist <- get_message_distances(pkg = pkg)
 #' @seealso \code{\link{get_messages}}, \code{\link{spell_check_msgs}}
 #' @importFrom tibble as_tibble
 #' @importFrom utils adist

@@ -49,8 +49,10 @@ These functions require that gettext is installed on your system.
 }
 \examples{
 \dontrun{
+  # create example package
+  pkg <- dummy_pkg()
+  
   # setup pkg for localization
-  pkg <- extract_example_pkg()
   use_localization(pkg)
   
   # generate Portugal Portugese translation in memory
