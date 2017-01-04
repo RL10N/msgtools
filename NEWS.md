@@ -1,6 +1,7 @@
 # CHANGES TO msgtools 0.2.3
 
 * Added a vignette demonstrating package functionality and streamlined the README. (#3)
+* Added simple test suite. (#18)
 
 # CHANGES TO msgtools 0.2.2
 
