@@ -3,5 +3,7 @@ sudo: false
 cache: packages
 r_packages:
 - covr
+r_github_packages:
+- RL10N/poio
 after_success:
 - Rscript -e 'library("covr");codecov()'

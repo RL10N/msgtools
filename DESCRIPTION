@@ -13,10 +13,11 @@ URL: https://github.com/RL10N/msgtools/
 BugReports: https://github.com/RL10N/msgtools/issues
 License: MIT + file LICENSE
 Version: 0.2.3
+Depends: R (>= 3.2.0)
 Imports:
     tools,
     utils,
-    poio,
+    poio (>= 0.0-2),
     tibble,
     hunspell,
     devtools
