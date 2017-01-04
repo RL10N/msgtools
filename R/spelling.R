@@ -8,7 +8,9 @@
 #' @author Thomas J. Leeper
 #' @examples
 #' \dontrun{
-#'   spell_check_msgs()
+#'   # Not run since it takes too long
+#'   pkg <- extract_example_pkg()
+#'   spell_check_msgs(pkg)
 #' }
 #' @seealso \code{\link{get_messages}}, \code{\link{get_message_distances}}
 #' @importFrom tibble as_tibble

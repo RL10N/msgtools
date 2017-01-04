@@ -5,13 +5,9 @@
 #' @return A \dQuote{tibble} (data frame) containing messages, pluralized messages, and the file location of each message.
 #' @author Thomas J. Leeper
 #' @examples
-#' \dontrun{
-#'   # get tidy data frame of messages
-#'   get_messages()
-#' 
-#'   # spell check messages
-#'   spell_check_msgs()
-#' }
+#' # get tidy data frame of messages
+#' pkg <- extract_example_pkg()
+#' get_messages(pkg)
 #' @seealso \code{\link{spell_check_msgs}}, \code{\link{get_message_distances}}
 #' @importFrom tibble tibble
 #' @importFrom tools xgettext xngettext

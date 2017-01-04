@@ -50,7 +50,8 @@ These functions require that gettext is installed on your system.
 \examples{
 \dontrun{
   # setup pkg for localization
-  use_localization()
+  pkg <- extract_example_pkg()
+  use_localization(pkg)
   
   # generate Portugal Portugese translation in memory
   make_translation("pt_PT", translator = "Some Person <example@example.com>")

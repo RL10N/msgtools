@@ -5,7 +5,7 @@
 #' @description This package implements a number utilities for developing and maintaining error, warning, and other diagnostic messages in R packages, including checking for consistency across messages, spell-checking messages, and managing internationalization and location of messages (i.e., translations into various languages).
 #' @template pkg
 #' @template domain
-#' @details R provides built-in message internationalization. All calls to \code{\link[base]{stop}}, \code{\link[base]{warning}}, \code{\link[base]{message}}, \code{\link[base]{gettext}}, and \code{\link[base]{ngettext}} are automatically configured for internationalization. Creating-language specific translations of these messages thus simply requires setting up a package for localization, performing the translations (likely by hand), and installing the translations into the package so they are available to users. msgtools provides utilities for handling each of these steps.
+#' @param verbose Logical. Should the function be chatty?
 #' 
 #' \code{use_localization} (alias: \code{use_l10n}) is the high-level, devtools-style function to create a \samp{/po} directory and initialize a translation template (.pot) file. 
 #' 
@@ -41,7 +41,8 @@ NULL
 #' @rdname msgtools-package
 #' @importFrom devtools as.package
 #' @export
-use_localization <- use_l10n <- function(pkg = ".", domain = "R") {
-    sync_template(pkg = pkg, domain = domain)
+use_localization <- use_l10n <- function(pkg = ".", domain = "R", 
+    verbose = getOption("verbose")) {
+    sync_template(pkg = pkg, domain = domain, verbose = verbose)
     return(invisible(TRUE))
 }

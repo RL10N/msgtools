@@ -19,11 +19,10 @@ make_po_dir(pkg = ".")
 Check for and create a /po directory
 }
 \examples{
-\dontrun{
-  # from within a package directory
-  if (!check_for_po_dir()) {
-    make_po_dir()
-  }
+# from within a package directory
+pkg <- extract_example_pkg()
+if (!check_for_po_dir(pkg)) {
+  make_po_dir(pkg)
 }
 }
 
