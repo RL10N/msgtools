@@ -32,32 +32,26 @@ edit_translation <- function(translation, language, pkg = ".", domain = "R") {
     
     # command-line interface to update po translation
     esingle <- function(msgid, msgstr) {
-        message(paste0(gettext("Original message is: "), msgid))
+        message(paste0(gettext("English message is: "), msgid))
         if (length(msgstr) && !is.na(msgstr) && msgstr != "") {
             message(paste0(gettext("Current translation is: "), msgstr))
         } else {
-            message("Current translation is empty")
+            message("No current translation!\n")
         }
         
         readline(gettext("Translation: "))
     }
     eplural <- function(msgid, msgid_plural, msgstr) {
-        message(paste0(gettext("Original message is: "), msgid))
-        message(paste0(gettext("Original plural message is: "), msgid_plural))
-        if (length(msgstr)) {
-            message(paste0(gettext("Current translations are: "), paste0(msgstr, collapse = "\n")))
-        } else {
-            message("Current translation is empty")
+        message(paste0(gettext("English single message is: "), msgid))
+        message(paste0(gettext("English plural message is: "), msgid_plural))
+        if (!length(msgstr)) {
+            message("No current translations!\n")
         }
-        plurals <- 
-        list(readline(gettext("Translation (n == 0): ")),
-             readline(gettext("Translation (n == 1): ")),
-             readline(gettext("Translation (n == 2): ")),
-             readline(gettext("Translation (n == 3): ")),
-             readline(gettext("Translation (n == 4): ")),
-             readline(gettext("Translation (n == 5): ")),
-             readline(gettext("Translation (n == 6): "))
-             )
+        plurals <- list()
+        for (i in 0:6) {
+            message(paste0(gettext("Current plural [", i, "] translation is: "), msgstr[[i+1]])
+            plurals[[i + 1L]] <- readline(gettext("Translation (n == ", i, "): "))
+        }
         plurals
     }
     
