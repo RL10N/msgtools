@@ -49,13 +49,16 @@ edit_translation <- function(translation, language, pkg = ".", domain = "R") {
         } else {
             message("Current translation is empty")
         }
-        
+        plurals <- 
         list(readline(gettext("Translation (n == 0): ")),
              readline(gettext("Translation (n == 1): ")),
              readline(gettext("Translation (n == 2): ")),
              readline(gettext("Translation (n == 3): ")),
-             readline(gettext("Translation (n >= 4): "))
+             readline(gettext("Translation (n == 4): ")),
+             readline(gettext("Translation (n == 5): ")),
+             readline(gettext("Translation (n == 6): "))
              )
+        plurals
     }
     
     msgs1 <- translation[["direct"]][["msgid"]]
