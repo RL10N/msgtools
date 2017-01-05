@@ -5,19 +5,21 @@
 #' @description Read, write, and generate .pot diagnostic message templates
 #' @template pkg
 #' @template template
-#' @param charset A character string specifying the character set of the translation template file.
-#' @param verbose Logical. Should the function be chatty?
+#' @template verbosity
 #' @template domain
 #' @details \code{read_template} and \code{write_template} provide basic input and output functionality for translation template (.pot) files. If called from with an R package directory, the locations of these fies are identified automatically (see \code{\link{make_po_dir}}).
 #' 
 #' \code{make_template} generates a new template in memory, without writing it to disk. \code{sync_template} makes a new template and writes it to disk or, if a template file already exists, overwrites it.
+#'
+#' \code{sync_template()} updates the template file. \code{\link{sync_translations}} further updates translation files against that template.
+#' 
 #' @return \code{make_template} and \code{read_template} reutrn an object of class \dQuote{po}. \code{write_template} returns the path to the file, invisibly.
 #' @author Thomas J. Leeper
 #' @examples
 #' pkg <- dummy_pkg()
 #'
 #' # check for existing template
-#' try(check_for_template(pkg = pkg))
+#' try(template_exists(pkg = pkg))
 #' 
 #' # generate an in-memory template
 #' pot <- make_template(pkg = pkg)
@@ -34,11 +36,12 @@ function(charset = "UTF-8",
     
     pkg <- as.package(pkg)
     
-    if (domain != "R") {
-        stop("Currently only the R domain is implemented")
+    if (!domain %in% c("R", "r")) {
+        stop("Currently only the 'R' domain is supported")
     }
     
     msgs <- get_messages(pkg = pkg)
+    msgs <- msgs[msgs[["msgid"]] != "", ]
     direct <- msgs[msgs[["type"]] == "direct",]
     countable <- msgs[msgs[["type"]] == "countable",]
     
@@ -94,16 +97,10 @@ function(charset = "UTF-8",
 
 #' @rdname templates
 #' @export
-sync_template <- function(charset = "UTF-8", pkg = ".", domain = "R",
-                          verbose = getOption("verbose")) {
-    template <- make_template(charset = charset, pkg = pkg, domain = domain)
-    write_template(template, pkg = pkg, verbose = verbose)
-}
-
-#' @rdname templates
-#' @export
 read_template <- function(pkg = ".", domain = "R"){
-    check_for_template(pkg = pkg, domain = domain)
+    if (!template_exists(pkg = pkg, domain = domain)) {
+        stop("Template (.pot) file not found!")
+    }
     pot_file <- template_path(pkg = pkg, domain = domain)
     fix_metadata(read_po(pot_file), pkg = pkg, file_type = "pot")
 }
@@ -112,12 +109,9 @@ read_template <- function(pkg = ".", domain = "R"){
 #' @export
 write_template <- function(template, pkg = ".", verbose = getOption("verbose")) {
     pkg <- as.package(pkg)
-    if(verbose) {
-      message("Creating the 'po' directory")
-    }
-    make_po_dir(pkg = pkg)
-    if(verbose) {
-      message("Writing the 'pot' master translation file")
+    make_po_dir(pkg = pkg, verbose = verbose)
+    if (isTRUE(verbose)) {
+       message("Writing the template (.pot) file")
     }
     pot_file <- template_path(pkg = pkg, domain = template[["source_type"]])
     write_po(template, pot_file)
@@ -126,13 +120,34 @@ write_template <- function(template, pkg = ".", verbose = getOption("verbose")) 
 
 #' @rdname templates
 #' @export
-check_for_template <- function(pkg = ".", domain = "R") {
+template_exists <- function(pkg = ".", domain = "R") {
     pkg <- as.package(pkg)
     pot_file <- template_path(pkg = pkg, domain = domain)
-    if (file.exists(pot_file)) {
-        return(TRUE)
+    if (!file.exists(pot_file)) {
+        return(FALSE)
     }
-    stop("Template (.pot) file does not exist")
+    return(TRUE)
+}
+
+#' @rdname templates
+#' @export
+sync_template <- 
+function(charset = "UTF-8", 
+         pkg = ".", 
+         domain = "R",
+         verbose = getOption("verbose")) {
+    template <- make_template(charset = charset, pkg = pkg, domain = domain)
+    no_template <- !template_exists(pkg = pkg, domain = domain)
+    if (isTRUE(no_template)) {
+        write_template(template, pkg = pkg, verbose = verbose)
+    } else if (!isTRUE(no_template)) {
+        current <- template_current(template = template, pkg = pkg, domain = domain)
+        if (isTRUE(current)) {
+            invisible(template_path(pkg = pkg, domain = domain))
+        } else {
+            write_template(template, pkg = pkg, verbose = verbose)
+        }
+    }
 }
 
 #' @rdname templates
@@ -140,9 +155,4 @@ check_for_template <- function(pkg = ".", domain = "R") {
 template_current <- function(template, pkg = ".", domain = "R") {
     template_from_file <- read_template(pkg = pkg, domain = domain)
     identical(template, template_from_file)
-}
-
-template_path <- function(pkg = ".", domain = "R") {
-    pkg <- as.package(pkg)
-    file.path(pkg$path, "po", paste0(if(domain %in% c("r","R")) "R-" else NULL, pkg$package, ".pot"))
 }

@@ -45,7 +45,16 @@ check_translations()
 install_translations()
 ```
 
-At this point, you still have to manually edit the the .po translation files created by `make_translation()` using either a text editor or the lightweight `edit_translation()` function.
+At this point, you still have to manually edit the the .po translation files created by `make_translation()` using either a text editor or the lightweight `edit_translation()` function. If you change your package code, you need to update the template file and each of the translation files to ensure they contain any new or modified messages. The easiest way to do this is:
+
+```R
+sync_translations()
+
+# translate, again!
+
+# re-install
+install_translations()
+```
 
 A [vignette included in the package](https://github.com/RL10N/msgtools/blob/master/vignettes/Tutorial.Rmd) provides a fully documented workflow using a simple example package.
 

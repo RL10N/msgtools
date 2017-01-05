@@ -6,20 +6,24 @@
 \alias{install_translations}
 \title{Install translations}
 \usage{
-check_translation(language, domain = "R", pkg = ".", strictPlural = FALSE)
+check_translation(language, pkg = ".", domain = "R", strictPlural = FALSE,
+  verbose = getOption("verbose"))
 
-check_translations(pkg = ".", strictPlural = FALSE)
+check_translations(pkg = ".", strictPlural = FALSE,
+  verbose = getOption("verbose"))
 
-install_translations(pkg = ".")
+install_translations(pkg = ".", verbose = getOption("verbose"))
 }
 \arguments{
 \item{language}{A character string specifying a language.}
 
-\item{domain}{A character string specifying the \dQuote{domain} of the messages. Either \dQuote{R} (the default) or \dQuote{C}. This is case insensitive.}
-
 \item{pkg}{The directory of an R package to extract diagnostic messages from. Path is passed to \code{\link[devtools]{as.package}}.}
 
+\item{domain}{A character string specifying the \dQuote{domain} of the messages. Either \dQuote{R} (the default) or \dQuote{C}. This is case insensitive.}
+
 \item{strictPlural}{A logical indicating whether to compare formats of singular and plural forms in a strict way. See \code{\link[tools]{checkPoFile}}.}
+
+\item{verbose}{A logical. Should the function be chatty?}
 }
 \value{
 \code{check_translation} returns an object of class \dQuote{check_po_files}; \code{check_translations} returns a list of such objects. \code{install_translations} returns a logical TRUE, if successful.

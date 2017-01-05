@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msgtools 0.2.1\n"
 "Report-Msgid-Bugs-To: https://github.com/RL10N/msgtools/issues\n"
-"POT-Creation-Date: 2017-01-03 11:46\n"
+"POT-Creation-Date: 2017-01-05 12:41\n"
 "PO-Revision-Date: 2017-01-03 11:47\n"
 "Last-Translator: Thomas J. Leeper <thosjleeper@gmail.com>\n"
 "Language-Team:  \n"
@@ -14,123 +14,168 @@ msgstr ""
 
 # NA
 #, fuzzy
-msgctxt ""
 msgid "Original message is:"
 msgstr "Mensaje original es:"
 
 # NA
 #, fuzzy
-msgctxt ""
 msgid "Current translation is:"
 msgstr "Traducción actual es:"
 
 # NA
 #, fuzzy
-msgctxt ""
 msgid "Current translation is empty"
 msgstr "La traducción actual está vacía"
 
 # NA
 #, fuzzy
-msgctxt ""
 msgid "Translation:"
 msgstr "Traducción"
 
 # NA
 #, fuzzy
-msgctxt ""
 msgid "Original plural message is:"
 msgstr "Mensaje original es:"
 
 # NA
 #, fuzzy
-msgctxt ""
 msgid "Current translations are:"
 msgstr "Traducción actual es:"
 
 # NA
 #, fuzzy
-msgctxt ""
 msgid "Translation (n == 0):"
 msgstr "Traducción (n == 0)"
 
 # NA
 #, fuzzy
-msgctxt ""
 msgid "Translation (n == 1):"
 msgstr "Traducción (n == 1)"
 
 # NA
 #, fuzzy
-msgctxt ""
 msgid "Translation (n == 2):"
 msgstr "Traducción (n == 2)"
 
 # NA
 #, fuzzy
-msgctxt ""
 msgid "Translation (n == 3):"
 msgstr "Traducción (n == 3)"
 
 # NA
 #, fuzzy
-msgctxt ""
 msgid "Translation (n >= 4):"
 msgstr "Traducción (n >= 4)"
 
-# NA
-msgctxt ""
 msgid "Select 'Direct' Messages to Translate"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Select 'Pluralized' Messages to Translate"
+msgstr ""
+
+msgid "Installation is currently only supported for Windows"
 msgstr ""
 
 # NA
 #, fuzzy
-msgctxt ""
-msgid "This is a single test message"
-msgstr "Este es un mensaje de prueba"
+msgid "Checking %s translation file"
+msgstr "Traducción actual es:"
+
+msgid "Creating the directory"
+msgstr ""
+
+msgid "'inst/po'"
+msgstr ""
+
+msgid "Installing R-"
+msgstr ""
 
 # NA
-msgctxt ""
+#, fuzzy
+msgid "translation"
+msgstr "Traducción"
+
 msgid "running msgfmt on %s failed"
 msgstr ""
 
-# NA
-msgctxt ""
+msgid "Installing"
+msgstr ""
+
+msgid "'po'"
+msgstr ""
+
 msgid "'language' does not matched any allowed value"
 msgstr ""
 
-# NA
-msgctxt ""
-msgid "Currently only the R domain is implemented"
+msgid "Currently only the 'R' domain is supported"
 msgstr ""
 
-# NA
-msgctxt ""
-msgid "Template (.pot) file does not exist"
+msgid "Template (.pot) file not found!"
 msgstr ""
 
-# NA
-msgctxt ""
+msgid "Writing the template (.pot) file"
+msgstr ""
+
+msgid "As I was going to St. Ives"
+msgstr ""
+
+msgid "Every wife had %d sacks"
+msgstr ""
+
+msgid "Every sack had"
+msgstr ""
+
+msgid "cats"
+msgstr ""
+
+msgid "Every cat had %d kits"
+msgstr ""
+
+msgid "Kits, cats, sacks, and wives"
+msgstr ""
+
+msgid "How many were going to St. Ives?"
+msgstr ""
+
 msgid "Overwriting existing translation (.po) file"
 msgstr ""
 
 # NA
 #, fuzzy
-msgctxt ""
-msgid "This is a test message"
-msgid_plural "These are two test messages"
-msgstr[0] "Este es un mensaje de prueba"
-msgstr[1] "Estos son unos mensajes de prueba"
+msgid "Writing translation (.po) file"
+msgstr "Traducción actual es:"
 
 # NA
 #, fuzzy
-msgctxt ""
-msgid "There is another test message"
-msgid_plural "These are another two test messages"
-msgstr[0] "Este es otro mensaje de prueba"
-msgstr[1] "Estos son otros mensajes de prueba"
+msgid "Generating translation from template"
+msgstr "La traducción actual está vacía"
+
+msgid "Updating existing translation (.po) file"
+msgstr ""
+
+msgid "I met a man with %d wife"
+msgid_plural "I met a man with %d wives"
+msgstr[0] ""
+msgstr[1] ""
+
+# NA
+#, fuzzy
+#~ msgctxt ""
+#~ msgid "This is a single test message"
+#~ msgstr "Este es un mensaje de prueba"
+
+# NA
+#, fuzzy
+#~ msgctxt ""
+#~ msgid "This is a test message"
+#~ msgid_plural "These are two test messages"
+#~ msgstr[0] "Este es un mensaje de prueba"
+#~ msgstr[1] "Estos son unos mensajes de prueba"
+
+# NA
+#, fuzzy
+#~ msgctxt ""
+#~ msgid "There is another test message"
+#~ msgid_plural "These are another two test messages"
+#~ msgstr[0] "Este es otro mensaje de prueba"
+#~ msgstr[1] "Estos son otros mensajes de prueba"

@@ -1,7 +1,10 @@
 #' @title Interactive translation editing
 #' @description Edit a translation object in-memory using a simple interface
-#' @param translation An object of class \code{"po"}, such as returned by \code{\link{make_translation}} or \code{\link{read_translation}}.
-#' @return \code{make_translation} and \code{read_translation} reutrn an object of class \code{"po"}.
+#' @param translation An object of class \code{"po"}, such as returned by \code{\link{make_translation}}. In lieu of \code{translation}, \code{language} and \code{pkg} and \code{domain} can be specified, which will load the translation from file using \code{\link{read_translation}}.
+#' @template language
+#' @template pkg
+#' @template domain
+#' @return An object of class \code{"po"}.
 #' @author Thomas J. Leeper
 #' @note Emacs users may find the gettext PO file editor more comfortable: \url{https://www.gnu.org/software/gettext/manual/gettext.html#PO-Mode}.
 #' @examples
@@ -21,7 +24,11 @@
 #' @seealso \code{\link{make_translation}}
 #' @importFrom utils select.list
 #' @export
-edit_translation <- function(translation) {
+edit_translation <- function(translation, language, pkg = ".", domain = "R") {
+    
+    if (missing(translation)) {
+        translation <- read_translation(language = language, pkg = pkg, domain = domain)
+    }
     
     # command-line interface to update po translation
     esingle <- function(msgid, msgstr) {

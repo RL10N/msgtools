@@ -1,0 +1,1 @@
+#' @param language A character string specifying a language, as either: (1) \dQuote{ll}, an ISO 639 two-letter language code (lowercase), or (2) \dQuote{ll_CC}, an ISO 639 two-letter language code (lowercase) and \sQuote{CC} is an ISO 3166 two-letter country code (uppercase).

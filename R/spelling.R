@@ -14,9 +14,9 @@
 #' }
 #' @seealso \code{\link{get_messages}}, \code{\link{get_message_distances}}
 #' @importFrom tibble as_tibble
-#' @importFrom hunspell hunspell dictionary hunspell_suggest
+#' @importFrom hunspell hunspell hunspell_suggest
 #' @export
-spell_check_msgs <- function(dict = dictionary("en_US"), pkg = ".") {
+spell_check_msgs <- function(dict = "en_US", pkg = ".") {
     pkg <- as.package(pkg)
     all_msgs <- get_messages(pkg = pkg)
     
@@ -44,7 +44,7 @@ spell_check_msgs <- function(dict = dictionary("en_US"), pkg = ".") {
     return(out)
 }
 
-spell_check_translation <- function(language, dict = dictionary(language), domain = "R", pkg = ".") {
+spell_check_translation <- function(language, dict = language, pkg = ".", domain = "R") {
     
     # function to spell check translations in a given language
     

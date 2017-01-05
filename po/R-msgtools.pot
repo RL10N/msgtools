@@ -1,160 +1,127 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: msgtools 0.2.3\n"
-"Report-Msgid-Bugs-To: https://github.com/RL10N/msgtools/issues\n"
-"POT-Creation-Date: 2017-01-04 17:23\n"
-"PO-Revision-Date: 2017-01-04 17:23\n"
-"Last-Translator:  \n"
-"Language-Team:  \n"
-"Language: LL\n"
+"POT-Creation-Date: 2017-01-05 12:41\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-# NA
-msgctxt ""
+
 msgid "Original message is:"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Current translation is:"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Current translation is empty"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Translation:"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Original plural message is:"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Current translations are:"
 msgstr ""
 
-# NA
-msgctxt ""
-msgid ""
-msgstr ""
-
-# NA
-msgctxt ""
 msgid "Translation (n == 0):"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Translation (n == 1):"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Translation (n == 2):"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Translation (n == 3):"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Translation (n >= 4):"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Select 'Direct' Messages to Translate"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Select 'Pluralized' Messages to Translate"
 msgstr ""
 
-# NA
-msgctxt ""
+msgid "Installation is currently only supported for Windows"
+msgstr ""
+
+msgid "Checking %s translation file"
+msgstr ""
+
+msgid "Creating the directory"
+msgstr ""
+
+msgid "'inst/po'"
+msgstr ""
+
+msgid "Installing R-"
+msgstr ""
+
+msgid "translation"
+msgstr ""
+
 msgid "running msgfmt on %s failed"
 msgstr ""
 
-# NA
-msgctxt ""
+msgid "Installing"
+msgstr ""
+
+msgid "'po'"
+msgstr ""
+
 msgid "'language' does not matched any allowed value"
 msgstr ""
 
-# NA
-msgctxt ""
-msgid "Currently only the R domain is implemented"
+msgid "Currently only the 'R' domain is supported"
 msgstr ""
 
-# NA
-msgctxt ""
-msgid "Creating the 'po' directory"
+msgid "Template (.pot) file not found!"
 msgstr ""
 
-# NA
-msgctxt ""
-msgid "Writing the 'pot' master translation file"
+msgid "Writing the template (.pot) file"
 msgstr ""
 
-# NA
-msgctxt ""
-msgid "Template (.pot) file does not exist"
-msgstr ""
-
-# NA
-msgctxt ""
 msgid "As I was going to St. Ives"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Every wife had %d sacks"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Every sack had"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "cats"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Every cat had %d kits"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Kits, cats, sacks, and wives"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "How many were going to St. Ives?"
 msgstr ""
 
-# NA
-msgctxt ""
 msgid "Overwriting existing translation (.po) file"
 msgstr ""
 
-# NA
-msgctxt ""
-msgid "I met a man with %d wife"
-msgid_plural "I met a man with %d wives"
-msgstr[0] ""
-msgstr[1] ""
+msgid "Writing translation (.po) file"
+msgstr ""
 
+msgid "Generating translation from template"
+msgstr ""
+
+msgid "Updating existing translation (.po) file"
+msgstr ""
+
+msgid        "I met a man with %d wife"
+msgid_plural "I met a man with %d wives"
+msgstr[0]    ""
+msgstr[1]    ""

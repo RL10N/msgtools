@@ -4,13 +4,19 @@
 \alias{edit_translation}
 \title{Interactive translation editing}
 \usage{
-edit_translation(translation)
+edit_translation(translation, language, pkg = ".", domain = "R")
 }
 \arguments{
-\item{translation}{An object of class \code{"po"}, such as returned by \code{\link{make_translation}} or \code{\link{read_translation}}.}
+\item{translation}{An object of class \code{"po"}, such as returned by \code{\link{make_translation}}. In lieu of \code{translation}, \code{language} and \code{pkg} and \code{domain} can be specified, which will load the translation from file using \code{\link{read_translation}}.}
+
+\item{language}{A character string specifying a language, as either: (1) \dQuote{ll}, an ISO 639 two-letter language code (lowercase), or (2) \dQuote{ll_CC}, an ISO 639 two-letter language code (lowercase) and \sQuote{CC} is an ISO 3166 two-letter country code (uppercase).}
+
+\item{pkg}{The directory of an R package to extract diagnostic messages from. Path is passed to \code{\link[devtools]{as.package}}.}
+
+\item{domain}{A character string specifying the \dQuote{domain} of the messages. Either \dQuote{R} (the default) or \dQuote{C}. This is case insensitive.}
 }
 \value{
-\code{make_translation} and \code{read_translation} reutrn an object of class \code{"po"}.
+An object of class \code{"po"}.
 }
 \description{
 Edit a translation object in-memory using a simple interface

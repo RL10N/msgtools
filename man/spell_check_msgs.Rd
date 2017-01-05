@@ -4,7 +4,7 @@
 \alias{spell_check_msgs}
 \title{Spell check diagnostic messages}
 \usage{
-spell_check_msgs(dict = dictionary("en_US"), pkg = ".")
+spell_check_msgs(dict = "en_US", pkg = ".")
 }
 \arguments{
 \item{dict}{A \code{\link[hunspell]{dictionary}} object.}

@@ -2,15 +2,18 @@
 #' @title Handle message translations (.po files)
 #' @description Read, write, and generate translations of diagnostic messages
 #' @param translation An object of class \code{"po"} containing a message translation.
-#' @param language A character string specifying a language, as either: (1) \dQuote{ll}, an ISO 639 two-letter language code (lowercase), or (2) \dQuote{ll_CC}, an ISO 639 two-letter language code (lowercase) and \sQuote{CC} is an ISO 3166 two-letter country code (uppercase).
+#' @template language
 #' @param translator A character string the name and email of a translation of the form \code{First Last <email@example.com>}.
 #' @param team Optionally, a character string specifying contact information for a \dQuote{translation team}.
 #' @template pkg
 #' @template domain
 #' @template template
+#' @template verbosity
 #' @details \code{read_translation} and \code{write_translation} provide basic input and output functionality for translation (.po) files. If called from with an R package directory, the locations of these fies are identified automatically. \code{\link[poio]{read_po}} provides a lower-level interface for reading a specific file.
 #' 
 #' The behavior of \code{make_translation} depends on context. If the requested translation already exists, it is updated against the template (.pot) file and loaded into memory. If the translation does not already exist, the function creates a \code{"po"} translation object from the message template (.pot) file (if one does not exist, it is created). The \code{language} and \code{translator} arguments are mandatory in the latter case and only used to update values in an existing file if they differ from the existing values. \code{language} must be an allowed language code (see \code{\link[poio]{language_codes}}); the \dQuote{Plural-Forms} metadata field is generated automatically from the language value (see \code{\link[poio]{plural_forms}}).
+#' 
+#' \code{sync_translations()} updates the template file (via \code{\link{sync_template}} and then updates existing translation files against it.
 #' 
 #' \code{\link{edit_translation}} is a very simple interactive interface for editing a translation object in memory.
 #' 
@@ -35,23 +38,30 @@
 #' @seealso \code{\link{make_template}}, \code{\link{use_localization}}, \code{\link{edit_translation}}
 #' @import poio
 #' @export
-read_translation <- function(language, domain = "R", pkg = ".") {
+read_translation <- function(language, pkg = ".", domain = "R") {
     pkg <- as.package(pkg)
+    if (!translation_exists(language = language, pkg = pkg, domain = domain)) {
+        stop("Translation (.po) file not found!")
+    }
     po_file <- translation_path(pkg = pkg, language = language, domain = domain)
     fix_metadata(read_po(po_file), pkg = pkg, file_type = "po")
 }
 
 #' @rdname translations
 #' @export
-write_translation <- function(translation, pkg = ".") {
+write_translation <- function(translation, pkg = ".", verbose = getOption("verbose")) {
     pkg <- as.package(pkg)
     make_po_dir(pkg = pkg)
     language <- translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Language"]
     po_file <- translation_path(pkg = pkg, 
                                 language = language, 
                                 domain = translation[["source_type"]])
-    if (file.exists(po_file)) {
-        message("Overwriting existing translation (.po) file")
+    if (isTRUE(verbose)) {
+        if (file.exists(po_file)) {
+            message("Overwriting existing translation (.po) file ", basename(po_file))
+        } else {
+            message("Writing translation (.po) file ", basename(po_file))
+        }
     }
     write_po(translation, po_file)
     return(invisible(po_file))
@@ -65,7 +75,8 @@ function(language,
          translator,
          team = " ",
          pkg = ".", 
-         domain = "R") {
+         domain = "R",
+         verbose = getOption("verbose")) {
     
     pkg <- as.package(pkg)
     
@@ -78,7 +89,7 @@ function(language,
         template <- read_template(pkg = pkg, domain = domain)
     } else {
         template <- make_template(pkg = pkg, domain = domain)
-        write_template(template, pkg = pkg)
+        write_template(template, pkg = pkg, verbose = verbose)
     }
     
     po_file <- translation_path(pkg = pkg, language = language, domain = template[["source_type"]])
@@ -86,10 +97,7 @@ function(language,
     # check for translation
     if (file.exists(po_file)) {
         
-        cmd <- paste("msgmerge --update", shQuote(po_file), shQuote(template_file))
-        if (system(cmd) != 0L) {
-            warning("running msgmerge on ", po_file, " failed", domain = NA)
-        }
+        sync_translation(language = language, pkg = pkg, domain = domain, verbose = verbose)
         
         translation <- read_translation(language = language, domain = domain, pkg = pkg)
         oldtranslator <- translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Last-Translator"]
@@ -105,6 +113,11 @@ function(language,
             }
         }
     } else {
+        
+        if (isTRUE(verbose)) {
+            message("Generating translation from template")
+        }
+        
         translation <- template
         translation[["file_type"]] <- "po"
         ## translator
@@ -129,6 +142,59 @@ function(language,
     return(translation)
 }
 
+sync_translation <- 
+function(language, 
+         pkg = ".", 
+         domain = "R",
+         verbose = getOption("verbose")) {
+    
+    pkg <- as.package(pkg)
+    
+    check_language_regex(language)
+    sync_template(pkg = pkg, domain = domain, verbose = verbose)
+    
+    template_file <- template_path(pkg = pkg, domain = domain)
+    po_file <- translation_path(pkg = pkg, language = language, domain = domain)
+    
+    if (isTRUE(verbose)) {
+        message("Updating existing translation (.po) file ", basename(po_file))
+    }
+    cmd <- paste("msgmerge --update", shQuote(po_file), shQuote(template_file))
+    if (system(cmd) != 0L) {
+        warning("running msgmerge on ", po_file, " failed", domain = NA)
+    }
+    return(invisible(TRUE))
+}
+
+#' @rdname translations
+#' @export
+sync_translations <- 
+function(pkg = ".", 
+         verbose = getOption("verbose")) {
+    
+    pkg <- as.package(pkg)
+    
+    languages <- dir(file.path(pkg$path, "po"), pattern = "\\.po$", full.names = FALSE)
+    languages <- gsub("\\.po$", "", languages)
+    rdomain <- grepl("^[R][-]", languages)
+    languages2 <- gsub("^[R][-]", "", languages)
+    
+    languages2 <- gsub("^[R][-]", "", languages)
+    out1 <- lapply(languages2[rdomain], sync_translation, pkg = pkg, domain = "R", verbose = verbose)
+    out2 <- lapply(languages2[!rdomain], sync_translation, pkg = pkg, domain = "C", verbose = verbose)
+    
+    return(invisible(TRUE))
+}
+
+translation_exists <- function(language, pkg = ".", domain = "R") {
+    pkg <- as.package(pkg)
+    po_file <- translation_path(language = language, pkg = pkg, domain = domain)
+    if (!file.exists(po_file)) {
+        return(FALSE)
+    }
+    return(TRUE)
+}
+
 #' @rdname translations
 #' @export
 translation_current <- function(language, template, pkg = ".", domain = "R") {
@@ -136,10 +202,5 @@ translation_current <- function(language, template, pkg = ".", domain = "R") {
     if (missing(template)) {
         template <- read_template(pkg = pkg, domain = domain)
     }
-    structure(identical(translation, template))
-}
-
-translation_path <- function(pkg = ".", language, domain = "R") {
-    pkg <- as.package(pkg)
-    file.path(pkg$path, "po", paste0(if(domain %in% c("R", "r")) "R-" else NULL, language, ".po"))
+    identical(translation, template)
 }
