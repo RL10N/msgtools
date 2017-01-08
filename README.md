@@ -2,7 +2,7 @@
 
 <img src="http://rl10n.github.io/images/logo.png" alt="RL10N Lion" height="150" />
 
-**msgtools** implements a number utilities for developing and maintaining error, warning, and other messages in R packages, including checking for consistency across messages, spell-checking messages, and building message translations into various languages for purposes of localization. The package is designed to enhance **devtools**.
+**msgtools** implements a number of utilities for developing and maintaining error, warning, and other messages in R packages, including checking for consistency across messages, spell-checking messages, and building message translations into various languages for purposes of localization. The package is designed to enhance **devtools**.
 
 ## Building and updating message translation files
 
