@@ -81,7 +81,7 @@ install_github('RL10N/msgtools')
 install.packages('msgtools')
 ```
 
-Note that **msgtools** also has one system requirement (i.e., software that must be installed separately from R). Specifically, the package requires [GNU gettext-tools](https://www.gnu.org/software/gettext/). Windows binaries can be installed from http://www.stats.ox.ac.uk/pub/Rtools/goodies/gettext-tools.zip or https://github.com/mlocati/gettext-iconv-windows.
+Note that **msgtools** also has one system requirement (i.e., software that must be installed separately from R). Specifically, the package requires [GNU gettext-tools](https://www.gnu.org/software/gettext/). Windows binaries can be installed using the `install_gettext()` function or by downloading binaries directly from http://www.stats.ox.ac.uk/pub/Rtools/goodies/gettext-tools.zip or https://github.com/mlocati/gettext-iconv-windows.
 
 ## Acknowledgements
 

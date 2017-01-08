@@ -14,7 +14,7 @@
 #' 
 #' \code{\link{get_messages}} returns a tibble (data frame) of messages and their file locations. \code{\link{spell_check_msgs}} returns a subset of messages with possible misspelled words and suggested replacements.
 #' 
-#' @note Most of the functionality of this package requires \samp{gettext}. Use \code{\link{check_for_gettext}} to see if it is available on your system; a Windows installer is provided in \code{\link{intall_gettext}}.
+#' @note Most of the functionality of this package requires \samp{gettext}. Use \code{\link{check_for_gettext}} to see if it is available on your system; a Windows installer is provided in \code{\link{install_gettext}}.
 #' @author Thomas J. Leeper
 #' @examples
 #'   # create example package

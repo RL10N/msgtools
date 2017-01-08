@@ -1,3 +1,7 @@
+# CHANGES TO msgtools 0.2.4
+
+* Updated package to work with new R6-based "po" objects from **poio**.
+
 # CHANGES TO msgtools 0.2.3
 
 * Added a vignette demonstrating package functionality and streamlined the README. (#3)

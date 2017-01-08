@@ -1,46 +1,47 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: msgtools 0.2.3\n"
-"POT-Creation-Date: 2017-01-05 12:41\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: msgtools 0.2.4\n"
+"Report-Msgid-Bugs-To: https://github.com/RL10N/msgtools/issues\n"
+"POT-Creation-Date: 2017-01-08 13:33\n"
+"PO-Revision-Date: 2017-01-08 13:33\n"
+"Last-Translator:  \n"
+"Language-Team:  \n"
+"Language: LL\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-
-msgid "Original message is:"
+msgid "English message is:"
 msgstr ""
 
 msgid "Current translation is:"
 msgstr ""
 
-msgid "Current translation is empty"
+msgid "No current translation!"
 msgstr ""
 
 msgid "Translation:"
 msgstr ""
 
-msgid "Original plural message is:"
+msgid "English single message is:"
 msgstr ""
 
-msgid "Current translations are:"
+msgid "English plural message is:"
 msgstr ""
 
-msgid "Translation (n == 0):"
+msgid "No current translations!"
 msgstr ""
 
-msgid "Translation (n == 1):"
+msgid "Current plural ["
 msgstr ""
 
-msgid "Translation (n == 2):"
+msgid "] translation is:"
 msgstr ""
 
-msgid "Translation (n == 3):"
+msgid "Translation (n =="
 msgstr ""
 
-msgid "Translation (n >= 4):"
+msgid "):"
 msgstr ""
 
 msgid "Select 'Direct' Messages to Translate"
@@ -109,6 +110,9 @@ msgstr ""
 msgid "How many were going to St. Ives?"
 msgstr ""
 
+msgid "Translation (.po) file not found!"
+msgstr ""
+
 msgid "Overwriting existing translation (.po) file"
 msgstr ""
 
@@ -121,7 +125,9 @@ msgstr ""
 msgid "Updating existing translation (.po) file"
 msgstr ""
 
-msgid        "I met a man with %d wife"
+msgctxt ""
+msgid "I met a man with %d wife"
 msgid_plural "I met a man with %d wives"
-msgstr[0]    ""
-msgstr[1]    ""
+msgstr[0] ""
+msgstr[1] ""
+

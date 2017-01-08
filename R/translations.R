@@ -7,7 +7,6 @@
 #' @param team Optionally, a character string specifying contact information for a \dQuote{translation team}.
 #' @template pkg
 #' @template domain
-#' @template template
 #' @template verbosity
 #' @details \code{read_translation} and \code{write_translation} provide basic input and output functionality for translation (.po) files. If called from with an R package directory, the locations of these fies are identified automatically. \code{\link[poio]{read_po}} provides a lower-level interface for reading a specific file.
 #' 
@@ -88,8 +87,8 @@ function(language,
     if (file.exists(template_file)) {
         template <- read_template(pkg = pkg, domain = domain)
     } else {
-        template <- make_template(pkg = pkg, domain = domain)
-        write_template(template, pkg = pkg, verbose = verbose)
+        sync_template(pkg = pkg, domain = domain, verbose = verbose)
+        template <- read_template(pkg = pkg, domain = domain)
     }
     
     po_file <- translation_path(pkg = pkg, language = language, domain = template[["source_type"]])
@@ -118,21 +117,12 @@ function(language,
             message("Generating translation from template")
         }
         
-        translation <- template
-        translation[["file_type"]] <- "po"
+        translation <- generate_po_from_pot(template, lang = language)
+        
         ## translator
         translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Last-Translator"] <- translator
         ## language team
         translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Language-Team"] <- team
-        ## language
-        translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Language"] <- language
-        ## plural forms
-        env <- new.env()
-        data(plural_forms, package = "poio", envir = env)
-        plural <- env[["plural_forms"]][["PluralFormHeader"]][env[["plural_forms"]][["ISO"]] == language]
-        translation[["metadata"]] <- rbind(translation[["metadata"]], c("Plural-Forms", plural))
-        
-        # need to setup structure of `countable$msgstr` list to reflect plural forms
         
     }
     
@@ -174,6 +164,9 @@ function(pkg = ".",
     
     pkg <- as.package(pkg)
     
+    sync_template(pkg = pkg, domain = "R", verbose = TRUE)
+    #sync_template(pkg = pkg, domain = "C", verbose = TRUE)
+    
     languages <- dir(file.path(pkg$path, "po"), pattern = "\\.po$", full.names = FALSE)
     languages <- gsub("\\.po$", "", languages)
     rdomain <- grepl("^[R][-]", languages)
@@ -193,14 +186,4 @@ translation_exists <- function(language, pkg = ".", domain = "R") {
         return(FALSE)
     }
     return(TRUE)
-}
-
-#' @rdname translations
-#' @export
-translation_current <- function(language, template, pkg = ".", domain = "R") {
-    translation <- read_translation(language = language, domain = domain, pkg = pkg)
-    if (missing(template)) {
-        template <- read_template(pkg = pkg, domain = domain)
-    }
-    identical(translation, template)
 }

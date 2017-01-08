@@ -24,6 +24,8 @@ sync_template(charset = "UTF-8", pkg = ".", domain = "R",
 template_current(template, pkg = ".", domain = "R")
 }
 \arguments{
+\item{charset}{A character string specifying the character set of the translation template file.}
+
 \item{pkg}{The directory of an R package to extract diagnostic messages from. Path is passed to \code{\link[devtools]{as.package}}.}
 
 \item{domain}{A character string specifying the \dQuote{domain} of the messages. Either \dQuote{R} (the default) or \dQuote{C}. This is case insensitive.}
@@ -33,13 +35,13 @@ template_current(template, pkg = ".", domain = "R")
 \item{verbose}{A logical. Should the function be chatty?}
 }
 \value{
-\code{make_template} and \code{read_template} reutrn an object of class \dQuote{po}. \code{write_template} returns the path to the file, invisibly.
+\code{make_template} and \code{read_template} reutrn an R6 object of class \dQuote{po}. \code{write_template} returns the path to the file, invisibly.
 }
 \description{
 Read, write, and generate .pot diagnostic message templates
 }
 \details{
-\code{read_template} and \code{write_template} provide basic input and output functionality for translation template (.pot) files. If called from with an R package directory, the locations of these fies are identified automatically (see \code{\link{make_po_dir}}).
+\code{read_template} and \code{write_template} provide basic input and output functionality for translation template (.pot) files. If called from with an R package directory, the locations of these fies are identified automatically.
 
 \code{make_template} generates a new template in memory, without writing it to disk. \code{sync_template} makes a new template and writes it to disk or, if a template file already exists, overwrites it.
 

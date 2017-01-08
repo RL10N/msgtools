@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: msgtools 0.2.1\n"
 "Report-Msgid-Bugs-To: https://github.com/RL10N/msgtools/issues\n"
-"POT-Creation-Date: 2017-01-05 12:41\n"
+"POT-Creation-Date: 2017-01-08 13:33\n"
 "PO-Revision-Date: 2017-01-03 11:47\n"
 "Last-Translator: Thomas J. Leeper <thosjleeper@gmail.com>\n"
 "Language-Team:  \n"
@@ -14,7 +14,7 @@ msgstr ""
 
 # NA
 #, fuzzy
-msgid "Original message is:"
+msgid "English message is:"
 msgstr "Mensaje original es:"
 
 # NA
@@ -24,8 +24,8 @@ msgstr "Traducción actual es:"
 
 # NA
 #, fuzzy
-msgid "Current translation is empty"
-msgstr "La traducción actual está vacía"
+msgid "No current translation!"
+msgstr "Traducción actual es:"
 
 # NA
 #, fuzzy
@@ -34,38 +34,36 @@ msgstr "Traducción"
 
 # NA
 #, fuzzy
-msgid "Original plural message is:"
+msgid "English single message is:"
 msgstr "Mensaje original es:"
 
 # NA
 #, fuzzy
-msgid "Current translations are:"
+msgid "English plural message is:"
+msgstr "Mensaje original es:"
+
+# NA
+#, fuzzy
+msgid "No current translations!"
 msgstr "Traducción actual es:"
 
 # NA
 #, fuzzy
-msgid "Translation (n == 0):"
+msgid "Current plural ["
+msgstr "Traducción actual es:"
+
+# NA
+#, fuzzy
+msgid "] translation is:"
+msgstr "Traducción actual es:"
+
+# NA
+#, fuzzy
+msgid "Translation (n =="
 msgstr "Traducción (n == 0)"
 
-# NA
-#, fuzzy
-msgid "Translation (n == 1):"
-msgstr "Traducción (n == 1)"
-
-# NA
-#, fuzzy
-msgid "Translation (n == 2):"
-msgstr "Traducción (n == 2)"
-
-# NA
-#, fuzzy
-msgid "Translation (n == 3):"
-msgstr "Traducción (n == 3)"
-
-# NA
-#, fuzzy
-msgid "Translation (n >= 4):"
-msgstr "Traducción (n >= 4)"
+msgid "):"
+msgstr ""
 
 msgid "Select 'Direct' Messages to Translate"
 msgstr ""
@@ -102,7 +100,7 @@ msgid "Installing"
 msgstr ""
 
 msgid "'po'"
-msgstr ""
+msgstr "'po'"
 
 msgid "'language' does not matched any allowed value"
 msgstr ""
@@ -126,7 +124,7 @@ msgid "Every sack had"
 msgstr ""
 
 msgid "cats"
-msgstr ""
+msgstr "gatos"
 
 msgid "Every cat had %d kits"
 msgstr ""
@@ -136,6 +134,11 @@ msgstr ""
 
 msgid "How many were going to St. Ives?"
 msgstr ""
+
+# NA
+#, fuzzy
+msgid "Translation (.po) file not found!"
+msgstr "Traducción actual es:"
 
 msgid "Overwriting existing translation (.po) file"
 msgstr ""
@@ -153,10 +156,41 @@ msgstr "La traducción actual está vacía"
 msgid "Updating existing translation (.po) file"
 msgstr ""
 
+msgctxt ""
 msgid "I met a man with %d wife"
 msgid_plural "I met a man with %d wives"
 msgstr[0] ""
 msgstr[1] ""
+
+# NA
+#, fuzzy
+#~ msgid "Current translation is empty"
+#~ msgstr "La traducción actual está vacía"
+
+# NA
+#, fuzzy
+#~ msgid "Current translations are:"
+#~ msgstr "Traducción actual es:"
+
+# NA
+#, fuzzy
+#~ msgid "Translation (n == 1):"
+#~ msgstr "Traducción (n == 1)"
+
+# NA
+#, fuzzy
+#~ msgid "Translation (n == 2):"
+#~ msgstr "Traducción (n == 2)"
+
+# NA
+#, fuzzy
+#~ msgid "Translation (n == 3):"
+#~ msgstr "Traducción (n == 3)"
+
+# NA
+#, fuzzy
+#~ msgid "Translation (n >= 4):"
+#~ msgstr "Traducción (n >= 4)"
 
 # NA
 #, fuzzy

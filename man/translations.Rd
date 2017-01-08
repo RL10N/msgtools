@@ -4,7 +4,6 @@
 \alias{make_translation}
 \alias{read_translation}
 \alias{sync_translations}
-\alias{translation_current}
 \alias{write_translation}
 \title{Handle message translations (.po files)}
 \usage{
@@ -16,8 +15,6 @@ make_translation(language, translator, team = " ", pkg = ".",
   domain = "R", verbose = getOption("verbose"))
 
 sync_translations(pkg = ".", verbose = getOption("verbose"))
-
-translation_current(language, template, pkg = ".", domain = "R")
 }
 \arguments{
 \item{language}{A character string specifying a language, as either: (1) \dQuote{ll}, an ISO 639 two-letter language code (lowercase), or (2) \dQuote{ll_CC}, an ISO 639 two-letter language code (lowercase) and \sQuote{CC} is an ISO 3166 two-letter country code (uppercase).}
@@ -33,8 +30,6 @@ translation_current(language, template, pkg = ".", domain = "R")
 \item{translator}{A character string the name and email of a translation of the form \code{First Last <email@example.com>}.}
 
 \item{team}{Optionally, a character string specifying contact information for a \dQuote{translation team}.}
-
-\item{template}{An object of class \dQuote{po} containing a message translation template.}
 }
 \value{
 \code{make_translation} and \code{read_translation} reutrn an object of class \dQuote{po}. \code{write_translation} returns the path to the file, invisibly.

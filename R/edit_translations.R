@@ -49,7 +49,7 @@ edit_translation <- function(translation, language, pkg = ".", domain = "R") {
         }
         plurals <- list()
         for (i in 0:6) {
-            message(paste0(gettext("Current plural [", i, "] translation is: "), msgstr[[i+1]])
+            message(paste0(gettext("Current plural [", i, "] translation is: "), msgstr[[i+1]]))
             plurals[[i + 1L]] <- readline(gettext("Translation (n == ", i, "): "))
         }
         plurals
