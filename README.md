@@ -6,7 +6,7 @@
 
 ## Building and updating message translation files
 
-The package creates a simplified workflow for creating, maintaining, and updating translations of messages in both R and C code that improve upon those available in the **tools** package. For some context on message localization in R, see ["R Administration"](http://cran.r-project.org/doc/manuals/r-devel/R-admin.html#Localization-of-messages) and ["Translating R Messages, R >=3.0.0"](http://developer.r-project.org/Translations30.html)). A list of "translation teams" is available from http://developer.r-project.org/TranslationTeams.html.
+**msgtools** provides a simplified workflow for creating, maintaining, and updating translations of messages in both R and C code that improve upon those available in the **tools** package. For some context on message localization in R, see ["R Administration"](https://cran.r-project.org/doc/manuals/r-devel/R-admin.html#Localization-of-messages) and ["Translating R Messages, R >=3.0.0"](https://developer.r-project.org/Translations30.html)). A list of "translation teams" is available from https://developer.r-project.org/TranslationTeams.html.
 
 R has reasonably sophisticated built-in *internationalization* (i18n) features. All calls to `message()`, `warning()`, `stop()`, `gettext()`, `ngettext()`, and `gettextf()` are passed through a C-level functionality that translates the contained messages into the user's local language (if the translations are available).
 
