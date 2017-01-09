@@ -67,7 +67,7 @@ dump("ex", file = file.path(pkg_dir, "R", "fns.R"))
 We will just confirm that the function has been added to the package by using the `get_messages()` function, which extracts all translatable messages from a package's code:
 
 ```{r}
-# check that gettext is available (required for msgtools to work)
+# check that GNU gettext is available (required for msgtools to work)
 check_for_gettext()
 
 get_messages(pkg_dir)
@@ -134,7 +134,7 @@ es <- make_translation("es", pkg = pkg_dir)
 
 ### Installing Translations
 
-Once we have the messages translated, we can check them for errors using `check_translations()` and then install them into the package by using `install_translations()`, which will create a `inst/po` directory and populate it with the translation binaries:
+Once we have the messages translated, we can check them for errors using `check_translations()` and then install them into the package by using `install_translations()`, which will create a `inst/po` directory and populate it with the translation `.mo` ("message object") binaries:
 
 ```{r}
 check_translations(pkg_dir)
