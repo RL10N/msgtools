@@ -25,6 +25,6 @@ Imports:
 Suggests:
     testthat,
     knitr
-SystemRequirements: gettext
+SystemRequirements: GNU gettext
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
