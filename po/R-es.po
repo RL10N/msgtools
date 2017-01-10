@@ -1,11 +1,11 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: msgtools 0.2.1\n"
+"Project-Id-Version: msgtools 0.2.5\n"
 "Report-Msgid-Bugs-To: https://github.com/RL10N/msgtools/issues\n"
-"POT-Creation-Date: 2017-01-08 13:33\n"
-"PO-Revision-Date: 2017-01-03 11:47\n"
+"POT-Creation-Date: 2017-01-10 10:00\n"
+"PO-Revision-Date: 2017-01-10 10:01\n"
 "Last-Translator: Thomas J. Leeper <thosjleeper@gmail.com>\n"
-"Language-Team:  \n"
+"Language-Team: \n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -148,6 +148,17 @@ msgstr ""
 msgid "Writing translation (.po) file"
 msgstr "Traducción actual es:"
 
+msgid "Overwriting existing translator"
+msgstr ""
+
+msgid "to"
+msgstr ""
+
+# NA
+#, fuzzy
+msgid "Overwriting existing translation team"
+msgstr "La traducción actual está vacía"
+
 # NA
 #, fuzzy
 msgid "Generating translation from template"
@@ -155,12 +166,6 @@ msgstr "La traducción actual está vacía"
 
 msgid "Updating existing translation (.po) file"
 msgstr ""
-
-msgctxt ""
-msgid "I met a man with %d wife"
-msgid_plural "I met a man with %d wives"
-msgstr[0] ""
-msgstr[1] ""
 
 # NA
 #, fuzzy
@@ -194,13 +199,16 @@ msgstr[1] ""
 
 # NA
 #, fuzzy
-#~ msgctxt ""
 #~ msgid "This is a single test message"
 #~ msgstr "Este es un mensaje de prueba"
 
+msgid "I met a man with %d wife"
+msgid_plural "I met a man with %d wives"
+msgstr[0] ""
+msgstr[1] ""
+
 # NA
 #, fuzzy
-#~ msgctxt ""
 #~ msgid "This is a test message"
 #~ msgid_plural "These are two test messages"
 #~ msgstr[0] "Este es un mensaje de prueba"
@@ -208,8 +216,8 @@ msgstr[1] ""
 
 # NA
 #, fuzzy
-#~ msgctxt ""
 #~ msgid "There is another test message"
 #~ msgid_plural "These are another two test messages"
 #~ msgstr[0] "Este es otro mensaje de prueba"
 #~ msgstr[1] "Estos son otros mensajes de prueba"
+

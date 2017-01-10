@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: msgtools 0.2.4\n"
+"Project-Id-Version: msgtools 0.2.5\n"
 "Report-Msgid-Bugs-To: https://github.com/RL10N/msgtools/issues\n"
-"POT-Creation-Date: 2017-01-08 13:33\n"
-"PO-Revision-Date: 2017-01-08 13:33\n"
+"POT-Creation-Date: 2017-01-10 10:01\n"
+"PO-Revision-Date: 2017-01-10 10:01\n"
 "Last-Translator:  \n"
 "Language-Team:  \n"
 "Language: LL\n"
@@ -117,6 +117,15 @@ msgid "Overwriting existing translation (.po) file"
 msgstr ""
 
 msgid "Writing translation (.po) file"
+msgstr ""
+
+msgid "Overwriting existing translator"
+msgstr ""
+
+msgid "to"
+msgstr ""
+
+msgid "Overwriting existing translation team"
 msgstr ""
 
 msgid "Generating translation from template"

@@ -43,7 +43,9 @@ read_translation <- function(language, pkg = ".", domain = "R") {
         stop("Translation (.po) file not found!")
     }
     po_file <- translation_path(pkg = pkg, language = language, domain = domain)
-    fix_metadata(read_po(po_file), pkg = pkg, file_type = "po")
+    translation <- read_po(po_file)
+    translator <- translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Last-Translator"]
+    fix_metadata(translation, pkg = pkg, .dots = list("Last-Translator" = translator))
 }
 
 #' @rdname translations
@@ -62,6 +64,10 @@ write_translation <- function(translation, pkg = ".", verbose = getOption("verbo
             message("Writing translation (.po) file ", basename(po_file))
         }
     }
+    
+    # update revision date
+    translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "PO-Revision-Date"] <- format(Sys.time(), "%Y-%m-%d %H:%M")
+    
     write_po(translation, po_file)
     return(invisible(po_file))
 }
@@ -102,12 +108,18 @@ function(language,
         oldtranslator <- translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Last-Translator"]
         if (!missing(translator)) {
             if (oldtranslator != translator) {
+                if (isTRUE(verbose)) {
+                    message("Overwriting existing translator ", oldtranslator, " to ", translator)
+                }
                 translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Last-Translator"] <- translator
             }
         }
         oldteam <- translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Language-Team"]
         if (team != " ") {
             if (oldteam != team) {
+                if (isTRUE(verbose)) {
+                    message("Overwriting existing translation team ", oldteam, " to ", team)
+                }
                 translation[["metadata"]][["value"]][translation[["metadata"]][["name"]] == "Language-Team"] <- team
             }
         }

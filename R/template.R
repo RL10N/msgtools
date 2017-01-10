@@ -109,7 +109,9 @@ read_template <- function(pkg = ".", domain = "R"){
         stop("Template (.pot) file not found!")
     }
     pot_file <- template_path(pkg = pkg, domain = domain)
-    fix_metadata(read_po(pot_file), pkg = pkg, file_type = "pot")
+    pot <- read_po(pot_file)
+    translator <- pot[["metadata"]][["value"]][pot[["metadata"]][["name"]] == "Last-Translator"]
+    fix_metadata(pot, pkg = pkg, .dots = list("Last-Translator" = translator))
 }
 
 #' @rdname templates

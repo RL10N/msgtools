@@ -5,19 +5,19 @@ Description: A number of utilities for developing and maintaining error, warning
     and other messages in R packages, including checking for consistency across
     messages, spell-checking messages, and building message translations into
     various languages for purposes of localization.
-Date: 2017-01-08
+Date: 2017-01-10
 Authors@R: c(person("Thomas J.", "Leeper",
                     role = c("aut", "cre"),
                     email = "thosjleeper@gmail.com"))
 URL: https://github.com/RL10N/msgtools/
 BugReports: https://github.com/RL10N/msgtools/issues
 License: MIT + file LICENSE
-Version: 0.2.4
+Version: 0.2.5
 Depends: R (>= 3.2.0)
 Imports:
     tools,
     utils,
-    poio (>= 0.0-2),
+    poio (>= 0.0-3),
     digest,
     tibble,
     hunspell,
