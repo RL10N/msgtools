@@ -79,15 +79,24 @@ install_translations <- function(pkg = ".", verbose = getOption("verbose")) {
         if (system(paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))) != 0L) 
             warning(sprintf("running msgfmt on %s failed", basename(f)), immediate. = TRUE)
     }
+    # handle UTF-8 locale
     if (l10n_info()[["UTF-8"]]) {
         lang <- "en@quot"
         f <- tempfile()
         dest <- file.path(inst_po_dir, lang, "LC_MESSAGES")
         dir.create(dest, FALSE, TRUE)
+        
+        tmp <- make_translation(lang, translator = "", pkg = pkg, verbose = verbose)
+        tmpfile <- write_translation(tmp, pkg = pkg, verbose = verbose)
+        paste("msgconv -t UTF-8 -o", f, tmpfile)
+        if (system(cmd) != 0L) {
+            stop("running msgconv failed", domain = NA)
+        }
         dest <- file.path(dest, sprintf("R-%s.mo", pkg$package))
         cmd <- paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))
-        if (system(cmd) != 0L) 
+        if (system(cmd) != 0L) {
             warning(sprintf("running msgfmt on %s failed", basename(f)), immediate. = TRUE)
+        }
     }
     
     # C-level messages
@@ -106,16 +115,16 @@ install_translations <- function(pkg = ".", verbose = getOption("verbose")) {
         if (system(paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))) != 0L) 
             warning(sprintf("running msgfmt on %s failed", basename(f)))
     }
-    if (l10n_info()[["UTF-8"]]) {
-        lang <- "en@quot"
-        f <- tempfile()
-        dest <- file.path(inst_po_dir, lang, "LC_MESSAGES")
-        dir.create(dest, FALSE, TRUE)
-        dest <- file.path(dest, sprintf("%s.mo", pkg$package))
-        cmd <- paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))
-        if (system(cmd) != 0L) 
-            warning(sprintf("running msgfmt on %s failed", basename(f)))
-    }
+    # if (l10n_info()[["UTF-8"]]) {
+        # lang <- "en@quot"
+        # f <- tempfile()
+        # dest <- file.path(inst_po_dir, lang, "LC_MESSAGES")
+        # dir.create(dest, FALSE, TRUE)
+        # dest <- file.path(dest, sprintf("%s.mo", pkg$package))
+        # cmd <- paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))
+        # if (system(cmd) != 0L) 
+            # warning(sprintf("running msgfmt on %s failed", basename(f)))
+    # }
     return(invisible(TRUE))
 }
 

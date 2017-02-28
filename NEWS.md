@@ -1,3 +1,8 @@
+# CHANGES TO msgtools 0.2.6
+
+* Work on UTF-8 issue. (#22)
+* Fixed bug in `use_localization()` (specifically in `make_template()` when when no messages are present. Added test of this. (#21)
+
 # CHANGES TO msgtools 0.2.5
 
 * Updated SystemRequirements to specify `GNU gettext`. (#20)
