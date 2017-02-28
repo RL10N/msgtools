@@ -51,4 +51,3 @@ These functions require that gettext is installed on your system.
 \seealso{
 \code{\link{use_localization}}, \code{\link{make_translation}}
 }
-

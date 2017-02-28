@@ -53,14 +53,13 @@ Most of the functionality of this package requires \samp{gettext}. Use \code{\li
   install_translations(pkg = pkg)
 
 }
-\author{
-Thomas J. Leeper
-}
 \references{
 \href{https://www.gnu.org/software/gettext/manual/gettext.html}{GNU gettext Manual}
 }
 \seealso{
 \code{\link{make_template}}, \code{\link{make_translation}}
 }
+\author{
+Thomas J. Leeper
+}
 \keyword{package}
-

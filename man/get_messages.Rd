@@ -23,10 +23,9 @@ pkg <- dummy_pkg()
 
 get_messages(pkg = pkg)
 }
-\author{
-Thomas J. Leeper
-}
 \seealso{
 \code{\link{spell_check_msgs}}, \code{\link{get_message_distances}}
 }
-
+\author{
+Thomas J. Leeper
+}

@@ -24,10 +24,9 @@ pkg <- dummy_pkg()
 # get message distances
 dist <- get_message_distances(pkg = pkg)
 }
-\author{
-Thomas J. Leeper
-}
 \seealso{
 \code{\link{get_messages}}, \code{\link{spell_check_msgs}}
 }
-
+\author{
+Thomas J. Leeper
+}

@@ -5,14 +5,14 @@ Description: A number of utilities for developing and maintaining error, warning
     and other messages in R packages, including checking for consistency across
     messages, spell-checking messages, and building message translations into
     various languages for purposes of localization.
-Date: 2017-01-10
+Date: 2017-02-28
 Authors@R: c(person("Thomas J.", "Leeper",
                     role = c("aut", "cre"),
                     email = "thosjleeper@gmail.com"))
 URL: https://github.com/RL10N/msgtools/
 BugReports: https://github.com/RL10N/msgtools/issues
 License: MIT + file LICENSE
-Version: 0.2.5
+Version: 0.2.6
 Depends: R (>= 3.2.0)
 Imports:
     tools,
@@ -27,4 +27,4 @@ Suggests:
     knitr
 SystemRequirements: GNU gettext
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
