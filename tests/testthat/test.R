@@ -1,12 +1,20 @@
-context("use_localization()  works")
 
 test_that("check_for_gettext() works", {
     expect_true(check_for_gettext())
 })
 
-suppressMessages(pkg_dir <- dummy_pkg())
+context("use_localization()  works")
 
-test_that("use_localization() works", {
+suppressMessages(pkg_dir <- dummy_pkg(messages = FALSE))
+
+test_that("use_localization() works without any messages", {
+    use_localization(pkg = pkg_dir)
+})
+
+unlink(pkg_dir)
+suppressMessages(pkg_dir <- dummy_pkg(messages = TRUE))
+
+test_that("use_localization() works with messages", {
     use_localization(pkg = pkg_dir)
 })
 

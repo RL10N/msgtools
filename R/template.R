@@ -84,7 +84,8 @@ function(charset = "UTF-8",
                        translator_comments = rep(list(character(0)), nrow(direct)),
                        source_reference_comments = rep(list(character(0)), nrow(direct)),
                        flags_comments = rep(list(character(0)), nrow(direct)),
-                       previous_string_comments = rep(list(character(0)), nrow(direct))
+                       previous_string_comments = rep(list(character(0)), nrow(direct)),
+                       msgkey = character(nrow(direct))
                       ),
        countable = tibble(msgid = countable[["msgid"]],
                           msgid_plural = countable[["msgid_plural"]],
@@ -94,11 +95,16 @@ function(charset = "UTF-8",
                           translator_comments = rep(list(character(0)), nrow(countable)),
                           source_reference_comments = rep(list(character(0)), nrow(countable)),
                           flags_comments = rep(list(character(0)), nrow(countable)),
-                          previous_string_comments = rep(list(character(0)), nrow(countable))
+                          previous_string_comments = rep(list(character(0)), nrow(countable)),
+                          msgkey = character(nrow(countable))
                          )
     )
-    out[["direct"]][["msgkey"]] <- digest(paste(out[["direct"]][["msgid"]], out[["direct"]][["msgctext"]]), algo = "xxhash32")
-    out[["countable"]][["msgkey"]] <- digest(paste(out[["countable"]][["msgid"]], out[["countable"]][["msgctext"]]), algo = "xxhash32")
+    if (nrow(out[["direct"]]) > 0) {
+        out[["direct"]][["msgkey"]] <- digest(paste(out[["direct"]][["msgid"]], out[["direct"]][["msgctext"]]), algo = "xxhash32")
+    }
+    if (nrow(out[["countable"]]) > 0) {
+        out[["countable"]][["msgkey"]] <- digest(paste(out[["countable"]][["msgid"]], out[["countable"]][["msgctext"]]), algo = "xxhash32")
+    }
     out
 }
 
