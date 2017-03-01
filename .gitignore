@@ -1,4 +1,6 @@
 .Rproj.user
 msgtools.Rproj
 vignettes/Tutorial.md
+vignettes/Tutorial.html
+vignettes/Tutorial.R
 po/*.po~

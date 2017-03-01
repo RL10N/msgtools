@@ -11,7 +11,7 @@ output:
     toc_depth: 3
 vignette: >
   %\VignetteIndexEntry{Tools for Developing Diagnostic Messages}
-  %\VignetteEngine{rmarkdown::rmarkdown}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
