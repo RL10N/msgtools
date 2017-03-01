@@ -13,7 +13,7 @@
 #' check_for_gettext()
 #' @export
 check_for_gettext <- function() {
-    e <- system("xgettext -h", show.output.on.console = FALSE)
+    e <- system("xgettext -h", show.output.on.console = FALSE, ignore.stdout = TRUE)
     if (e != 0L) {
         return(FALSE)
     } else {

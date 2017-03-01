@@ -12,8 +12,8 @@ make_enquote_translation <- function(pkg = ".", domain = "R", verbose = getOptio
                                                         translation[["countable"]][["msgid_plural"]],
                                                      SIMPLIFY = FALSE)
     write_po(translation, po_file = f1)
-    char <- rawToChar(readBin(f1, "raw", n = 1e8))
+    char <- rawToChar(readBin(f1, "raw", n = 1e9))
     char <- sub("Language: en\\\\n", "Language: en@quot\\\\n", char)
-    writeBin(char, f1)
+    cat(char, file = f1)
     return(f1)
 }
