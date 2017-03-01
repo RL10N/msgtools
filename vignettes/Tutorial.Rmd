@@ -11,13 +11,9 @@ output:
     toc_depth: 3
 vignette: >
   %\VignetteIndexEntry{Tools for Developing Diagnostic Messages}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{rmarkdown::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
-```{r, echo = FALSE, message = FALSE}
-knitr::opts_chunk$set(comment = "")
-```
 
 **msgtools** provides a simplified workflow for creating, maintaining, and updating translations of messages in both R and C code that improve upon those available in the **tools** package. For some context on message localization in R, see ["R Administration"](https://cran.r-project.org/doc/manuals/r-devel/R-admin.html#Localization-of-messages) and ["Translating R Messages, R >=3.0.0"](https://developer.r-project.org/Translations30.html)). A list of "translation teams" is available from https://developer.r-project.org/TranslationTeams.html. This vignette walks through the basic functionality of **msgtools**, in particular how to use the package to generate message translations.
 

@@ -1,3 +1,7 @@
+# CHANGES TO msgtools 0.2.7
+
+* Fix CRAN failures due to `en@quot` UTF-8 directional quote language. (#22)
+
 # CHANGES TO msgtools 0.2.6
 
 * Work on UTF-8 issue. (#22)

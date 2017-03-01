@@ -12,7 +12,7 @@ Authors@R: c(person("Thomas J.", "Leeper",
 URL: https://github.com/RL10N/msgtools/
 BugReports: https://github.com/RL10N/msgtools/issues
 License: MIT + file LICENSE
-Version: 0.2.6
+Version: 0.2.7
 Depends: R (>= 3.2.0)
 Imports:
     tools,
@@ -24,7 +24,7 @@ Imports:
     devtools
 Suggests:
     testthat,
-    knitr
+    rmarkdown
 SystemRequirements: GNU gettext
-VignetteBuilder: knitr
+VignetteBuilder: rmarkdown
 RoxygenNote: 6.0.1

@@ -81,21 +81,16 @@ install_translations <- function(pkg = ".", verbose = getOption("verbose")) {
     }
     # handle UTF-8 locale
     if (l10n_info()[["UTF-8"]]) {
-        lang <- "en@quot"
-        f <- tempfile()
-        dest <- file.path(inst_po_dir, lang, "LC_MESSAGES")
-        dir.create(dest, FALSE, TRUE)
-        
-        tmp <- make_translation(lang, translator = "", pkg = pkg, verbose = verbose)
-        tmpfile <- write_translation(tmp, pkg = pkg, verbose = verbose)
-        paste("msgconv -t UTF-8 -o", f, tmpfile)
+        f1 <- make_enquote_translation(pkg = pkg, domain = "R", verbose = verbose)
+        f2 <- tempfile()
+        cmd <- paste("msgconv -t UTF-8 -o", f2, f1)
         if (system(cmd) != 0L) {
-            stop("running msgconv failed", domain = NA)
+            stop("running msgconv on 'R-en@quot' UTF-8 localization failed", domain = NA)
         }
-        dest <- file.path(dest, sprintf("R-%s.mo", pkg$package))
-        cmd <- paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))
+        dest <- file.path(inst_po_dir, "en@quot", "LC_MESSAGES", sprintf("R-%s.mo", pkg$package))
+        cmd <- paste("msgfmt -o", shQuote(dest), shQuote(f2))
         if (system(cmd) != 0L) {
-            warning(sprintf("running msgfmt on %s failed", basename(f)), immediate. = TRUE)
+            warning(sprintf("running msgfmt on 'R-en@quot' UTF-8 localization failed"), immediate. = TRUE)
         }
     }
     
@@ -115,16 +110,20 @@ install_translations <- function(pkg = ".", verbose = getOption("verbose")) {
         if (system(paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))) != 0L) 
             warning(sprintf("running msgfmt on %s failed", basename(f)))
     }
-    # if (l10n_info()[["UTF-8"]]) {
-        # lang <- "en@quot"
-        # f <- tempfile()
-        # dest <- file.path(inst_po_dir, lang, "LC_MESSAGES")
-        # dir.create(dest, FALSE, TRUE)
-        # dest <- file.path(dest, sprintf("%s.mo", pkg$package))
-        # cmd <- paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))
-        # if (system(cmd) != 0L) 
-            # warning(sprintf("running msgfmt on %s failed", basename(f)))
-    # }
+    if (length(po_files) && l10n_info()[["UTF-8"]]) {
+        f1 <- make_enquote_translation(pkg = pkg, domain = "C", verbose = verbose)
+        f2 <- tempfile()
+        cmd <- paste("msgconv -t UTF-8 -o", f2, f1)
+        if (system(cmd) != 0L) {
+            stop("running msgconv on 'en@quot' UTF-8 localization failed", domain = NA)
+        }
+        dest <- file.path(inst_po_dir, "en@quot", "LC_MESSAGES", sprintf("%s.mo", pkg$package))
+        cmd <- paste("msgfmt -o", shQuote(dest), shQuote(f))
+        if (system(cmd) != 0L) {
+            warning(sprintf("running msgfmt on 'en@quot' UTF-8 localization failed"), immediate. = TRUE)
+        }
+    }
+    
     return(invisible(TRUE))
 }
 

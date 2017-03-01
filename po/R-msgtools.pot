@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: msgtools 0.2.5\n"
+"Project-Id-Version: msgtools 0.2.7\n"
 "Report-Msgid-Bugs-To: https://github.com/RL10N/msgtools/issues\n"
-"POT-Creation-Date: 2017-01-10 10:01\n"
-"PO-Revision-Date: 2017-01-10 10:01\n"
+"POT-Creation-Date: 2017-03-01 14:34\n"
+"PO-Revision-Date: 2017-03-01 14:34\n"
 "Last-Translator:  \n"
 "Language-Team:  \n"
 "Language: LL\n"
@@ -71,7 +71,13 @@ msgstr ""
 msgid "running msgfmt on %s failed"
 msgstr ""
 
+msgid "running msgfmt on 'R-en@quot' UTF-8 localization failed"
+msgstr ""
+
 msgid "Installing"
+msgstr ""
+
+msgid "running msgfmt on 'en@quot' UTF-8 localization failed"
 msgstr ""
 
 msgid "'po'"
