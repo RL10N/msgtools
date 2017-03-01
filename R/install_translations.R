@@ -76,8 +76,14 @@ install_translations <- function(pkg = ".", verbose = getOption("verbose")) {
         dest <- file.path(inst_po_dir, lang, "LC_MESSAGES")
         dir.create(dest, FALSE, TRUE)
         dest <- file.path(dest, sprintf("R-%s.mo", pkg$package))
-        if (system(paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))) != 0L) 
+        if (isTRUE(verbose)) {
+            cmd <- paste("msgfmt -v -o", shQuote(dest), shQuote(f))
+        } else {
+            cmd <- paste("msgfmt -v -o", shQuote(dest), shQuote(f))
+        }
+        if (system(cmd) != 0L) {
             warning(sprintf("running msgfmt on %s failed", basename(f)), immediate. = TRUE)
+        }
     }
     # handle UTF-8 locale
     if (l10n_info()[["UTF-8"]]) {
@@ -107,8 +113,14 @@ install_translations <- function(pkg = ".", verbose = getOption("verbose")) {
         dest <- file.path(inst_po_dir, lang, "LC_MESSAGES")
         dir.create(dest, FALSE, TRUE)
         dest <- file.path(dest, paste0("R-", pkg$package, ".mo"))
-        if (system(paste("msgfmt -c --statistics -o", shQuote(dest), shQuote(f))) != 0L) 
+        if (isTRUE(verbose)) {
+            cmd <- paste("msgfmt -v -o", shQuote(dest), shQuote(f))
+        } else {
+            cmd <- paste("msgfmt -v -o", shQuote(dest), shQuote(f))
+        }
+        if (system(cmd) != 0L) {
             warning(sprintf("running msgfmt on %s failed", basename(f)))
+        }
     }
     if (length(po_files) && l10n_info()[["UTF-8"]]) {
         f1 <- make_enquote_translation(pkg = pkg, domain = "C", verbose = verbose)

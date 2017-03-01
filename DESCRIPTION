@@ -24,7 +24,8 @@ Imports:
     devtools
 Suggests:
     testthat,
+    knitr,
     rmarkdown
 SystemRequirements: GNU gettext
-VignetteBuilder: rmarkdown
+VignetteBuilder: knitr
 RoxygenNote: 6.0.1
