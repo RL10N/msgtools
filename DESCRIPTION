@@ -10,7 +10,7 @@ Authors@R: c(person("Thomas J.", "Leeper",
                     role = c("aut", "cre"),
                     email = "thosjleeper@gmail.com"),
              person("Richard", "Cotton",
-                    role = "cre",
+                    role = "aut",
                     email = "richierocks@gmail.com"))
 URL: https://github.com/RL10N/msgtools/
 BugReports: https://github.com/RL10N/msgtools/issues
