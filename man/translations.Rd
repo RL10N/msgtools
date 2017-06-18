@@ -32,7 +32,7 @@ sync_translations(pkg = ".", verbose = getOption("verbose"))
 \item{team}{Optionally, a character string specifying contact information for a \dQuote{translation team}.}
 }
 \value{
-\code{make_translation} and \code{read_translation} reutrn an object of class \dQuote{po}. \code{write_translation} returns the path to the file, invisibly.
+\code{make_translation} and \code{read_translation} return an object of class \dQuote{po}. \code{write_translation} returns the path to the file, invisibly.
 }
 \description{
 Read, write, and generate translations of diagnostic messages
