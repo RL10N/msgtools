@@ -15,11 +15,23 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, echo = FALSE, message = FALSE}
-knitr::opts_chunk$set(comment = "")
+**msgtools** provides a simplified workflow for creating, maintaining, and updating translations of messages in both R and C code that improve upon those available in the **tools** package. For some context on message localization in R, see ["R Administration"](https://cran.r-project.org/doc/manuals/r-devel/R-admin.html#Localization-of-messages) and ["Translating R Messages, R >=3.0.0"](https://developer.r-project.org/Translations30.html)). A list of "translation teams" is available from https://developer.r-project.org/TranslationTeams.html. This vignette walks through the basic functionality of **msgtools**, in particular how to use the package to generate message translations.
+
+## Intro to R message localization
+
+To begin *localization* (l10n) of messages, a package developer simply needs to (1) write translations for these messages using a standardized file format and (2) install the translations into their package. Localization traditionally requires the manual creation of a `.pot` ("portable object template") file using the `xgettext` command line utility and the generation of language-specific .po ("portable object") translation files that specify the translation of each message string into the target language.
+
+The .pot/.po file format is fairly straightforward, simply containing a series of messages and their translations, plus some metadata:
+
+```
+#: lib/error.c:116
+msgid "Unknown system error"
+msgstr "Error desconegut del sistema"
 ```
 
-This vignette walks through the basic functionality of **msgtools**, in particular how to use the package to generate message translations.
+(The R source contains a number of examples of translations, for example in [the base package](https://svn.r-project.org/R/trunk/src/library/base/po/).)
+
+**msgtools** negates the need to directly call the command-line utilities or interact with .pot/.po files by relying on R representations of templates and translations (provided by [poio](https://cran.r-project.org/package=poio)). This makes it possible to programmatically create, modify, and install translations, thus eliminating the need to manually open each translation file in a text editor.
 
 ## Message Translations (Localization)
 
@@ -51,6 +63,9 @@ dump("ex", file = file.path(pkg_dir, "R", "fns.R"))
 We will just confirm that the function has been added to the package by using the `get_messages()` function, which extracts all translatable messages from a package's code:
 
 ```{r}
+# check that GNU gettext is available (required for msgtools to work)
+check_for_gettext()
+
 get_messages(pkg_dir)
 ```
 
@@ -115,7 +130,7 @@ es <- make_translation("es", pkg = pkg_dir)
 
 ### Installing Translations
 
-Once we have the messages translated, we can check them for errors using `check_translations()` and then install them into the package by using `install_translations()`, which will create a `inst/po` directory and populate it with the translation binaries:
+Once we have the messages translated, we can check them for errors using `check_translations()` and then install them into the package by using `install_translations()`, which will create a `inst/po` directory and populate it with the translation `.mo` ("message object") binaries:
 
 ```{r}
 check_translations(pkg_dir)

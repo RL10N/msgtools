@@ -33,4 +33,3 @@ check_for_gettext()
 \seealso{
 \code{\link{use_localization}}
 }
-

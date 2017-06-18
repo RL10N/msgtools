@@ -32,7 +32,7 @@ resetlang <- function(language) {
 }
 
 check_language_regex <- function(language) {
-    if (!grepl(ALLOWED_LANGUAGE_REGEX, language)) {
+    if ((!grepl(ALLOWED_LANGUAGE_REGEX, language)) && language != "en@quot") {
         stop("'language' does not matched any allowed value")
     }
     return(TRUE)

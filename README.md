@@ -2,11 +2,11 @@
 
 <img src="http://rl10n.github.io/images/logo.png" alt="RL10N Lion" height="150" />
 
-**msgtools** implements a number utilities for developing and maintaining error, warning, and other messages in R packages, including checking for consistency across messages, spell-checking messages, and building message translations into various languages for purposes of localization. The package is designed to enhance **devtools**.
+**msgtools** implements a number of utilities for developing and maintaining error, warning, and other messages in R packages, including checking for consistency across messages, spell-checking messages, and building message translations into various languages for purposes of localization. The package is designed to enhance **devtools**.
 
 ## Building and updating message translation files
 
-The package creates a simplified workflow for creating, maintaining, and updating translations of messages in both R and C code that improve upon those available in the **tools** package. For some context on message localization in R, see ["R Administration"](http://cran.r-project.org/doc/manuals/r-devel/R-admin.html#Localization-of-messages) and ["Translating R Messages, R >=3.0.0"](http://developer.r-project.org/Translations30.html)). A list of "translation teams" is available from http://developer.r-project.org/TranslationTeams.html.
+**msgtools** provides a simplified workflow for creating, maintaining, and updating translations of messages in both R and C code that improve upon those available in the **tools** package. For some context on message localization in R, see ["R Administration"](https://cran.r-project.org/doc/manuals/r-devel/R-admin.html#Localization-of-messages) and ["Translating R Messages, R >=3.0.0"](https://developer.r-project.org/Translations30.html)). A list of "translation teams" is available from https://developer.r-project.org/TranslationTeams.html.
 
 R has reasonably sophisticated built-in *internationalization* (i18n) features. All calls to `message()`, `warning()`, `stop()`, `gettext()`, `ngettext()`, and `gettextf()` are passed through a C-level functionality that translates the contained messages into the user's local language (if the translations are available).
 
@@ -81,7 +81,7 @@ install_github('RL10N/msgtools')
 install.packages('msgtools')
 ```
 
-Note that **msgtools** also has one system requirement (i.e., software that must be installed separately from R). Specifically, the package requires [GNU gettext-tools](https://www.gnu.org/software/gettext/). Windows binaries can be installed from http://www.stats.ox.ac.uk/pub/Rtools/goodies/gettext-tools.zip or https://github.com/mlocati/gettext-iconv-windows.
+Note that **msgtools** also has one system requirement (i.e., software that must be installed separately from R). Specifically, the package requires [GNU gettext-tools](https://www.gnu.org/software/gettext/). Windows binaries can be installed using the `install_gettext()` function or by downloading binaries directly from http://www.stats.ox.ac.uk/pub/Rtools/goodies/gettext-tools.zip or https://github.com/mlocati/gettext-iconv-windows.
 
 ## Acknowledgements
 

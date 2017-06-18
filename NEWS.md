@@ -1,3 +1,23 @@
+# CHANGES TO msgtools 0.2.7
+
+* Fix CRAN failures due to `en@quot` UTF-8 directional quote language. (#22)
+
+# CHANGES TO msgtools 0.2.6
+
+* Work on UTF-8 issue. (#22)
+* Fixed bug in `use_localization()` (specifically in `make_template()` when when no messages are present. Added test of this. (#21)
+
+# CHANGES TO msgtools 0.2.5
+
+* Updated SystemRequirements to specify `GNU gettext`. (#20)
+* Made tests conditional successful `check_for_gettext()`. (#20)
+* Updated calls to `poio::fix_metadata()` to pass explicit `Last-Translator` metadata.
+* Installed Spanish translation of some messages.
+
+# CHANGES TO msgtools 0.2.4
+
+* Updated package to work with new R6-based "po" objects from **poio**.
+
 # CHANGES TO msgtools 0.2.3
 
 * Added a vignette demonstrating package functionality and streamlined the README. (#3)

@@ -1,10 +1,11 @@
 #' @title Dummy package creation
 #' @description Create a simple example package in the temporary directory
 #' @param location A character string containing a path to a directory in which to create the package, by default the location of \code{\link[base]{tempdir}}.
+#' @param messages A logical indicating whether to include some dummy translatable messages. Default \code{TRUE}.
 #' @return A string denoting a path to the root of the package (called \dQuote{translateme}).
 #' @importFrom devtools create
 #' @export
-dummy_pkg <- function(location = tempdir()) {
+dummy_pkg <- function(location = tempdir(), messages = TRUE) {
     
     pkg_path <- file.path(location, "translateme")
     
@@ -25,6 +26,8 @@ dummy_pkg <- function(location = tempdir()) {
     create(pkg_path, description = description, rstudio = FALSE)
 
     # initialize some messages
-    dump("translatable_messages", file = file.path(pkg_path, "R", "fns.R"))
+    if (isTRUE(messages)) {
+        dump("translatable_messages", file = file.path(pkg_path, "R", "fns.R"))
+    }
     pkg_path
 }

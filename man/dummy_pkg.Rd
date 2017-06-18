@@ -4,10 +4,12 @@
 \alias{dummy_pkg}
 \title{Dummy package creation}
 \usage{
-dummy_pkg(location = tempdir())
+dummy_pkg(location = tempdir(), messages = TRUE)
 }
 \arguments{
 \item{location}{A character string containing a path to a directory in which to create the package, by default the location of \code{\link[base]{tempdir}}.}
+
+\item{messages}{A logical indicating whether to include some dummy translatable messages. Default \code{TRUE}.}
 }
 \value{
 A string denoting a path to the root of the package (called \dQuote{translateme}).
@@ -15,4 +17,3 @@ A string denoting a path to the root of the package (called \dQuote{translateme}
 \description{
 Create a simple example package in the temporary directory
 }
-

@@ -1,66 +1,46 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: msgtools 0.2.5\n"
+"Project-Id-Version: msgtools 0.2.7\n"
 "Report-Msgid-Bugs-To: https://github.com/RL10N/msgtools/issues\n"
-"POT-Creation-Date: 2017-01-10 10:00\n"
-"PO-Revision-Date: 2017-01-10 10:01\n"
+"POT-Creation-Date: 2017-03-01 14:34\n"
+"PO-Revision-Date: 2017-03-01 14:48\n"
 "Last-Translator: Thomas J. Leeper <thosjleeper@gmail.com>\n"
-"Language-Team: \n"
-"Language: es\n"
+"Language-Team:  \n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# NA
-#, fuzzy
 msgid "English message is:"
-msgstr "Mensaje original es:"
+msgstr ""
 
-# NA
-#, fuzzy
 msgid "Current translation is:"
-msgstr "Traducción actual es:"
+msgstr ""
 
-# NA
-#, fuzzy
 msgid "No current translation!"
-msgstr "Traducción actual es:"
+msgstr ""
 
-# NA
-#, fuzzy
 msgid "Translation:"
-msgstr "Traducción"
+msgstr ""
 
-# NA
-#, fuzzy
 msgid "English single message is:"
-msgstr "Mensaje original es:"
+msgstr ""
 
-# NA
-#, fuzzy
 msgid "English plural message is:"
-msgstr "Mensaje original es:"
+msgstr ""
 
-# NA
-#, fuzzy
 msgid "No current translations!"
-msgstr "Traducción actual es:"
+msgstr ""
 
-# NA
-#, fuzzy
 msgid "Current plural ["
-msgstr "Traducción actual es:"
+msgstr ""
 
-# NA
-#, fuzzy
 msgid "] translation is:"
-msgstr "Traducción actual es:"
+msgstr ""
 
-# NA
-#, fuzzy
 msgid "Translation (n =="
-msgstr "Traducción (n == 0)"
+msgstr ""
 
 msgid "):"
 msgstr ""
@@ -74,10 +54,8 @@ msgstr ""
 msgid "Installation is currently only supported for Windows"
 msgstr ""
 
-# NA
-#, fuzzy
 msgid "Checking %s translation file"
-msgstr "Traducción actual es:"
+msgstr ""
 
 msgid "Creating the directory"
 msgstr ""
@@ -88,19 +66,23 @@ msgstr ""
 msgid "Installing R-"
 msgstr ""
 
-# NA
-#, fuzzy
 msgid "translation"
-msgstr "Traducción"
+msgstr ""
 
 msgid "running msgfmt on %s failed"
+msgstr ""
+
+msgid "running msgfmt on 'R-en@quot' UTF-8 localization failed"
 msgstr ""
 
 msgid "Installing"
 msgstr ""
 
+msgid "running msgfmt on 'en@quot' UTF-8 localization failed"
+msgstr ""
+
 msgid "'po'"
-msgstr "'po'"
+msgstr ""
 
 msgid "'language' does not matched any allowed value"
 msgstr ""
@@ -124,7 +106,7 @@ msgid "Every sack had"
 msgstr ""
 
 msgid "cats"
-msgstr "gatos"
+msgstr ""
 
 msgid "Every cat had %d kits"
 msgstr ""
@@ -135,18 +117,14 @@ msgstr ""
 msgid "How many were going to St. Ives?"
 msgstr ""
 
-# NA
-#, fuzzy
 msgid "Translation (.po) file not found!"
-msgstr "Traducción actual es:"
+msgstr ""
 
 msgid "Overwriting existing translation (.po) file"
 msgstr ""
 
-# NA
-#, fuzzy
 msgid "Writing translation (.po) file"
-msgstr "Traducción actual es:"
+msgstr ""
 
 msgid "Overwriting existing translator"
 msgstr ""
@@ -154,70 +132,17 @@ msgstr ""
 msgid "to"
 msgstr ""
 
-# NA
-#, fuzzy
 msgid "Overwriting existing translation team"
-msgstr "La traducción actual está vacía"
+msgstr ""
 
-# NA
-#, fuzzy
 msgid "Generating translation from template"
-msgstr "La traducción actual está vacía"
+msgstr ""
 
 msgid "Updating existing translation (.po) file"
 msgstr ""
-
-# NA
-#, fuzzy
-#~ msgid "Current translation is empty"
-#~ msgstr "La traducción actual está vacía"
-
-# NA
-#, fuzzy
-#~ msgid "Current translations are:"
-#~ msgstr "Traducción actual es:"
-
-# NA
-#, fuzzy
-#~ msgid "Translation (n == 1):"
-#~ msgstr "Traducción (n == 1)"
-
-# NA
-#, fuzzy
-#~ msgid "Translation (n == 2):"
-#~ msgstr "Traducción (n == 2)"
-
-# NA
-#, fuzzy
-#~ msgid "Translation (n == 3):"
-#~ msgstr "Traducción (n == 3)"
-
-# NA
-#, fuzzy
-#~ msgid "Translation (n >= 4):"
-#~ msgstr "Traducción (n >= 4)"
-
-# NA
-#, fuzzy
-#~ msgid "This is a single test message"
-#~ msgstr "Este es un mensaje de prueba"
 
 msgid "I met a man with %d wife"
 msgid_plural "I met a man with %d wives"
 msgstr[0] ""
 msgstr[1] ""
-
-# NA
-#, fuzzy
-#~ msgid "This is a test message"
-#~ msgid_plural "These are two test messages"
-#~ msgstr[0] "Este es un mensaje de prueba"
-#~ msgstr[1] "Estos son unos mensajes de prueba"
-
-# NA
-#, fuzzy
-#~ msgid "There is another test message"
-#~ msgid_plural "These are another two test messages"
-#~ msgstr[0] "Este es otro mensaje de prueba"
-#~ msgstr[1] "Estos son otros mensajes de prueba"
 

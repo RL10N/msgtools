@@ -39,10 +39,9 @@ Emacs users may find the gettext PO file editor more comfortable: \url{https://w
   write_translation(tran2, pkg = pkg)
 }
 }
-\author{
-Thomas J. Leeper
-}
 \seealso{
 \code{\link{make_translation}}
 }
-
+\author{
+Thomas J. Leeper
+}

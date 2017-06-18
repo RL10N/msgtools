@@ -1,16 +1,3 @@
-#' @rdname po_directory
-#' @title Utilities for translation directory
-#' @description Check for and create a /po directory
-#' @template pkg
-#' @template verbosity
-#' @return The path to the directory.
-#' @examples
-#' # create example package
-#' pkg <- dummy_pkg()
-#' if (!check_for_po_dir(pkg)) {
-#'   make_po_dir(pkg)
-#' }
-#' @export
 make_po_dir <- function(pkg = ".", verbose = getOption("verbose")) {
     pkg <- as.package(pkg)
     po_dir <- file.path(pkg$path, "po")

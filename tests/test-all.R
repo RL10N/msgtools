@@ -1,3 +1,6 @@
 library("testthat")
 library("msgtools")
-test_check("msgtools", reporter = "summary")
+
+if (!grepl('SunOS',Sys.info()['sysname']) && check_for_gettext()) {
+    test_check("msgtools", reporter = "summary")
+}
