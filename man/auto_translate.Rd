@@ -39,5 +39,19 @@ account. See \url{https://cloud.google.com/translate/docs/getting-started}
 to get started.
 Likewise, to use Microsfot Translator, you need a Microsoft Azure account.
 See \url{https://www.microsoft.com/en-us/translator/getstarted.aspx} to get 
-started.
+started.#' @examples
+\dontrun{
+  # create example package
+  pkg <- dummy_pkg()
+  
+  # setup pkg for localization
+  use_localization(pkg)
+  
+  # generate Spanish translation in memory
+  (tran <- make_translation("es", translator = "Some Person <example@example.com>"))
+  
+  auto_tran <- google_translate(tran)
+  View(auto_tran$direct)
+  View(auto_tran$countable)
+}
 }
