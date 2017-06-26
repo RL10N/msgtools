@@ -6,14 +6,17 @@
 \alias{microsoft_translate}
 \title{Auto translate messages}
 \usage{
-auto_translate(translation, overwrite = FALSE, api_key, engine = c("google",
-  "microsoft"))
+auto_translate(translation, overwrite = FALSE, api_key,
+  parallelization_strategy = c("sequential", "multicore", "cluster"),
+  engine = c("google", "microsoft"))
 
 google_translate(translation, overwrite = FALSE,
-  api_key = Sys.getenv("GOOGLE_TRANSLATE_API_KEY"))
+  api_key = Sys.getenv("GOOGLE_TRANSLATE_API_KEY"),
+  parallelization_strategy = c("sequential", "multicore", "cluster"))
 
 microsoft_translate(translation, overwrite = FALSE,
-  api_key = Sys.getenv("MICROSOFT_TRANSLATER_API_KEY"))
+  api_key = Sys.getenv("MICROSOFT_TRANSLATOR_API_KEY"),
+  parallelization_strategy = c("sequential", "multicore", "cluster"))
 }
 \arguments{
 \item{translation}{An object of class \code{"po"} containing a message 
@@ -25,6 +28,9 @@ translation will be translated.}
 
 \item{api_key}{A string describing an API key for Google Translate or Microsoft 
 Translator.}
+
+\item{parallelization_strategy}{A string naming a parallelization strategy,
+passed to \code{\link[future]{plan}}.}
 }
 \value{
 An object of class \code{"po"} containing a message translation.
@@ -50,8 +56,15 @@ started.#' @examples
   # generate Spanish translation in memory
   (tran <- make_translation("es", translator = "Some Person <example@example.com>"))
   
-  auto_tran <- google_translate(tran)
-  View(auto_tran$direct)
-  View(auto_tran$countable)
+  # You need a Google Translate API key before running this
+  auto_tran_google <- google_translate(tran)
+  View(auto_tran_google$direct)
+  View(auto_tran_google$countable)
+  
+  # You need a Microsoft Cognitive Services Translator API 
+  # key before running this
+  auto_tran_microsoft <- microsoft_translate(tran)
+  View(auto_tran_microsoft$direct)
+  View(auto_tran_microsoft$countable)
 }
 }
