@@ -16,7 +16,7 @@
 #' 
 #' \code{\link{edit_translation}} is a very simple interactive interface for editing a translation object in memory.
 #' 
-#' @return \code{make_translation} and \code{read_translation} reutrn an object of class \dQuote{po}. \code{write_translation} returns the path to the file, invisibly.
+#' @return \code{make_translation} and \code{read_translation} return an object of class \dQuote{po}. \code{write_translation} returns the path to the file, invisibly.
 #' @note These functions require that gettext is installed on your system.
 #' @author Thomas J. Leeper
 #' @examples
