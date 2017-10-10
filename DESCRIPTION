@@ -7,8 +7,10 @@ Description: A number of utilities for developing and maintaining error, warning
     various languages for purposes of localization.
 Date: 2017-02-28
 Authors@R: c(person("Thomas J.", "Leeper",
-                    role = c("aut", "cre"),
-                    email = "thosjleeper@gmail.com"))
+                    role = c("aut", "cre"), 
+                    email = "thosjleeper@gmail.com",
+                    comment = c(ORCID = "0000-0003-4097-6326"))
+             )
 URL: https://github.com/RL10N/msgtools/
 BugReports: https://github.com/RL10N/msgtools/issues
 License: MIT + file LICENSE
